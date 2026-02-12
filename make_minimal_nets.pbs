@@ -11,7 +11,7 @@ cd $PBS_O_WORKDIR
 
 module purge
 module load compiler/python3.11.9
-module load libs/OpenBlas-0.3.20
+module load libs/liblapack-3.10.1
 
 source venv/bin/activate
 
