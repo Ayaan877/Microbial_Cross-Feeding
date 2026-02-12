@@ -1,7 +1,7 @@
 import numpy as np
 from prune_check import isCoreProduced
 
-def randMinSubnet(satRxnVec, rxnMat, prodMat, sumRxnVec, 
+def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec, 
                   coreProdRxns, coreTBP, nutrientSet, Currency):
     """
     Takes in a set of satisfied reactions (belonging to a subgraph) and prunes

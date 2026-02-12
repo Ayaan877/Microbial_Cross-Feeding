@@ -1,5 +1,6 @@
 from Bio.KEGG import REST
 import pandas as pd
+import numpy as np
 import time
 from tqdm import tqdm
 import pickle
@@ -116,8 +117,10 @@ def build_stoich_matrix(reaction_ids, sleep_time=0.1):
 
     # Build DataFrame
     stoich_matrix = pd.DataFrame(
-        0, index=sorted(all_metabolites), columns=reaction_stoich.keys()
-    )
+        data=np.zeros((len(all_metabolites), len(reaction_stoich))),
+        index=sorted(all_metabolites),
+        columns=list(reaction_stoich.keys()))
+    
     for rxn, stoich in reaction_stoich.items():
         for met, coeff in stoich.items():
             stoich_matrix.loc[met, rxn] = coeff

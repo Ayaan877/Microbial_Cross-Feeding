@@ -3,8 +3,7 @@ from satisfiability_check import markSatMetsRxns
 
 def giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, coreTBP):
     """
-    Takes in the stoichiometric matrix in the form of a reaction 
-    and product matrix, along with a sum vector mentioning the 
+    Takes in the stoichiometric matrix along with a sum vector mentioning the 
     number of reactants in each reaction in the matrix. Also takes
     in a set of nutrients available in the medium and a set of currency
     metabolites. Receives information about which core molecule must
