@@ -14,4 +14,4 @@ source venv/bin/activate
 
 TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
-python run_target.py $TARGET
+python parallel_network_generation.py $TARGET
