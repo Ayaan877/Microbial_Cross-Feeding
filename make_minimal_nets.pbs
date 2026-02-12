@@ -15,10 +15,6 @@ module load libs/OpenBlas-0.3.20
 
 source venv/bin/activate
 
-pip uninstall numpy -y
-
-pip install --no-binary=numpy numpy
-
 TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
 python parallel_network_generation.py $TARGET
