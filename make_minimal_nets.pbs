@@ -9,7 +9,6 @@
 
 cd $PBS_O_WORKDIR
 
-module purge
 module load compiler/python3.11.9
 module load libs/liblapack-3.10.1
 
