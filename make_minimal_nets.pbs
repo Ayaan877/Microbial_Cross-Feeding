@@ -9,6 +9,7 @@
 
 cd $PBS_O_WORKDIR
 
+module purge
 module load compiler/anaconda3-23.07.0 
 
 source venv/bin/activate
