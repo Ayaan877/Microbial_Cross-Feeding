@@ -9,6 +9,8 @@
 
 cd $PBS_O_WORKDIR
 
+module load compiler/anaconda3-23.07.0 
+
 source venv/bin/activate
 
 TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
