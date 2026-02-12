@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N MinNet
 #PBS -l select=1:ncpus=5:mem=16gb
-#PBS -l walltime=01:00:00
+#PBS -l walltime=05:00:00
 #PBS -J 1-8
 #PBS -o logs/
 #PBS -e logs/
@@ -9,6 +9,6 @@
 cd $PBS_O_WORKDIR
 module load python
 
-TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" targets.txt)
+TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
 python run_target.py $TARGET
