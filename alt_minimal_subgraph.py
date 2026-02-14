@@ -2,11 +2,14 @@ import numpy as np
 from prune_check import isCoreProduced
 
 def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
-                        coreProdRxns, coreTBP, nutrientSet, Currency,
+                        coreProdRxns, coreTBP, nutrientSet, Currency, rng=None,
                         init_frac=0.5):
     """
     Wrapper for batch-based pruning followed by single-reaction cleanup.
     """
+    if rng is None:
+        rng = np.random.default_rng()
+
     currSatRxnVec = np.copy(satRxnVec)
     fail_count = 0
     max_fails = 3
@@ -27,7 +30,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
         # Batchwise Reaction Removal Phase
         # ------------------------------------------------
         if batch_size > 1:
-            batch = np.random.choice(currRxns, size=batch_size, replace=False)
+            batch = rng.choice(currRxns, size=batch_size, replace=False)
 
             if isCoreProduced(batch, currSatRxnVec, rxnMat, prodMat, sumRxnVec,
                             coreProdRxns, nutrientSet, Currency, coreTBP):
@@ -48,7 +51,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
         else:
             removed_any = False
 
-            for rxn in currRxns:
+            for rxn in rng.permutation(currRxns):
                 if isCoreProduced([rxn], currSatRxnVec, rxnMat, prodMat,
                                 sumRxnVec, coreProdRxns,
                                 nutrientSet, Currency, coreTBP):
