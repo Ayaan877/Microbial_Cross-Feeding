@@ -21,8 +21,8 @@ if __name__ == "__main__":
     variants = generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec, Energy, 
                                         Currency, n_variants=5, n_cores=5)
 
-    with open(f"{target_id}_MinNetworks.pkl", "wb") as f:
+    with open(f"{target_id}_MinNets.pkl", "wb") as f:
         pickle.dump({"target": target, "target_id": target_id, "variants": variants}, f)
 
-    print(f"Saved {len(variants)} variants to {target_id}_MinNetworks.pkl")
+    print(f"Saved {len(variants)} variants to {target_id}_MinNets.pkl")
     print("Finished.")
