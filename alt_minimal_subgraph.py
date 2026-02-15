@@ -24,7 +24,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
             break
 
         batch_size = max(1, int(n_curr * batch_frac))
-        print(f"[batch] Current size={n_curr}, batch_size={batch_size}")
+        # print(f"[batch] Current size={n_curr}, batch_size={batch_size}")
 
         # ------------------------------------------------
         # Batchwise Reaction Removal Phase
@@ -35,7 +35,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
             if isCoreProduced(batch, currSatRxnVec, rxnMat, prodMat, sumRxnVec,
                             coreProdRxns, nutrientSet, Currency, coreTBP):
 
-                print(f"[batch] Removing batch of {batch_size}")
+                print(f"Removing batch of {batch_size}")
                 currSatRxnVec[batch] = 0
                 fail_count = 0
 
@@ -60,7 +60,8 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
                     removed_any = True
 
             if not removed_any:
-                print("[single] No more removable reactions → terminating.")
+                print("No more removable reactions → terminating.")
+                print(f'Minimal network size = {len(np.nonzero(currSatRxnVec)[0])}')
                 break
     
     return np.nonzero(currSatRxnVec)[0]
