@@ -18,7 +18,7 @@ TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
 python parallel_network_generation.py $TARGET
 
-mkdir -p MinNets_2
-mv *_MinNetworks.pkl MinNets_2/
+mkdir -p MinNets_3
+mv *_MinNetworks.pkl MinNets_3/
 
 echo "Finished job for target: $TARGET at $(date)"
