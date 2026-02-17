@@ -75,24 +75,3 @@ rxnMat = (rho != 0) * 1
 prodMat = (pi != 0) * 1
 sumRxnVec = np.sum(rxnMat, axis = 1)
 sumProdVec = np.sum(prodMat, axis = 1)
-
-# #-------------------------------------------------------------------------
-# # Check for non-reversible reactions
-# #-------------------------------------------------------------------------
-
-# from collections import defaultdict
-
-# # Group reactions by their base KEGG ID (remove suffix)
-# rxn_groups = defaultdict(list)
-# for rxn_id in reactions:  # "reactions" = stoich_matrix.columns.tolist()
-#     base_id = rxn_id[:-2]  # strip "_f" or "_r"
-#     rxn_groups[base_id].append(rxn_id)
-
-# # Keep only those that have a single direction (irreversible)
-# non_reversible_rxns = [rxns[0] for rxns in rxn_groups.values() if len(rxns) == 1]
-
-# # Get their internal indices
-# non_reversible_indices = [rxn_map[rxn_id] for rxn_id in non_reversible_rxns]
-
-# print("Number of non-reversible reactions:", len(non_reversible_rxns))
-# print("Example KEGG IDs:", non_reversible_rxns)

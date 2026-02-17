@@ -2,7 +2,7 @@ import sys
 import pickle
 import time
 from datetime import datetime
-from singly_generated_subgraphs import generate_pruned_networks
+from generate_single_pruning_variants import generate_pruned_networks
 from load_data import *
 
 with open("inv_met_map.pkl", "rb") as f:
