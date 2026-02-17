@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N MinNet_BatchPruning
 #PBS -q cpu
-#PBS -l select=1:ncpus=5:mem=32gb
+#PBS -l select=1:ncpus=4:mem=32gb
 #PBS -l walltime=10:00:00
 #PBS -J 1-8
 #PBS -o logs/

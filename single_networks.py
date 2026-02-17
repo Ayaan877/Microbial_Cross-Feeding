@@ -20,7 +20,7 @@ if __name__ == "__main__":
     print(f"Target ID: {target_id}")
 
     variants = generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec, Energy, 
-                                        Currency, n_variants=5, n_cores=5)
+                                        Currency, n_variants=4, n_cores=4)
 
     if variants:
         with open(f"{target_id}_Single_MinNets.pkl", "wb") as f:
