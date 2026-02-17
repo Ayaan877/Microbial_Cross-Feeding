@@ -1,6 +1,8 @@
 # Cost-Benefit Trade-offs of Metabolite Exchange in Obligately Dependent Cross-Feeding Microbial Pairs
 
-## Thesis Project by Ayaan Dutt, under the guidance of Prof. Sandeep Krishna and Prof. Gautam Menon
+## Thesis Project by Ayaan Dutt, BSc (Hons.) Physics, Ashoka University
+
+Under the guidance of Prof. Sandeep Krishna (NCBS) and Prof. Gautam Menon (Ashoka University)
 
 ### Abstract
 
