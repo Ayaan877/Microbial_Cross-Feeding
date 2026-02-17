@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     if variants:
         with open(f"{target_id}_MinNets.pkl", "wb") as f:
-            pickle.dump({"target": target, "target_id": target_id, "variants": variants}, f)
+            pickle.dump(variants, f)
 
         print(f"Saved {len(variants)} variants to {target_id}_MinNets.pkl")
     else:
