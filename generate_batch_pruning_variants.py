@@ -13,9 +13,8 @@ def single_variant(args):
 
     rng = np.random.default_rng(seed)
 
-    return randMinNetwork(
-        satRxns, rxnMat, prodMat, sumRxnVec,
-        [], target, Energy, Currency, rng=rng)
+    return randMinNetwork(satRxns, rxnMat, prodMat, sumRxnVec,
+                          target, Energy, Currency, rng=rng)
 
 def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
                              Energy, Currency, n_variants, n_cores):
@@ -56,7 +55,7 @@ def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
 #     (satRxns, rxnMat, prodMat, sumRxnVec, target, Energy, Currency) = args
 
 #     return randMinNetwork(satRxns, rxnMat, prodMat, sumRxnVec, 
-#                             [], target, Energy, Currency)
+#                           target, Energy, Currency)
 
 
 # def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec, Energy, 
@@ -88,7 +87,8 @@ def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
 #     target_id = inv_met_map[target]
 #     variants = []
 #     for _ in range(n_variants):
-#         min_rxns = randMinNetwork(satRxns, rxnMat, prodMat, sumRxnVec, [], target, Energy, Currency)
+#         min_rxns = randMinNetwork(satRxns, rxnMat, prodMat, sumRxnVec,
+#                                   target, Energy, Currency)
 #         variants.append(min_rxns)
 
 #     with open(f"{target_id}_MinNetworks.pkl", "wb") as f:

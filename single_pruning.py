@@ -2,7 +2,7 @@ import numpy as np
 from prune_check import isCoreProduced
 
 def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec, 
-                  coreProdRxns, coreTBP, nutrientSet, Currency, rng=None):
+                   coreTBP, nutrientSet, Currency, rng=None):
     """
     Takes in a set of satisfied reactions (belonging to a subgraph) and prunes
     it down to a minimal subgraph by randomly removing singly removable reactions.

@@ -13,9 +13,8 @@ def single_variant(args):
 
     rng = np.random.default_rng(seed)
 
-    return randMinNetwork(
-        satRxns, rxnMat, prodMat, sumRxnVec,
-        [], target, Energy, Currency, rng=rng)
+    return randMinNetwork(satRxns, rxnMat, prodMat, sumRxnVec,
+                          target, Energy, Currency, rng=rng)
 
 def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
                              Energy, Currency, n_variants, n_cores):

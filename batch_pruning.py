@@ -2,8 +2,7 @@ import numpy as np
 from prune_check import isCoreProduced
 
 def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
-                        coreProdRxns, coreTBP, nutrientSet, Currency, rng=None,
-                        init_frac=0.5):
+                   coreTBP, nutrientSet, Currency, rng=None, init_frac=0.5):
     """
     Wrapper for batch-based pruning followed by single-reaction cleanup.
     """
@@ -67,7 +66,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
 
 
 # def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
-#                         coreProdRxns, coreTBP, nutrientSet, Currency,
+#                    coreTBP, nutrientSet, Currency,
 #                         init_frac=0.5, min_size=5):
 #     """
 #     Batch-based pruning: start by removing a large random batch (e.g., 50%),
@@ -96,8 +95,8 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
 #         batch = np.random.choice(currRxns, size=batch_size, replace=False)
 
 #         # Try removing batch
-#         if isCoreProduced(batch, currSatRxnVec, rxnMat, prodMat, sumRxnVec,
-#                           coreProdRxns, nutrientSet, Currency, coreTBP):
+#         if isCoreProduced(batch, currSatRxnVec, rxnMat, prodMat, sumRxnVec, 
+#                           nutrientSet, Currency, coreTBP):
 #             print(f"[batch] Removing batch of {batch_size}")
 #             currSatRxnVec[batch] = 0
 #             fail_count = 0
@@ -128,7 +127,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
 
 #         for rxn in currRxns:
 #             if isCoreProduced([rxn], currSatRxnVec, rxnMat, prodMat, sumRxnVec,
-#                               coreProdRxns, nutrientSet, Currency, coreTBP):
+#                               nutrientSet, Currency, coreTBP):
 #                 # print(f"[cleanup] Removing leftover singly-removable reaction {rxn}")
 #                 currSatRxnVec[rxn] = 0
 #                 changed = True

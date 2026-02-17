@@ -28,7 +28,7 @@ def isCoreProduced(remRxns, satRxns, rxnMat, prodMat, sumRxnVec,
 #-------------------------------------------------------------------------
 
 def isFitterSubset(remRxns, satRxns, rxnMat, prodMat, sumRxnVec, 
-                   coreProdRxns, nutrientSet, Currency, coreTBP, stoich_matrix, Energy):
+                   nutrientSet, Currency, coreTBP, stoich_matrix, Energy):
     
     tempSatMets, tempSatRxns = prunedSatsMets(remRxns, satRxns, rxnMat, prodMat, sumRxnVec, 
                                               nutrientSet, Currency)
