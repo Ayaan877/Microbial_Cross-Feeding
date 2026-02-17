@@ -32,8 +32,8 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
         if batch_size > 1:
             batch = rng.choice(currRxns, size=batch_size, replace=False)
 
-            if isCoreProduced(batch, currSatRxnVec, rxnMat, prodMat, sumRxnVec,
-                            coreProdRxns, nutrientSet, Currency, coreTBP):
+            if isCoreProduced(batch, currSatRxnVec, rxnMat, prodMat, 
+                              sumRxnVec, nutrientSet, Currency, coreTBP):
 
                 print(f"Removing batch of {batch_size}")
                 currSatRxnVec[batch] = 0
@@ -53,8 +53,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
 
             for rxn in rng.permutation(currRxns):
                 if isCoreProduced([rxn], currSatRxnVec, rxnMat, prodMat,
-                                sumRxnVec, coreProdRxns,
-                                nutrientSet, Currency, coreTBP):
+                                  sumRxnVec, nutrientSet, Currency, coreTBP):
 
                     currSatRxnVec[rxn] = 0
                     removed_any = True

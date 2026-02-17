@@ -2,7 +2,7 @@ import numpy as np
 from satisfiability_check import markSatMetsRxns
 
 def prunedSatsMets(remRxns, satRxns, rxnMat, prodMat, sumRxnVec, 
-                   coreProdRxns, nutrientSet, Currency, coreTBP):
+                   nutrientSet, Currency):
     # Creating a temporary set of reactions with
     # some reactions pruned.
     tempSatRxns = np.copy(satRxns)
@@ -10,15 +10,15 @@ def prunedSatsMets(remRxns, satRxns, rxnMat, prodMat, sumRxnVec,
     
     # Calculating the marked set of reactions from the temporary set.
     return markSatMetsRxns(tempSatRxns, rxnMat, prodMat, sumRxnVec, 
-                            nutrientSet, Currency)
+                           nutrientSet, Currency)
 
 #-------------------------------------------------------------------------
 
 def isCoreProduced(remRxns, satRxns, rxnMat, prodMat, sumRxnVec, 
-                   coreProdRxns, nutrientSet, Currency, coreTBP):
+                    nutrientSet, Currency, coreTBP):
 
     tempSatMets, tempSatRxns = prunedSatsMets(remRxns, satRxns, rxnMat, prodMat, sumRxnVec, 
-                                              coreProdRxns, nutrientSet, Currency, coreTBP)
+                                              nutrientSet, Currency)
     
     # Checking if this still produces the core molecule.
     if coreTBP in np.nonzero(tempSatMets)[0]:
@@ -31,7 +31,7 @@ def isFitterSubset(remRxns, satRxns, rxnMat, prodMat, sumRxnVec,
                    coreProdRxns, nutrientSet, Currency, coreTBP, stoich_matrix, Energy):
     
     tempSatMets, tempSatRxns = prunedSatsMets(remRxns, satRxns, rxnMat, prodMat, sumRxnVec, 
-                                              coreProdRxns, nutrientSet, Currency, coreTBP)
+                                              nutrientSet, Currency)
 
     mulFac = [1, 3, 3]
     # Checking if this still produces the core molecule, and 

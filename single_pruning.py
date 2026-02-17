@@ -21,8 +21,8 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
         # Marking out which reactions are singly removable.
         for remRxn in rng.permutation(currSatRxns):
             print(f"Checking reaction {remRxn} for removal...")
-            canRemoveVec = np.array([isCoreProduced(remRxn, currSatRxnVec, rxnMat, prodMat, sumRxnVec, 
-                                                    coreProdRxns, nutrientSet, Currency, coreTBP)]) * 1
+            canRemoveVec = np.array([isCoreProduced(remRxn, currSatRxnVec, rxnMat, prodMat, 
+                                                    sumRxnVec, nutrientSet, Currency, coreTBP)]) * 1
 
         # Keeping a list of what is removable.
         removableMets = currSatRxns[ np.where( canRemoveVec ) ]
@@ -41,8 +41,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
         # Calling a vector of reaction that can be removed.
         for remRxn in removalOrder:
             if isCoreProduced(remRxn, currSatRxnVec, rxnMat, prodMat, 
-                              sumRxnVec, coreProdRxns, nutrientSet, 
-                              Currency, coreTBP):
+                              sumRxnVec, nutrientSet, Currency, coreTBP):
                 currSatRxnVec[remRxn] = 0
             else:
                 break
