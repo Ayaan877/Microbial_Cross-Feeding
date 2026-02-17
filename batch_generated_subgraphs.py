@@ -1,6 +1,6 @@
 from datetime import datetime
 from reverse_scope import giveRevScope
-from alt_minimal_subgraph import randMinNetwork
+from batch_pruning import randMinNetwork
 from multiprocessing import Pool
 import numpy as np
 import time

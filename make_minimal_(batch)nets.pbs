@@ -1,0 +1,21 @@
+#!/bin/bash
+#PBS -N MinNet
+#PBS -q cpu
+#PBS -l select=1:ncpus=10:mem=32gb
+#PBS -l walltime=10:00:00
+#PBS -J 1-8
+#PBS -o logs/
+#PBS -e logs/
+
+cd $PBS_O_WORKDIR
+
+module purge
+module load compiler/anaconda3-23.07.0
+
+source venv/bin/activate
+
+TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
+
+python batch_networks.py $TARGET
+
+echo "Finished job for target: $TARGET at $(date)"

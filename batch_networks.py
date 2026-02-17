@@ -2,7 +2,7 @@ import sys
 import pickle
 import time
 from datetime import datetime
-from generate_subgraphs import generate_pruned_networks
+from batch_generated_subgraphs import generate_pruned_networks
 from load_data import *
 
 with open("inv_met_map.pkl", "rb") as f:
@@ -23,10 +23,10 @@ if __name__ == "__main__":
                                         Currency, n_variants=5, n_cores=10)
 
     if variants:
-        with open(f"{target_id}_MinNets.pkl", "wb") as f:
+        with open(f"{target_id}_Batch_MinNets.pkl", "wb") as f:
             pickle.dump(variants, f)
 
-        print(f"Saved {len(variants)} variants to {target_id}_MinNets.pkl")
+        print(f"Saved {len(variants)} variants to {target_id}_Batch_MinNets.pkl")
     else:
         print(f"No variants generated for {target_id}")
 
