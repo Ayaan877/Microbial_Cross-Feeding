@@ -16,6 +16,6 @@ source venv/bin/activate
 
 TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
-python single_networks.py $TARGET single
+python save_minimal_paths.py $TARGET single
 
 echo "Finished job for target: $TARGET at $(date)"
