@@ -1,6 +1,5 @@
 from datetime import datetime
 from reverse_scope import giveRevScope
-from batch_pruning import randMinNetwork
 from multiprocessing import Pool
 import numpy as np
 import time
@@ -9,7 +8,7 @@ import time
 
 def single_variant(args):
     (satRxns, rxnMat, prodMat, sumRxnVec,
-     target, Energy, Currency, seed) = args
+     target, Energy, Currency, seed, randMinNetwork) = args
 
     rng = np.random.default_rng(seed)
 
@@ -17,12 +16,9 @@ def single_variant(args):
                           target, Energy, Currency, rng=rng)
 
 def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
-                             Energy, Currency, n_variants, n_cores):
+                             Energy, Currency, n_variants, n_cores, randMinNetwork):
 
-    satMets, satRxns = giveRevScope(
-        rxnMat, prodMat, sumRxnVec,
-        Energy, Currency, target
-    )
+    satMets, satRxns = giveRevScope(rxnMat, prodMat, sumRxnVec, Energy, Currency, target)
 
     unique_nets = set()
     attempts = 0
@@ -33,7 +29,7 @@ def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
         seeds = np.random.randint(0, 10**9, size=n_cores)
 
         variant_args = [(satRxns, rxnMat, prodMat, sumRxnVec,
-                        target, Energy, Currency, seed)
+                        target, Energy, Currency, seed, randMinNetwork)
                         for seed in seeds]
         
         start = time.time()

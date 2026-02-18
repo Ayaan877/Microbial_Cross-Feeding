@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N MinNet_BatchPruning
+#PBS -N MinNet_Batch
 #PBS -q cpu
 #PBS -l select=1:ncpus=4:mem=32gb
 #PBS -l walltime=10:00:00
@@ -16,6 +16,6 @@ source venv/bin/activate
 
 TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
-python batch_networks.py $TARGET
+python save_minimal_paths.py $TARGET batch
 
 echo "Finished job for target: $TARGET at $(date)"
