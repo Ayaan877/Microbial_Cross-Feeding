@@ -27,8 +27,13 @@ def load_paths(mode):
     all_targets = []
 
     for file in target_files:
-        with open(file, "rb") as f:
+        with open(f"MinNets_3/{file}", "rb") as f:
             variants = pickle.load(f)
-            all_targets.append(variants)
+            all_targets.append(list(variants.values())[-1])
 
     return all_targets
+
+if __name__ == "__main__":
+    mode = "batch"
+    all_paths = load_paths(mode=mode)
+    print(all_paths)
