@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N MinNet_Single
+#PBS -N MinNet_SimpleSingle
 #PBS -q cpu
 #PBS -l select=1:ncpus=4:mem=32gb
 #PBS -l walltime=20:00:00
