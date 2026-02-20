@@ -2,7 +2,6 @@ import sys
 import pickle
 import time
 from datetime import datetime
-from generate_variants import generate_pruned_networks
 from load_data import *
 
 with open("inv_met_map.pkl", "rb") as f:
@@ -23,10 +22,12 @@ if __name__ == "__main__":
 
     if mode == "batch":
         from batch_pruning import randMinNetwork
+        from generate_variants_parallel import generate_pruned_networks
         output_file = f"{target_id}_Batch_MinNets.pkl"
 
     elif mode == "single":
         from single_pruning import randMinNetwork
+        from generate_variants_serial import generate_pruned_networks
         output_file = f"{target_id}_Single_MinNets.pkl"
 
     else:

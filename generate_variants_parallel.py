@@ -4,9 +4,10 @@ from multiprocessing import Pool
 import numpy as np
 import time
 
-#### PARALLEL COMPUTATION WITH UNIQUENESS ####
-
 def single_variant(args):
+    '''
+    Multiprocessing worker function for each variant
+    '''
     (satRxns, rxnMat, prodMat, sumRxnVec,
      target, Energy, Currency, seed, randMinNetwork) = args
 
@@ -17,6 +18,10 @@ def single_variant(args):
 
 def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
                              Energy, Currency, n_variants, n_cores, randMinNetwork):
+    '''
+    Generates minimal subgraphs for each core molecule, using parallel computation.
+    Returns: A list of unique pathways from the medium to the precursor. 
+    '''
 
     satMets, satRxns = giveRevScope(rxnMat, prodMat, sumRxnVec, Energy, Currency, target)
 
