@@ -33,9 +33,10 @@ def isAllCoreProduced(remRxns, satRxns, rxnMat, prodMat, sumRxnVec,
     tempSatMets, tempSatRxns = prunedSatsMets(remRxns, satRxns, rxnMat, prodMat, sumRxnVec, 
                                               nutrientSet, Currency)
 
-    if np.all(tempSatMets[coreTBPs] == 1):
-        return True
-    return False
+    for coreTBP in coreTBPs:
+        if coreTBP not in np.nonzero(tempSatMets)[0]:
+            return False
+    return True
 
 #-------------------------------------------------------------------------
 

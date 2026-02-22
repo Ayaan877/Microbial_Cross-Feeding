@@ -1,6 +1,7 @@
 import sys
 import pickle
 import time
+from pathlib import Path
 from datetime import datetime
 from load_data import *
 
@@ -24,11 +25,15 @@ if __name__ == "__main__":
         from batch_pruning import randMinNetwork
         from generate_variants_parallel import generate_pruned_networks
         output_file = f"{target_id}_Batch_MinNets.pkl"
+        output_dir = Path(f"MinNets6_Batch")
+        output_dir.mkdir(exist_ok=True)
 
     elif mode == "single":
         from simple_single_pruning import randMinNetwork
         from generate_variants_parallel import generate_pruned_networks
         output_file = f"{target_id}_SimpleSingle_MinNets.pkl"
+        output_dir = Path("MinNets6_Single")
+        output_dir.mkdir(exist_ok=True)
 
     else:
         raise ValueError("Mode must be 'batch' or 'single'")
@@ -37,7 +42,8 @@ if __name__ == "__main__":
                                         n_variants=4, n_cores=4, randMinNetwork=randMinNetwork)
 
     if variants:
-        with open(output_file, "wb") as f:
+        output_path = output_dir / output_file
+        with open(output_path, "wb") as f:
             pickle.dump(variants, f)
 
         print(f"Saved {len(variants)} variants to {output_file}")

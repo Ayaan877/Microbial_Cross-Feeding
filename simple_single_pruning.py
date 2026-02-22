@@ -27,6 +27,12 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
         # Randomize order for stochastic minimal networks
         removalOrder = rng.permutation(currSatRxns)
 
+        n = len(removalOrder)
+        print('Checking reactions in random order for removability...', flush=True)
+        for i, remRxn in enumerate(removalOrder, 1):
+            if i == 1 or i % 100 == 0 or i == n:
+                print(f"[Sweep {count}] {100*i/n:.1f}%", flush=True)
+
         for remRxn in removalOrder:
             # print(f"Checking if reaction {remRxn} is removable...", flush=True)
 
@@ -37,7 +43,6 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
 
                 currSatRxnVec[remRxn] = 0
                 removed_any = True
-                print(f"Removed reaction {remRxn}", flush=True)
         
         # If we completed a full pass with no removals → minimal
         if not removed_any:

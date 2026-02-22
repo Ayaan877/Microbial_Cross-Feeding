@@ -2,7 +2,7 @@
 #PBS -N MinNet_SimpleSingle
 #PBS -q cpu
 #PBS -l select=1:ncpus=4:mem=32gb
-#PBS -l walltime=20:00:00
+#PBS -l walltime=30:00:00
 #PBS -J 1-8
 #PBS -o logs/
 #PBS -e logs/
