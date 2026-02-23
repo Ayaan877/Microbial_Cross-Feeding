@@ -1,4 +1,5 @@
 import numpy as np
+import time
 from prune_check import isCoreProduced
 
 ### Serial Algorithm ###
@@ -14,6 +15,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
         rng = np.random.default_rng()
 
     currSatRxnVec = np.copy(satRxnVec)
+    print(f"Starting simple single pruning (Ayaan's version)...", flush=True)
     count = 0
 
     while True:
@@ -28,23 +30,23 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
         removalOrder = rng.permutation(currSatRxns)
 
         n = len(removalOrder)
-        print('Checking reactions in random order for removability...', flush=True)
+        print(f'[Sweep {count}] Checking reactions in random order for removability...', flush=True)
+        removed = 0
+        start = time.time()
         for i, remRxn in enumerate(removalOrder, 1):
-            if i == 1 or i % 100 == 0 or i == n:
-                print(f"[Sweep {count}] {100*i/n:.1f}%", flush=True)
-
-        for remRxn in removalOrder:
-            # print(f"Checking if reaction {remRxn} is removable...", flush=True)
-
-            if isCoreProduced(remRxn, currSatRxnVec,
-                              rxnMat, prodMat,
-                              sumRxnVec, nutrientSet,
-                              Currency, coreTBP):
+            if isCoreProduced(remRxn, currSatRxnVec, rxnMat, prodMat, 
+                              sumRxnVec, nutrientSet, Currency, coreTBP):
 
                 currSatRxnVec[remRxn] = 0
                 removed_any = True
-        
+                removed += 1
+
+            if i == 1 or i % 100 == 0 or i == n:
+                print(f"[Sweep {count}] {100*i/n:.1f}%, Time elapsed: {time.time() - start:.2f}s", flush=True)
+
+        print(f"[Sweep {count}] Removed {removed} reactions this sweep.", flush=True)
         # If we completed a full pass with no removals → minimal
         if not removed_any:
-            print("[randMinSubnet] Finished. Minimal subset achieved.", flush=True)
-            return np.nonzero(currSatRxnVec)[0]
+            print("No more removable reactions → terminating.", flush=True)
+            print(f'Minimal network size = {len(currSatRxns)}', flush=True)
+            return currSatRxns

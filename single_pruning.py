@@ -26,13 +26,14 @@ def  randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
         rng = np.random.default_rng()
 
     currSatRxnVec = np.copy(satRxnVec)
+    print(f"Starting single pruning (Akshit's version)...", flush=True)
 
     with Pool(processes=nprocs) as pool:
-
+        count = 0
         while True:
-
+            count += 1
             currSatRxns = np.nonzero(currSatRxnVec)[0]
-            print(f"[randMinSubnet] Current size: {len(currSatRxns)}", flush=True)
+            print(f"[Sweep {count}] Current size: {len(currSatRxns)}", flush=True)
 
             # Parallel removal check for each reaction in the current subgraph
             args_iterable = [
@@ -45,19 +46,24 @@ def  randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
 
             removableRxns = currSatRxns[np.where(canRemoveVec)[0]]
 
-            print(f"Removable this round: {len(removableRxns)}", flush=True)
+            print(f"[Sweep {count}] Removable this round: {len(removableRxns)}", flush=True)
 
             if len(removableRxns) == 0:
-                print("[randMinSubnet] Finished. Minimal subset achieved.", flush=True)
+                print("No more removable reactions → terminating.", flush=True)
+                print(f'Minimal network size = {len(currSatRxns)}', flush=True)
                 return currSatRxns
 
             # Sequential removal of singly removable reactions in random order
             removalOrder = rng.permutation(removableRxns)
-
+            removed = 0
+            
             for remRxn in removalOrder:
                 if isCoreProduced(remRxn, currSatRxnVec, rxnMat, prodMat,
                                   sumRxnVec, nutrientSet, Currency, coreTBP):
                     currSatRxnVec[remRxn] = 0
+                    removed += 1
+
+            print(f"[Sweep {count}] Removed {removed} reactions this round.", flush=True)
 
 ### Serial Algorithm ###
 

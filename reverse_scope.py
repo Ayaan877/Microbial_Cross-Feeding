@@ -45,7 +45,7 @@ def giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, coreTBP):
 
         # If core has been reached, checking if everything is marked, then returning.
         if np.array_equal(satRxns, rxnProc):
-            print('Everything marked.')
+            print('All reactions are satisfied.', flush=True)
             return satMets, satRxns
 
         # Calculating the new metabolites that need to be produced
@@ -55,5 +55,5 @@ def giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, coreTBP):
 
         # If the full reverse scope has been reached, stopping and returning the marked set.
         if set(np.nonzero(currScopeMets)[0]).issubset(set(np.nonzero(prevScopeMets)[0])):
-            print('Reached as far back as possible.')
+            print(f'Reverse scope complete with {np.sum(satMets)} metabolites and {np.sum(satRxns)} reactions.', flush=True)
             return satMets, satRxns      

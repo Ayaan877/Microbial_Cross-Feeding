@@ -16,8 +16,8 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
     batch_frac = init_frac
 
     while True:
-        currRxns = np.nonzero(currSatRxnVec)[0]
-        n_curr = len(currRxns)
+        currSatRxns = np.nonzero(currSatRxnVec)[0]
+        n_curr = len(currSatRxns)
 
         if n_curr == 0:
             break
@@ -29,7 +29,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
         # Batchwise Reaction Removal Phase
         # ------------------------------------------------
         if batch_size > 1:
-            batch = rng.choice(currRxns, size=batch_size, replace=False)
+            batch = rng.choice(currSatRxns, size=batch_size, replace=False)
 
             if isCoreProduced(batch, currSatRxnVec, rxnMat, prodMat, 
                               sumRxnVec, nutrientSet, Currency, coreTBP):
@@ -50,7 +50,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
         else:
             removed_any = False
 
-            for rxn in rng.permutation(currRxns):
+            for rxn in rng.permutation(currSatRxns):
                 if isCoreProduced([rxn], currSatRxnVec, rxnMat, prodMat,
                                   sumRxnVec, nutrientSet, Currency, coreTBP):
 
@@ -58,11 +58,11 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
                     removed_any = True
 
             if not removed_any:
-                print("No more removable reactions → terminating.")
-                print(f'Minimal network size = {len(np.nonzero(currSatRxnVec)[0])}')
+                print("No more removable reactions → terminating.", flush=True)
+                print(f'Minimal network size = {len(currSatRxns)}', flush=True)
                 break
     
-    return np.nonzero(currSatRxnVec)[0]
+    return currSatRxns
 
 
 # def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
@@ -84,15 +84,15 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
 #     batch_frac = init_frac
 
 #     while True:
-#         currRxns = np.nonzero(currSatRxnVec)[0]
-#         if len(currRxns) == 0:
+#         currSatRxns = np.nonzero(currSatRxnVec)[0]
+#         if len(currSatRxns) == 0:
 #             break
 
-#         batch_size = max(1, int(len(currRxns) * batch_frac))
-#         print(f"[batch] Current size={len(currRxns)}, batch_size={batch_size}")
+#         batch_size = max(1, int(len(currSatRxns) * batch_frac))
+#         print(f"[batch] Current size={len(currSatRxns)}, batch_size={batch_size}")
 
 #         # Select random batch
-#         batch = np.random.choice(currRxns, size=batch_size, replace=False)
+#         batch = np.random.choice(currSatRxns, size=batch_size, replace=False)
 
 #         # Try removing batch
 #         if isCoreProduced(batch, currSatRxnVec, rxnMat, prodMat, sumRxnVec, 
@@ -120,12 +120,12 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
 
 #     while True:
 #         changed = False
-#         currRxns = np.nonzero(currSatRxnVec)[0]
+#         currSatRxns = np.nonzero(currSatRxnVec)[0]
 
-#         if len(currRxns) == 0:
+#         if len(currSatRxns) == 0:
 #             break
 
-#         for rxn in currRxns:
+#         for rxn in currSatRxns:
 #             if isCoreProduced([rxn], currSatRxnVec, rxnMat, prodMat, sumRxnVec,
 #                               nutrientSet, Currency, coreTBP):
 #                 # print(f"[cleanup] Removing leftover singly-removable reaction {rxn}")

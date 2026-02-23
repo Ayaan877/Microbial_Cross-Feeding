@@ -59,4 +59,3 @@ if __name__ == "__main__":
 
     total_time = time.time() - start_time
     print(f"Total time: {total_time/60:.2f} minutes")
-    print("Finished.")
