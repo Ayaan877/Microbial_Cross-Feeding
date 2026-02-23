@@ -16,7 +16,7 @@ def check_removable(args):
                           sumRxnVec, nutrientSet, Currency, coreTBP)
 
 def  randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec, 
-                    coreTBP, nutrientSet, Currency, rng=None, nprocs=8):
+                    coreTBP, nutrientSet, Currency, rng=None, nprocs=32):
     """
     Takes in a set of satisfied reactions (belonging to a subgraph) and prunes
     it down to a minimal subgraph by randomly removing singly removable reactions.

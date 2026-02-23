@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     elif mode == "single":
         from single_pruning import randMinNetwork
-        from generate_variants_parallel import generate_pruned_networks
+        from generate_variants_serial import generate_pruned_networks
         output_file = f"{target_id}_Single_MinNets.pkl"
         output_dir = Path("MinNets6_Single")
         output_dir.mkdir(exist_ok=True)
