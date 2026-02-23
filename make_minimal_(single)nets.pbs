@@ -1,8 +1,8 @@
 #!/bin/bash
-#PBS -N MinNet_SimpleSingle
+#PBS -N MinNet_Single
 #PBS -q cpu
 #PBS -l select=1:ncpus=4:mem=32gb
-#PBS -l walltime=30:00:00
+#PBS -l walltime=48:00:00
 #PBS -J 1-8
 #PBS -o logs/
 #PBS -e logs/
@@ -18,4 +18,4 @@ TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
 python save_minimal_paths.py $TARGET single
 
-echo "Finished job for target: $TARGET at $(date)"
+echo "Finished single pruning job for target: $TARGET at $(date)"

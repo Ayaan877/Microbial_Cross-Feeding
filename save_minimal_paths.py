@@ -29,6 +29,13 @@ if __name__ == "__main__":
         output_dir.mkdir(exist_ok=True)
 
     elif mode == "single":
+        from single_pruning import randMinNetwork
+        from generate_variants_serial import generate_pruned_networks
+        output_file = f"{target_id}_Single_MinNets.pkl"
+        output_dir = Path("MinNets6_SimpleSingle")
+        output_dir.mkdir(exist_ok=True)
+
+    elif mode == "simple_single":
         from simple_single_pruning import randMinNetwork
         from generate_variants_parallel import generate_pruned_networks
         output_file = f"{target_id}_SimpleSingle_MinNets.pkl"
@@ -36,7 +43,7 @@ if __name__ == "__main__":
         output_dir.mkdir(exist_ok=True)
 
     else:
-        raise ValueError("Mode must be 'batch' or 'single'")
+        raise ValueError("Mode must be 'batch' or 'single' or 'simple_single'")
 
     variants = generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec, Energy, Currency,
                                         n_variants=4, n_cores=4, randMinNetwork=randMinNetwork)

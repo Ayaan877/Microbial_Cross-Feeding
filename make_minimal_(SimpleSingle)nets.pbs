@@ -1,8 +1,8 @@
 #!/bin/bash
-#PBS -N MinNet_Batch
+#PBS -N MinNet_SimpleSingle
 #PBS -q cpu
 #PBS -l select=1:ncpus=4:mem=32gb
-#PBS -l walltime=10:00:00
+#PBS -l walltime=48:00:00
 #PBS -J 1-8
 #PBS -o logs/
 #PBS -e logs/
@@ -16,6 +16,6 @@ source venv/bin/activate
 
 TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
-python save_minimal_paths.py $TARGET batch
+python save_minimal_paths.py $TARGET simple_single
 
-echo "Finished batch pruning job for target: $TARGET at $(date)"
+echo "Finished simple single pruning job for target: $TARGET at $(date)"
