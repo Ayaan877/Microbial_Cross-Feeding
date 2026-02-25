@@ -4,7 +4,7 @@ import time
 from pathlib import Path
 from datetime import datetime
 from load_paths import loadPaths
-from combine_pathways import buildAutonomousNetwork
+from generate_networks import allAutonomousNetworks
 from load_data import *
 
 if __name__ == "__main__":
@@ -14,8 +14,8 @@ if __name__ == "__main__":
     mode = sys.argv[1]
     all_paths, data_dir = loadPaths(mode=mode, dataset=5)
 
-    AutoNets = buildAutonomousNetwork(all_paths, rxnMat, prodMat, sumRxnVec, 
-                                      Energy, Currency, Core)
+    AutoNets = allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec, 
+                                     Energy, Currency, Core)
     output_file = f"AutoNets{data_dir}.pkl"
     output_dir = Path(f"AutoNets{data_dir}")
     output_dir.mkdir(exist_ok=True)
