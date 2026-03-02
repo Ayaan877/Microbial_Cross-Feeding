@@ -9,22 +9,22 @@ def single_variant(args):
     Multiprocessing worker function for each variant
     '''
     (satRxns, rxnMat, prodMat, sumRxnVec,
-     target, Energy, Currency, seed, randMinNetwork) = args
+     target, nutrientSet, Currency, seed, randMinNetwork) = args
 
     rng = np.random.default_rng(seed)
 
     return randMinNetwork(satRxns, rxnMat, prodMat, sumRxnVec,
-                          target, Energy, Currency, rng=rng)
+                          target, nutrientSet, Currency, rng=rng)
 
 def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
-                             Energy, Currency, n_variants, n_cores, randMinNetwork):
+                             nutrientSet, Currency, n_variants, n_cores, randMinNetwork):
     '''
     Generates minimal subgraphs for each core molecule, using parallel computation.
     Returns: A list of unique pathways from the medium to the precursor. 
     '''
     
     print("Running reverse scope...")
-    satMets, satRxns = giveRevScope(rxnMat, prodMat, sumRxnVec, Energy, Currency, target)
+    satMets, satRxns = giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, target)
 
     unique_nets = set()
     attempts = 0
@@ -35,7 +35,7 @@ def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
         seeds = np.random.randint(0, 10**9, size=n_cores)
 
         variant_args = [(satRxns, rxnMat, prodMat, sumRxnVec,
-                        target, Energy, Currency, seed, randMinNetwork)
+                        target, nutrientSet, Currency, seed, randMinNetwork)
                         for seed in seeds]
         
         start = time.time()

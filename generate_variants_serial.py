@@ -4,14 +4,14 @@ import numpy as np
 import time
 
 def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
-                             Energy, Currency, n_variants, n_cores, randMinNetwork):
+                             nutrientSet, Currency, n_variants, n_cores, randMinNetwork):
     '''
     Generates minimal subgraphs for each core molecule, using serial computation.
     Returns: A list of unique pathways from the medium to the precursor. 
     '''
 
     print("Running reverse scope...")
-    satMets, satRxns = giveRevScope(rxnMat, prodMat, sumRxnVec, Energy, Currency, target)
+    satMets, satRxns = giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, target)
 
     unique_nets = set()
     attempts = 0
@@ -27,7 +27,7 @@ def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
         start = time.time()
 
         net = randMinNetwork(satRxns, rxnMat, prodMat, sumRxnVec,
-                             target, Energy, Currency, rng=rng)
+                             target, nutrientSet, Currency, rng=rng)
 
         elapsed = time.time() - start
 

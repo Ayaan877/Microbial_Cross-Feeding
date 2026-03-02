@@ -17,8 +17,9 @@ Returns:
     mets: list of internal indices for all metabolites
     rxns: list of internal indices for all reactions
     Currency: list of internal indices for currency metabolites
-    Energy: list of internal indices for nutrient metabolites
+    Energy: list of internal indices for energy metabolites (ATP & NADPH)
     Core: list of internal indices for core metabolites
+    nutrientSet: list of internal indices for nutrient metabolites
 
     rho: reactant stoichiometric matrix (negative entries, others set to 0)
     pi: product stoichiometric matrix (positive entries, others set to 0)
@@ -53,12 +54,14 @@ with open(f"inv_rxn_map.pkl", "wb") as f:
 
 # Currency and nutrient metabolites
 currency_mets_idx = pd.read_csv("kegg_currency.txt", header=None)[0].tolist()
-energy_mets_idx = pd.read_csv("kegg_nutrients.txt", header=None)[0].tolist()
+energy_mets_idx = pd.read_csv("kegg_energy.txt", header=None)[0].tolist()
 core_mets_idx = pd.read_csv("kegg_core.txt", header=None)[0].tolist()
+nutrient_mets_idx = pd.read_csv("kegg_nutrients.txt", header=None)[0].tolist()
 
 Currency = [met_map[i] for i in currency_mets_idx if i in met_map]
 Energy = [met_map[i] for i in energy_mets_idx if i in met_map]
 Core = [met_map[i] for i in core_mets_idx if i in met_map]
+nutrientSet = [met_map[i] for i in nutrient_mets_idx if i in met_map]
 
 # Compound names dictionary
 mets = list(met_map.values())

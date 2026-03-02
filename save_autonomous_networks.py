@@ -15,7 +15,7 @@ if __name__ == "__main__":
     all_paths, data_dir = loadPaths(mode=mode, dataset=5)
 
     AutoNets = allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec, 
-                                     Energy, Currency, Core)
+                                     nutrientSet, Currency, Core)
     output_file = f"AutoNets{data_dir}.pkl"
     output_dir = Path(f"AutoNets{data_dir}")
     output_dir.mkdir(exist_ok=True)

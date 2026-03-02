@@ -45,7 +45,7 @@ if __name__ == "__main__":
     else:
         raise ValueError("Mode must be 'batch' or 'single' or 'simple_single'")
 
-    variants = generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec, Energy, Currency,
+    variants = generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency,
                                         n_variants=4, n_cores=4, randMinNetwork=randMinNetwork)
 
     if variants:

@@ -11,6 +11,10 @@ def giveLimitingCurrency(r, tRxn):
 
 def splitByDemand(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi, 
                  nutrientSet, Energy, Currency, Core, orgRxns):
+    '''
+    Takes a set of reactions that form a complete network (orgRxns) and 
+    calculates the energy and biomass yields based on stoichiometric demand
+    '''
     # Initializing yield counters for E and B.
     runningE, runningB = 0.0, 0.0
 
@@ -42,7 +46,11 @@ def splitByDemand(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
                                          np.abs(np.sum(r, axis = 0))[mask])
     shareMatrix[:, Currency] = -1
 
+    step = 0
+    total_rxns = int(np.sum(scopeRxns))
     while procRxnVec.any():
+        step += 1
+
         # Initializing the product metabolite state vector.
         prodState = np.zeros(len(np.transpose(stoich_matrix)))
 
