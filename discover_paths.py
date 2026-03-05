@@ -15,7 +15,7 @@ if __name__ == "__main__":
     
     mode = "batch"
 
-    target = Core[0]
+    target = Core[-1]
     target_id = inv_met_map[target]
 
     print(f"Running target: {target}")
