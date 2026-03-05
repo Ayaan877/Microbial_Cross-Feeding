@@ -1,8 +1,8 @@
 #!/bin/bash
-#PBS -N AutoNets
+#PBS -N AutoNets_Single
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
-#PBS -l walltime=200:00:00
+#PBS -l walltime=250:00:00
 #PBS -o logs/
 #PBS -e logs/
 
@@ -13,6 +13,6 @@ module load compiler/anaconda3-23.07.0
 
 source venv/bin/activate
 
-python save_autonomous_networks.py batch
+python save_autonomous_networks.py simple_single
 
 echo "Finished autonomous network generation at $(date)"

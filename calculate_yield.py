@@ -35,6 +35,7 @@ def splitByDemand(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
 
     # Figuring out which reactions can be performed at this step.
     procRxnVec = ((np.dot(rMat, metState != 0) - sumRxnVec) == 0) * 1
+    procRxnVec[scopeRxns == 0] = 0
 
     # Continuing calculation till no more reactions can be performed
     isChecked = np.zeros(len(rxnMat))
@@ -46,10 +47,7 @@ def splitByDemand(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
                                          np.abs(np.sum(r, axis = 0))[mask])
     shareMatrix[:, Currency] = -1
 
-    step = 0
-    total_rxns = int(np.sum(scopeRxns))
     while procRxnVec.any():
-        step += 1
 
         # Initializing the product metabolite state vector.
         prodState = np.zeros(len(np.transpose(stoich_matrix)))
@@ -83,7 +81,7 @@ def splitByDemand(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
                 prodState[thisMet] += shareMatrix[thisRxn, limRct] * ratio
 
             mets = np.append(rs, ps)
-            for thisMet in mets[np.where(np.in1d(mets, np.array(Core + Energy)))]:
+            for thisMet in mets[np.where(np.isin(mets, np.array(Core + Energy)))]:
                 ratio = S[thisRxn, thisMet] / S[thisRxn, limRct]
 
                 # Updating E and B if these metabolites are produced or consumed.
@@ -111,6 +109,7 @@ def splitByDemand(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
         # Recalculating performable reactions.
         procRxnVec = ((np.dot(rMat, np.sum(shareMatrix, axis = 0) != 0) - sumRxnVec) == 0) * 1
         procRxnVec[np.where(isChecked)] = 0
+        procRxnVec[scopeRxns == 0] = 0
 
     if isCoreProduced[Core].all():
         return runningE, runningB, True

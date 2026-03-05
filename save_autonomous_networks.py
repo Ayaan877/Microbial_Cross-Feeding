@@ -12,7 +12,7 @@ if __name__ == "__main__":
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
     mode = sys.argv[1]
-    all_paths, data_dir = loadPaths(mode=mode, dataset=5)
+    all_paths, data_dir = loadPaths(mode=mode, dataset=6)
 
     AutoNets = allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec, 
                                      nutrientSet, Currency, Core)
