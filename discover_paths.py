@@ -33,7 +33,7 @@ if __name__ == "__main__":
         with open(output_path, "wb") as f:
             pickle.dump(results, f)
 
-        print(f"{len(results["networks"])} variants generated in {results["attempts"][-1]} attempts")
+        print(f"{len(results['networks'])} variants generated in {results['attempts'][-1]} attempts")
 
     total_time = time.time() - start_time
     print(f"Total time: {total_time/60:.2f} minutes")
