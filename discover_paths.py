@@ -22,7 +22,7 @@ if __name__ == "__main__":
     print(f"Target ID: {target_id}")
 
     output_file = f"{target_id}_Pathways.pkl"
-    output_dir = Path(f"Num_Paths")
+    output_dir = Path(f"NumPaths_{target_id}")
     output_dir.mkdir(exist_ok=True)
 
     results = generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
