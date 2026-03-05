@@ -1,0 +1,18 @@
+#!/bin/bash
+#PBS -N PathRate
+#PBS -q cpu
+#PBS -l select=1:ncpus=8:mem=32gb
+#PBS -l walltime=100:00:00
+#PBS -o logs/
+#PBS -e logs/
+
+cd $PBS_O_WORKDIR
+
+module purge
+module load compiler/anaconda3-23.07.0
+
+source venv/bin/activate
+
+python dicover_paths.py
+
+echo "Finished path discovery rate estimation at $(date)"

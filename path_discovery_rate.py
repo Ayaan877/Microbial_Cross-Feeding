@@ -1,0 +1,75 @@
+from datetime import datetime
+from reverse_scope import giveRevScope
+from multiprocessing import Pool
+import numpy as np
+import time
+
+
+def single_variant(args):
+    '''
+    Multiprocessing worker function for each variant
+    '''
+    (satRxns, rxnMat, prodMat, sumRxnVec,
+     target, nutrientSet, Currency, seed, randMinNetwork) = args
+
+    rng = np.random.default_rng(seed)
+
+    return randMinNetwork(satRxns, rxnMat, prodMat, sumRxnVec,
+                          target, nutrientSet, Currency, rng=rng)
+
+
+def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
+                             nutrientSet, Currency, n_cores, randMinNetwork):
+
+    print("Running reverse scope...")
+    satMets, satRxns = giveRevScope(rxnMat, prodMat, sumRxnVec,
+                                    nutrientSet, Currency, target)
+
+    unique_nets = set()
+
+    attempts_list = []
+    unique_counts = []
+
+    attempt = 0
+    max_attempts = 100
+    plateau_window = 5
+    plateau_threshold = 1
+
+    while attempt < max_attempts:
+
+        attempt += 1
+        seeds = np.random.randint(0, 10**9, size=n_cores)
+
+        variant_args = [(satRxns, rxnMat, prodMat, sumRxnVec,
+                         target, nutrientSet, Currency,
+                         seed, randMinNetwork)
+                        for seed in seeds]
+
+        start = time.time()
+
+        with Pool(processes=n_cores) as pool:
+            new_nets = pool.map(single_variant, variant_args)
+
+        elapsed = time.time() - start
+
+        for net in new_nets:
+            unique_nets.add(tuple(sorted(net)))
+
+        current_count = len(unique_nets)
+
+        attempts_list.append(attempt)
+        unique_counts.append(current_count)
+
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] "
+              f"Attempt {attempt}: {elapsed:.4f}s - "
+              f"{current_count} unique networks")
+
+        if current_count > plateau_window:
+            recent_growth = unique_counts[-1] - unique_counts[-plateau_window]
+            if recent_growth <= plateau_threshold:
+                print("Unique network discovery has plateaued. Stopping...")
+                break
+
+    return {"networks": [np.array(net) for net in unique_nets], 
+            "attempts": attempts_list, 
+            "unique_counts": unique_counts}
