@@ -1,3 +1,4 @@
+import sys
 import pickle
 import time
 from pathlib import Path
@@ -9,13 +10,17 @@ from load_data import *
 with open("inv_met_map.pkl", "rb") as f:
     inv_met_map = pickle.load(f)
 
+with open("met_map.pkl", "rb") as f:
+    met_map = pickle.load(f)
+
 if __name__ == "__main__":
     start_time = time.time()
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
     mode = "batch"
 
-    target = Core[-1]
+    target_name = sys.argv[1]
+    target = met_map[target_name]
     target_id = inv_met_map[target]
 
     print(f"Running target: {target}")

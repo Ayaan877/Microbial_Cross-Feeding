@@ -1,8 +1,9 @@
 #!/bin/bash
-#PBS -N PathRate_Core8
+#PBS -N PathRates
 #PBS -q cpu
 #PBS -l select=1:ncpus=8:mem=32gb
 #PBS -l walltime=100:00:00
+#PBS -J 1-8
 #PBS -o logs/
 #PBS -e logs/
 
@@ -13,6 +14,8 @@ module load compiler/anaconda3-23.07.0
 
 source venv/bin/activate
 
-python discover_paths.py
+TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
-echo "Finished path discovery rate estimation at $(date)"
+python discover_paths.py $TARGET
+
+echo "Finished path discovery rate estimation for $TARGET at $(date)"
