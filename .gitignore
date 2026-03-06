@@ -1,7 +1,8 @@
 .venv
 test.py
-mini_test.py
+check_data.py
 reverse_scope_old.py
 __pycache__
 revScope.py
 MinNets*
+NumPaths*

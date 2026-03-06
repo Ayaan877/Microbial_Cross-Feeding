@@ -64,7 +64,7 @@ def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
               f"Attempt {attempt}: {elapsed:.4f}s - "
               f"{current_count} unique networks")
 
-        if current_count > plateau_window:
+        if len(unique_counts) > plateau_window:
             recent_growth = unique_counts[-1] - unique_counts[-plateau_window]
             if recent_growth <= plateau_threshold:
                 print("Unique network discovery has plateaued. Stopping...")
