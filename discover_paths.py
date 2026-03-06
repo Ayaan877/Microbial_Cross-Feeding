@@ -26,12 +26,12 @@ if __name__ == "__main__":
     print(f"Running target: {target}")
     print(f"Target ID: {target_id}")
 
+    results = generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
+                                        nutrientSet, Currency, n_cores=8, randMinNetwork=randMinNetwork)
+
     output_file = f"{target_id}_Pathways.pkl"
     output_dir = Path(f"NumPaths")
     output_dir.mkdir(exist_ok=True)
-
-    results = generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
-                                        nutrientSet, Currency, n_cores=8, randMinNetwork=randMinNetwork)
 
     if results:
         output_path = output_dir / output_file
