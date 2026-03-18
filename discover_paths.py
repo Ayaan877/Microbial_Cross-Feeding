@@ -25,9 +25,9 @@ if __name__ == "__main__":
     output_dir.mkdir(exist_ok=True)
     output_path = output_dir / output_file
 
-    results = generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
-                                        nutrientSet, Currency, n_cores=8, randMinNetwork=randMinNetwork,
-                                        save_path=output_path)
+    results = generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec, nutrientSet, 
+                                       Currency, n_cores=8, randMinNetwork=randMinNetwork,
+                                       save_path=output_path)
 
     if results:
         print(f"{len(results['networks'])} variants generated in {results['attempts'][-1]} attempts")
