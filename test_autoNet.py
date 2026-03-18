@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     start = time.time()
     MinNet = buildAutonomousNetwork(paths, rxnMat, prodMat, sumRxnVec, 
-                                    nutrientSet, Currency, Core, prune=True)
+                                    nutrientSet, Currency, Core, prune=False)
     print(f"Time taken: {(time.time() - start)} seconds")
 
     with open('MinNet_test.pkl', "wb") as f:

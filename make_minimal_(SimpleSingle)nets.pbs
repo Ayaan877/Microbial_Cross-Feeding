@@ -16,6 +16,6 @@ source venv/bin/activate
 
 TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
-python save_minimal_paths.py $TARGET simple_single
+python make_minimal_paths.py $TARGET simple_single
 
 echo "Finished simple single pruning job for target: $TARGET at $(date)"

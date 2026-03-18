@@ -21,9 +21,9 @@ if __name__ == "__main__":
     satMets, satRxns = giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, target)
     print(f"Reverse scope complete, with {np.sum(satRxns)} satisfied reactions. Starting pruning...")
 
-    RS_rxns = randMinNetwork(satRxns, rxnMat, prodMat, sumRxnVec, target, 
-                             nutrientSet, Currency, rng=np.random.default_rng(42))
-    rxn_ids = [inv_rxn_map[idx] for idx in RS_rxns]
+    min_rxns = randMinNetwork(satRxns, rxnMat, prodMat, sumRxnVec, 
+                             target, nutrientSet, Currency)
+    rxn_ids = [inv_rxn_map[idx] for idx in min_rxns]
 
     print("\nPrecursor Name:", target_id, target_name)
     print("Satisfied Metabolites:", np.sum(satMets))
