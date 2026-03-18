@@ -11,16 +11,27 @@ if __name__ == "__main__":
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
     mode = sys.argv[1]
+    pruning = sys.argv[2].lower()
     all_paths, data_dir = loadPaths(mode=mode, dataset=6)
 
-    output_file = f"AutoNets{data_dir}.pkl"
-    output_dir = Path(f"AutoNets{data_dir}Prune")
-    output_dir.mkdir(exist_ok=True)
-    output_path = output_dir / output_file
+    if pruning == "prune":
+        output_file = f"AutoNets{data_dir}.pkl"
+        output_dir = Path(f"AutoNets{data_dir}_P")
+        output_dir.mkdir(exist_ok=True)
+        output_path = output_dir / output_file
 
-    AutoNets = allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec, 
-                                     nutrientSet, Currency, Core, n_processes=32,
-                                     save_path=output_path, prune=True)
+        AutoNets = allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec, 
+                                        nutrientSet, Currency, Core, prune=True, 
+                                        n_processes=32, save_path=output_path)
+    if pruning == "noprune":
+        output_file = f"AutoNets{data_dir}.pkl"
+        output_dir = Path(f"AutoNets{data_dir}_NP")
+        output_dir.mkdir(exist_ok=True)
+        output_path = output_dir / output_file
+
+        AutoNets = allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec, 
+                                        nutrientSet, Currency, Core, prune=False, 
+                                        n_processes=32, save_path=output_path)
 
     if AutoNets:
         print(f"Saved {len(AutoNets)} autonomous networks to {output_file}")

@@ -13,6 +13,6 @@ module load compiler/anaconda3-23.07.0
 
 source venv/bin/activate
 
-python save_autonomous_networks.py batch
+python save_autonomous_networks.py batch prune
 
 echo "Finished autonomous network generation at $(date)"

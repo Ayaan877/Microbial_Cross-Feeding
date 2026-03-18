@@ -50,8 +50,8 @@ def  randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
 
             if len(removableRxns) == 0:
                 print("No more removable reactions → terminating.", flush=True)
-                print(f'Minimal network size = {len(currSatRxns)}', flush=True)
-                return currSatRxns
+                print(f'Minimal network size = {len(np.nonzero(currSatRxnVec)[0])}', flush=True)
+                return np.nonzero(currSatRxnVec)[0]
 
             # Sequential removal of singly removable reactions in random order
             removalOrder = rng.permutation(removableRxns)
@@ -99,7 +99,7 @@ def  randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
 #         # Quitting with what we have
 #         if len(removableMets) == 0:
 #             print("[randMinSubnet] Finished. Minimal subset achieved.", flush=True)
-#             return currSatRxns
+#             return np.nonzero(currSatRxnVec)[0]
 
 #         # Randomly permuting the singly removable reactions.
 #         removalOrder = rng.permutation(removableMets)

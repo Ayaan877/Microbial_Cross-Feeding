@@ -48,5 +48,5 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
         # If we completed a full pass with no removals → minimal
         if not removed_any:
             print("No more removable reactions → terminating.", flush=True)
-            print(f'Minimal network size = {len(currSatRxns)}', flush=True)
-            return currSatRxns
+            print(f'Minimal network size = {len(np.nonzero(currSatRxnVec)[0])}', flush=True)
+            return np.nonzero(currSatRxnVec)[0]

@@ -62,7 +62,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
                 print(f'Minimal network size = {len(currSatRxns)}', flush=True)
                 break
     
-    return currSatRxns
+    return np.nonzero(currSatRxnVec)[0]
 
 
 # def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
