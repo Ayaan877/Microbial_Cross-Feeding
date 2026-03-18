@@ -1,7 +1,7 @@
 import numpy as np
 import pickle
 import itertools
-from multiprocessing import cpu_count, Pool
+from multiprocessing import Pool
 from combine_pathways import buildAutonomousNetwork
 
 def process_network(args):
