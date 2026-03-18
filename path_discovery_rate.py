@@ -37,47 +37,47 @@ def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
     plateau_window = 5
     plateau_threshold = 2  # Stop if we find <= 2 new unique networks in the last 5 attempts
 
-    while attempt < max_attempts:
+    with Pool(processes=n_cores) as pool:
+        while attempt < max_attempts:
 
-        attempt += 1
-        seeds = np.random.randint(0, 10**9, size=n_cores)
+            attempt += 1
+            seeds = np.random.randint(0, 10**9, size=n_cores)
 
-        variant_args = [(satRxns, rxnMat, prodMat, sumRxnVec,
-                         target, nutrientSet, Currency,
-                         seed, randMinNetwork)
-                        for seed in seeds]
+            variant_args = [(satRxns, rxnMat, prodMat, sumRxnVec,
+                             target, nutrientSet, Currency,
+                             seed, randMinNetwork)
+                            for seed in seeds]
 
-        start = time.time()
+            start = time.time()
 
-        with Pool(processes=n_cores) as pool:
             new_nets = pool.map(single_variant, variant_args)
 
-        elapsed = time.time() - start
+            elapsed = time.time() - start
 
-        for net in new_nets:
-            unique_nets.add(tuple(sorted(net)))
+            for net in new_nets:
+                unique_nets.add(tuple(sorted(net)))
 
-        current_count = len(unique_nets)
+            current_count = len(unique_nets)
 
-        attempts_list.append(attempt)
-        unique_counts.append(current_count)
+            attempts_list.append(attempt)
+            unique_counts.append(current_count)
 
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] "
-              f"Attempt {attempt}: {elapsed:.4f}s - "
-              f"{current_count} unique networks")
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] "
+                  f"Attempt {attempt}: {elapsed:.4f}s - "
+                  f"{current_count} unique networks")
 
-        if save_path is not None:
-            results = {"networks": [np.array(net) for net in unique_nets],
-                       "attempts": attempts_list,
-                       "unique_counts": unique_counts}
-            with open(save_path, "wb") as f:
-                pickle.dump(results, f)
+            if save_path is not None:
+                results = {"networks": [np.array(net) for net in unique_nets],
+                           "attempts": attempts_list,
+                           "unique_counts": unique_counts}
+                with open(save_path, "wb") as f:
+                    pickle.dump(results, f)
 
-        if len(unique_counts) > plateau_window:
-            recent_growth = unique_counts[-1] - unique_counts[-plateau_window]
-            if recent_growth <= plateau_threshold:
-                print("Unique network discovery has plateaued. Stopping...")
-                break
+            if len(unique_counts) > plateau_window:
+                recent_growth = unique_counts[-1] - unique_counts[-plateau_window]
+                if recent_growth <= plateau_threshold:
+                    print("Unique network discovery has plateaued. Stopping...")
+                    break
 
     return {"networks": [np.array(net) for net in unique_nets], 
             "attempts": attempts_list, 

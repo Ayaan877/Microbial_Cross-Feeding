@@ -21,9 +21,7 @@ def isCoreProduced(remRxns, satRxns, rxnMat, prodMat, sumRxnVec,
                                               nutrientSet, Currency)
     
     # Checking if this still produces the core molecule.
-    if coreTBP in np.nonzero(tempSatMets)[0]:
-        return True
-    return False
+    return bool(tempSatMets[coreTBP])
 
 #-------------------------------------------------------------------------
 
@@ -33,10 +31,7 @@ def isAllCoreProduced(remRxns, satRxns, rxnMat, prodMat, sumRxnVec,
     tempSatMets, tempSatRxns = prunedSatsMets(remRxns, satRxns, rxnMat, prodMat, sumRxnVec, 
                                               nutrientSet, Currency)
 
-    for coreTBP in coreTBPs:
-        if coreTBP not in np.nonzero(tempSatMets)[0]:
-            return False
-    return True
+    return all(tempSatMets[t] for t in coreTBPs)
 
 #-------------------------------------------------------------------------
 
