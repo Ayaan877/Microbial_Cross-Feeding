@@ -5,12 +5,6 @@ from pathlib import Path
 from datetime import datetime
 from load_data import *
 
-with open("inv_met_map.pkl", "rb") as f:
-    inv_met_map = pickle.load(f)
-
-with open("met_map.pkl", "rb") as f:
-    met_map = pickle.load(f)
-
 if __name__ == "__main__":
     start_time = time.time()
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")

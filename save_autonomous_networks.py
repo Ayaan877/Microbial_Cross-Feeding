@@ -1,5 +1,4 @@
 import sys
-import pickle
 import time
 from pathlib import Path
 from datetime import datetime
@@ -14,17 +13,16 @@ if __name__ == "__main__":
     mode = sys.argv[1]
     all_paths, data_dir = loadPaths(mode=mode, dataset=6)
 
-    AutoNets = allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec, 
-                                     nutrientSet, Currency, Core)
     output_file = f"AutoNets{data_dir}.pkl"
     output_dir = Path(f"AutoNets{data_dir}")
     output_dir.mkdir(exist_ok=True)
-    
-    if AutoNets:
-        output_path = output_dir / output_file
-        with open(output_path, "wb") as f:
-            pickle.dump(AutoNets, f)
+    output_path = output_dir / output_file
 
+    AutoNets = allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec, 
+                                     nutrientSet, Currency, Core, n_processes=32,
+                                     save_path=output_path)
+
+    if AutoNets:
         print(f"Saved {len(AutoNets)} autonomous networks to {output_file}")
     else:
         print(f"No autonomous networks generated for MinNets{data_dir}")

@@ -2,6 +2,7 @@ from datetime import datetime
 from reverse_scope import giveRevScope
 from multiprocessing import Pool
 import numpy as np
+import pickle
 import time
 
 
@@ -19,7 +20,8 @@ def single_variant(args):
 
 
 def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
-                             nutrientSet, Currency, n_cores, randMinNetwork):
+                             nutrientSet, Currency, n_cores, randMinNetwork,
+                             save_path=None):
 
     print("Running reverse scope...")
     satMets, satRxns = giveRevScope(rxnMat, prodMat, sumRxnVec,
@@ -63,6 +65,13 @@ def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
         print(f"[{datetime.now().strftime('%H:%M:%S')}] "
               f"Attempt {attempt}: {elapsed:.4f}s - "
               f"{current_count} unique networks")
+
+        if save_path is not None:
+            results = {"networks": [np.array(net) for net in unique_nets],
+                       "attempts": attempts_list,
+                       "unique_counts": unique_counts}
+            with open(save_path, "wb") as f:
+                pickle.dump(results, f)
 
         if len(unique_counts) > plateau_window:
             recent_growth = unique_counts[-1] - unique_counts[-plateau_window]

@@ -3,7 +3,7 @@ import time
 from prune_check import isAllCoreProduced
 
 def buildAutonomousNetwork(pathway_list, rxnMat, prodMat, sumRxnVec, 
-                           nutrientSet, Currency, coreTBPs, rng=None):
+                           nutrientSet, Currency, coreTBPs, rng=None, init_frac=0.5, prune=True):
     """
     pathway_list : list of 8 pathways (each pathway = list of reaction indices)
     coreTBPs     : array of 8 target metabolite indices
@@ -26,23 +26,53 @@ def buildAutonomousNetwork(pathway_list, rxnMat, prodMat, sumRxnVec,
 
     satRxnVec = np.zeros(rxnMat.shape[0], dtype=int)
     satRxnVec[combined_rxns] = 1
+    
+    if prune:
+        # Iterative pruning (batch + single cleanup)
+        currSatRxnVec = np.copy(satRxnVec)
+        fail_count = 0
+        max_fails = 3
+        batch_frac = init_frac
 
-    # Iterative pruning
-    currSatRxnVec = np.copy(satRxnVec)
-    removed = 0
-    while True:
-        currRxns = np.nonzero(currSatRxnVec)[0]
-        removable = 0
+        while True:
+            currSatRxns = np.nonzero(currSatRxnVec)[0]
+            n_curr = len(currSatRxns)
 
-        for rxn in rng.permutation(currRxns):
-            if isAllCoreProduced(rxn, currSatRxnVec, rxnMat, prodMat, sumRxnVec, 
-                                 nutrientSet, Currency, coreTBPs):
-                currSatRxnVec[rxn] = 0
-                removable += 1
-                removed += 1
+            if n_curr == 0:
+                break
 
-        if removable == 0:
-            print("No more removable reactions → terminating.")
-            print(f'Final network size = {len(currRxns)}, removed {removed} reactions')
-            break
-    return currRxns
+            batch_size = max(1, int(n_curr * batch_frac))
+
+            # Batch removal phase
+            if batch_size > 1:
+                batch = rng.choice(currSatRxns, size=batch_size, replace=False)
+
+                if isAllCoreProduced(batch, currSatRxnVec, rxnMat, prodMat,
+                                    sumRxnVec, nutrientSet, Currency, coreTBPs):
+                    print(f"Removing batch of {batch_size}")
+                    currSatRxnVec[batch] = 0
+                    fail_count = 0
+                else:
+                    fail_count += 1
+                    if fail_count >= max_fails:
+                        batch_frac /= 1.1
+                        fail_count = 0
+
+            # Single reaction systematic removal phase
+            else:
+                removed_any = False
+
+                for rxn in rng.permutation(currSatRxns):
+                    if isAllCoreProduced(rxn, currSatRxnVec, rxnMat, prodMat,
+                                        sumRxnVec, nutrientSet, Currency, coreTBPs):
+                        currSatRxnVec[rxn] = 0
+                        removed_any = True
+
+                if not removed_any:
+                    print("No more removable reactions → terminating.")
+                    print(f'Final network size = {len(currSatRxns)}')
+                    break
+
+        return np.nonzero(currSatRxnVec)[0]
+    else:
+        return combined_rxns

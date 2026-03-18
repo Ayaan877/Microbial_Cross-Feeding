@@ -9,7 +9,7 @@ from load_data import *
 
 if __name__ == "__main__":
     mode = "batch"
-    all_paths, data_dir = loadPaths(mode=mode, dataset=5)
+    all_paths, data_dir = loadPaths(mode=mode, dataset=6)
     paths = [all_paths[i][2] for i in range(8)] # Take 1st pathway for each target
 
     MinNet = buildAutonomousNetwork(paths, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, Core)
