@@ -6,19 +6,19 @@ from combine_pathways import buildAutonomousNetwork
 
 def process_network(args):
     (combo, rxnMat, prodMat, sumRxnVec,
-     nutrientSet, Currency, coreTBPs, seed, prune) = args
+     nutrientSet, Currency, coreTBPs, prune, seed) = args
 
     rng = np.random.default_rng(seed)
 
     network = buildAutonomousNetwork(combo, rxnMat, prodMat, sumRxnVec, nutrientSet, 
-                                     Currency, coreTBPs, rng=rng, prune=prune)
+                                     Currency, coreTBPs, prune=prune, rng=rng)
 
     return tuple(sorted(network))
 
 def allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec,
-                                   nutrientSet, Currency, coreTBPs,
+                                   nutrientSet, Currency, coreTBPs, prune,
                                    n_processes=None, chunk_size=100,
-                                   save_path=None, save_interval=10, prune=True):
+                                   save_path=None, save_interval=10):
 
     if n_processes is None:
         n_processes = 32
@@ -34,7 +34,7 @@ def allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec,
     processed = 0
 
     job_iter = ((combo, rxnMat, prodMat, sumRxnVec,
-         nutrientSet, Currency, coreTBPs, i, prune)
+         nutrientSet, Currency, coreTBPs, prune, i)
         for i, combo in enumerate(combo_generator))
 
     for result in pool.imap_unordered(process_network, job_iter, chunksize=chunk_size):

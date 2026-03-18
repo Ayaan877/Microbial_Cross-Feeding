@@ -3,7 +3,7 @@ import time
 from prune_check import isAllCoreProduced
 
 def buildAutonomousNetwork(pathway_list, rxnMat, prodMat, sumRxnVec, 
-                           nutrientSet, Currency, coreTBPs, rng=None, init_frac=0.5, prune=True):
+                           nutrientSet, Currency, coreTBPs, prune, rng=None, init_frac=0.5):
     """
     pathway_list : list of 8 pathways (each pathway = list of reaction indices)
     coreTBPs     : array of 8 target metabolite indices

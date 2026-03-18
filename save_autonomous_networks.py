@@ -14,13 +14,13 @@ if __name__ == "__main__":
     all_paths, data_dir = loadPaths(mode=mode, dataset=6)
 
     output_file = f"AutoNets{data_dir}.pkl"
-    output_dir = Path(f"AutoNets{data_dir}")
+    output_dir = Path(f"AutoNets{data_dir}Prune")
     output_dir.mkdir(exist_ok=True)
     output_path = output_dir / output_file
 
     AutoNets = allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec, 
                                      nutrientSet, Currency, Core, n_processes=32,
-                                     save_path=output_path)
+                                     save_path=output_path, prune=True)
 
     if AutoNets:
         print(f"Saved {len(AutoNets)} autonomous networks to {output_file}")
