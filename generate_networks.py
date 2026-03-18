@@ -18,7 +18,7 @@ def process_network(args):
 def allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec,
                                    nutrientSet, Currency, coreTBPs,
                                    n_processes=None, chunk_size=100,
-                                   save_path=None, save_interval=100, prune=True):
+                                   save_path=None, save_interval=10, prune=True):
 
     if n_processes is None:
         n_processes = cpu_count()

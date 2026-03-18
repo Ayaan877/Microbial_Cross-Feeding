@@ -12,7 +12,8 @@ if __name__ == "__main__":
     all_paths, data_dir = loadPaths(mode=mode, dataset=6)
     paths = [all_paths[i][2] for i in range(8)] # Take 1st pathway for each target
 
-    MinNet = buildAutonomousNetwork(paths, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, Core)
+    MinNet = buildAutonomousNetwork(paths, rxnMat, prodMat, sumRxnVec, 
+                                    nutrientSet, Currency, Core)
 
     with open('MinNet_test.pkl', "wb") as f:
             pickle.dump(MinNet, f)
