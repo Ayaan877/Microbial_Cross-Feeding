@@ -21,7 +21,7 @@ def allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec,
                                    save_path=None, save_interval=10, prune=True):
 
     if n_processes is None:
-        n_processes = cpu_count()
+        n_processes = 32
 
     print(f"Using {n_processes} processes")
 
