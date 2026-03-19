@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N AutoNets(SS)_NP
+#PBS -N AutoNets(S)_NP
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=250:00:00
@@ -13,6 +13,10 @@ module load compiler/anaconda3-23.07.0
 
 source venv/bin/activate
 
-python make_autonomous_networks.py simple_single noprune
+# arg1 = single or batch
+# arg2 = prune or noprune
+# arg3 = dataset number
+
+python build_autonomous_networks.py single noprune 6
 
 echo "Finished autonomous network generation at $(date)"

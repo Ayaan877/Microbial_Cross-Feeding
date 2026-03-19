@@ -4,7 +4,7 @@ Returns: Minimal pathways for a given precursor
 '''
 from reverse_scope import giveRevScope
 from batch_pruning import randMinNetwork  
-# Replace 'batch_pruning' with 'single_pruning'/'simple_single_pruning' to test other methods
+# Replace 'batch_pruning' with 'single_pruning' to test other methods
 from load_data import *
 
 if __name__ == "__main__":

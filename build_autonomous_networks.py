@@ -3,17 +3,18 @@ import time
 from pathlib import Path
 from datetime import datetime
 from load_paths import loadPaths
-from generate_networks import allAutonomousNetworks
+from generate_autoNets import allAutonomousNetworks
 from load_data import *
 
 if __name__ == "__main__":
-    start_time = time.time()
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
     mode = sys.argv[1]
     pruning = sys.argv[2].lower()
-    all_paths, data_dir = loadPaths(mode=mode, dataset=6)
+    dataset = sys.argv[3]
+    all_paths, data_dir = loadPaths(mode=mode, dataset=dataset)
 
+    start_time = time.time()
     if pruning == "prune":
         output_file = f"AutoNets{data_dir}.pkl"
         output_dir = Path(f"AutoNets{data_dir}_P")

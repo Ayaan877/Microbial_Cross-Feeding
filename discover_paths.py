@@ -2,20 +2,24 @@ import sys
 import time
 from pathlib import Path
 from datetime import datetime
-from batch_pruning import randMinNetwork
 from path_discovery_rate import generate_pruned_networks
 from load_data import *
 
 if __name__ == "__main__":
-    start_time = time.time()
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    
-    mode = "batch"
 
     target_name = sys.argv[1]
+    mode = sys.argv[2].lower()
     target = met_map[target_name]
     target_id = inv_met_map[target]
 
+    if mode == "batch":
+        from batch_pruning import randMinNetwork
+    elif mode == "single":
+        from single_pruning import randMinNetwork
+    else: 
+        raise ValueError("Mode must be 'batch' or 'single'")
+    
     print(f"Running target: {target}")
     print(f"Target ID: {target_id}")
 
@@ -23,7 +27,8 @@ if __name__ == "__main__":
     output_dir = Path(f"NumPaths")
     output_dir.mkdir(exist_ok=True)
     output_path = output_dir / output_file
-
+    
+    start_time = time.time()
     results = generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec, nutrientSet, 
                                        Currency, n_cores=8, randMinNetwork=randMinNetwork,
                                        save_path=output_path)

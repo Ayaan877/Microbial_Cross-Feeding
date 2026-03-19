@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N MinNet_Batch
+#PBS -N MinPath_Batch
 #PBS -q cpu
 #PBS -l select=1:ncpus=4:mem=32gb
 #PBS -l walltime=10:00:00
@@ -16,6 +16,10 @@ source venv/bin/activate
 
 TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
-python make_minimal_paths.py $TARGET batch
+# arg1 = target molecule
+# arg2 = batch or single
+# arg3 = dataset number
+
+python build_minimal_paths.py $TARGET batch 7
 
 echo "Finished batch pruning job for target: $TARGET at $(date)"

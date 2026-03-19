@@ -1,14 +1,63 @@
-from calculate_autonet_yields import autonetYields
+from calculate_yield import *
+from load_data import *
+import time
+import multiprocessing as mp
 import pickle
-import os
 
-autonet_dir = "AutoNets6_Batch_NP"
-autonet_data = "AutoNets6_Batch.pkl"
-autonet_path = f"{autonet_dir}/{autonet_data}"
+def compute_yield(net):
+    '''Worker function for parallel yield calculation.
+    Uses module-level globals from load_data (shared via fork COW).'''
+    return splitByDemand(
+        stoich_matrix, rxnMat, prodMat,
+        sumRxnVec, rho, pi, nutrientSet,
+        Energy, Currency, Core, net)
 
-num_workers = 32
+if __name__ == "__main__":
+    '''
+    AUTONET YIELD CALCULATOR
+    Loads autonomous networks and calculates energy/biomass yields for each network.
+    '''
 
-E_yields, B_yields, viability = autonetYields(autonet_path, num_workers=num_workers)
+    dataset = 6
+    prune_mode = "Batch"
+    minimal = "NP"
 
-with open(f"{autonet_dir}/Yields_{autonet_data}", "wb") as f:
-    pickle.dump((E_yields, B_yields, viability), f)
+    autonet_dir = f"AutoNets{dataset}_{prune_mode}_{minimal}"
+    autonet_data = f"AutoNets{dataset}_{prune_mode}.pkl"
+    autonet_path = f"{autonet_dir}/{autonet_data}"
+    num_workers = 32
+
+    with open(autonet_path, "rb") as f:
+        AutoNets = pickle.load(f)
+
+    num_nets = len(AutoNets)
+    print(f"Loaded {num_nets} networks from {autonet_path}")
+
+    E_yields = np.zeros(num_nets)
+    B_yields = np.zeros(num_nets)
+    viability = np.zeros(num_nets, dtype=bool)
+
+    start = time.time()
+
+    print(f"Using {num_workers} parallel workers")
+    with mp.Pool(processes=num_workers) as pool:
+        for i, (E_yield, B_yield, status) in enumerate(
+                pool.imap(compute_yield, AutoNets, chunksize=64)):
+            E_yields[i] = E_yield
+            B_yields[i] = B_yield
+            viability[i] = status
+
+            if (i + 1) % 500 == 0:
+                elapsed_so_far = time.time() - start
+                rate = (i + 1) / elapsed_so_far
+                eta = (num_nets - i - 1) / rate
+                print(f"  Processed {i + 1}/{num_nets} "
+                        f"({rate:.1f} nets/s, ETA {eta/60:.1f} min)")
+
+    elapsed = time.time() - start
+    valid = np.sum(viability)
+    print(f"\nCompleted in {elapsed:.2f} seconds")
+    print(f"Valid networks (all precursors produced): {valid}/{num_nets}")
+
+    with open(f"{autonet_dir}/Yields_{autonet_data}", "wb") as f:
+        pickle.dump((E_yields, B_yields, viability), f)

@@ -25,18 +25,6 @@ def loadPaths(mode, dataset):
             "C00065_Single_MinNets.pkl",
             "C00097_Single_MinNets.pkl",
             "C00117_Single_MinNets.pkl"]
-        
-    elif mode == "simple_single":
-        data_dir = f"{dataset}_SimpleSingle"
-        target_files = [
-            "C00009_SimpleSingle_MinNets.pkl",
-            "C00013_SimpleSingle_MinNets.pkl",
-            "C00022_SimpleSingle_MinNets.pkl",
-            "C00025_SimpleSingle_MinNets.pkl",
-            "C00041_SimpleSingle_MinNets.pkl",
-            "C00065_SimpleSingle_MinNets.pkl",
-            "C00097_SimpleSingle_MinNets.pkl",
-            "C00117_SimpleSingle_MinNets.pkl"]
 
     all_targets = []
 

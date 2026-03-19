@@ -1,5 +1,4 @@
 import numpy as np
-import time
 from prune_check import isAllCoreProduced
 
 def buildAutonomousNetwork(pathway_list, rxnMat, prodMat, sumRxnVec, 
