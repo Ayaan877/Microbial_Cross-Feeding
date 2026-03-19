@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N AutoNets(S)_NP
+#PBS -N AutoNetsS_NP
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=250:00:00
