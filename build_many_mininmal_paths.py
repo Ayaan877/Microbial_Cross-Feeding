@@ -10,6 +10,7 @@ if __name__ == "__main__":
 
     target_name = sys.argv[1]
     mode = sys.argv[2].lower()
+    dataset = sys.argv[3]
     target = met_map[target_name]
     target_id = inv_met_map[target]
 
@@ -24,7 +25,7 @@ if __name__ == "__main__":
     print(f"Target ID: {target_id}")
 
     output_file = f"{target_id}_Pathways.pkl"
-    output_dir = Path(f"NumPaths")
+    output_dir = Path(f"NumPaths{dataset}_{mode.capitalize()}")
     output_dir.mkdir(exist_ok=True)
     output_path = output_dir / output_file
 
