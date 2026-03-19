@@ -2,7 +2,7 @@ import sys
 import time
 from pathlib import Path
 from datetime import datetime
-from path_discovery_rate import generate_pruned_networks
+from generate_many_minPaths import generate_pruned_networks
 from load_data import *
 
 if __name__ == "__main__":
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     output_dir = Path(f"NumPaths")
     output_dir.mkdir(exist_ok=True)
     output_path = output_dir / output_file
-    
+
     start_time = time.time()
     results = generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec, nutrientSet, 
                                        Currency, n_cores=8, randMinNetwork=randMinNetwork,

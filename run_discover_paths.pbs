@@ -16,6 +16,9 @@ source venv/bin/activate
 
 TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
-python discover_paths.py $TARGET Batch
+# arg1 = target molecule
+# arg2 = batch or single
+
+python build_many_minimal_paths.py $TARGET batch
 
 echo "Finished path discovery rate estimation for $TARGET at $(date)"

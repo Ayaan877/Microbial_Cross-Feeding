@@ -14,6 +14,11 @@ module load compiler/anaconda3-23.07.0
 source venv/bin/activate
 
 export NUM_WORKERS=32
-python get_yields.py
+
+# arg1 = batch or single
+# arg2 = NP or P
+# arg3 = dataset number
+
+python get_yields.py Batch NP 6
 
 echo "Finished yield calculation at $(date)"

@@ -3,27 +3,21 @@ from load_data import *
 import time
 import multiprocessing as mp
 import pickle
+import sys
 
 def compute_yield(net):
-    '''Worker function for parallel yield calculation.
-    Uses module-level globals from load_data (shared via fork COW).'''
     return splitByDemand(
         stoich_matrix, rxnMat, prodMat,
         sumRxnVec, rho, pi, nutrientSet,
         Energy, Currency, Core, net)
 
 if __name__ == "__main__":
-    '''
-    AUTONET YIELD CALCULATOR
-    Loads autonomous networks and calculates energy/biomass yields for each network.
-    '''
+    mode = sys.argv[1]
+    minimal = sys.argv[2]
+    dataset = sys.argv[3]
 
-    dataset = 6
-    prune_mode = "Batch"
-    minimal = "NP"
-
-    autonet_dir = f"AutoNets{dataset}_{prune_mode}_{minimal}"
-    autonet_data = f"AutoNets{dataset}_{prune_mode}.pkl"
+    autonet_dir = f"AutoNets{dataset}_{mode}_{minimal}"
+    autonet_data = f"AutoNets{dataset}_{mode}.pkl"
     autonet_path = f"{autonet_dir}/{autonet_data}"
     num_workers = 32
 
