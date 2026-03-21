@@ -18,7 +18,7 @@ def process_network(args):
 def allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec,
                                    nutrientSet, Currency, coreTBPs, prune,
                                    n_processes=None, chunk_size=100,
-                                   save_path=None, save_interval=10):
+                                   save_path=None, save_interval=100):
 
     if n_processes is None:
         n_processes = 32

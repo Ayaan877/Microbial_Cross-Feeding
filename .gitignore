@@ -1,7 +1,6 @@
 .venv
 .vscode
 test.py
-check_data.py
 reverse_scope_old.py
 __pycache__
 revScope.py

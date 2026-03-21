@@ -21,7 +21,6 @@ def buildAutonomousNetwork(pathway_list, rxnMat, prodMat, sumRxnVec,
         combined_rxns.update(pathway)
 
     combined_rxns = np.array(list(combined_rxns), dtype=int)
-    print(f"Combined network size before pruning: {len(combined_rxns)}")
 
     satRxnVec = np.zeros(rxnMat.shape[0], dtype=int)
     satRxnVec[combined_rxns] = 1
@@ -40,8 +39,8 @@ def buildAutonomousNetwork(pathway_list, rxnMat, prodMat, sumRxnVec,
                     removed_any = True
 
             if not removed_any:
-                print("No more removable reactions → terminating.")
-                print(f'Final network size = {len(currSatRxns)}')
+                # print("No more removable reactions → terminating.")
+                # print(f'Final network size = {len(currSatRxns)}')
                 break
 
         return np.nonzero(currSatRxnVec)[0]

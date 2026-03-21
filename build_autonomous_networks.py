@@ -21,6 +21,8 @@ if __name__ == "__main__":
         output_dir.mkdir(exist_ok=True)
         output_path = output_dir / output_file
 
+        print(f"Generating pruned autonomous networks from MinNets{data_dir}...")
+
         AutoNets = allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec, 
                                         nutrientSet, Currency, Core, prune=True, 
                                         n_processes=32, save_path=output_path)
@@ -29,6 +31,8 @@ if __name__ == "__main__":
         output_dir = Path(f"AutoNets{data_dir}_NP")
         output_dir.mkdir(exist_ok=True)
         output_path = output_dir / output_file
+
+        print(f"Generating unpruned autonomous networks from MinNets{data_dir}...")
 
         AutoNets = allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec, 
                                         nutrientSet, Currency, Core, prune=False, 
