@@ -6,6 +6,7 @@ from reverse_scope import giveRevScope
 from batch_pruning import randMinNetwork  
 # Replace 'batch_pruning' with 'single_pruning' to test other methods
 from load_data import *
+import time
 
 if __name__ == "__main__":
 
@@ -18,11 +19,15 @@ if __name__ == "__main__":
     print(f"Testing pruning on target: {target_id} - {target_name}")
     print("Running reverse scope...")
     
+    start = time.time()
     satMets, satRxns = giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, target)
     print(f"Reverse scope complete, with {np.sum(satRxns)} satisfied reactions. Starting pruning...")
-
+    print(f"Time taken for reverse scope: {time.time() - start:.2f} seconds")
+    
+    start = time.time()
     min_rxns = randMinNetwork(satRxns, rxnMat, prodMat, sumRxnVec, 
                              target, nutrientSet, Currency)
+    print(f"Time taken for pruning: {time.time() - start:.2f} seconds")
     rxn_ids = [inv_rxn_map[idx] for idx in min_rxns]
 
     print("\nPrecursor Name:", target_id, target_name)

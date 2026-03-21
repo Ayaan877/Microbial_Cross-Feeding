@@ -12,20 +12,58 @@ def markSatMetsRxns(rxnProc, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency):
         satMetVec, satRxnVec: the current sets of metabolites and reactions
                           that are said to be satisfied.
     """
-    satMetVec = np.zeros(len(np.transpose(rxnMat)))
-    satMetVec[nutrientSet + Currency] = 1
-    satRxnVec = np.zeros(len(rxnMat))
+    n_rxns, n_mets = rxnMat.shape
+
+    seeds = np.array(nutrientSet + Currency)
+
+    # Only operate on candidate reactions to avoid full-matrix multiplies.
+    active_rxns = np.nonzero(rxnProc)[0]
+
+    if len(active_rxns) == 0:
+        satMetVec = np.zeros(n_mets)
+        satMetVec[seeds] = 1
+        return satMetVec, np.zeros(n_rxns)
+
+    # Extract submatrices for active reactions only.
+    sub_rxnMat = rxnMat[active_rxns]
+    sub_prodMat = prodMat[active_rxns]
+    sub_sumRxnVec = sumRxnVec[active_rxns]
+
+    # Compress metabolite dimension: keep only columns involved in any
+    # active reaction plus the seed metabolites.
+    seed_mask = np.zeros(n_mets, dtype=bool)
+    seed_mask[seeds] = True
+    involved_mets = np.nonzero(np.any(sub_rxnMat, axis=0) | np.any(sub_prodMat, axis=0) | seed_mask)[0]
+
+    comp_rxnMat = sub_rxnMat[:, involved_mets]
+    comp_prodMat_T = sub_prodMat[:, involved_mets].T
+    
+    # Map seed indices into compressed metabolite space.
+    met_to_local = np.empty(n_mets, dtype=np.intp)
+    met_to_local[involved_mets] = np.arange(len(involved_mets))
+
+    n_involved = len(involved_mets)
+    comp_satMetVec = np.zeros(n_involved)
+    comp_satMetVec[met_to_local[seeds]] = 1
+
+    comp_satRxnVec = np.zeros(len(active_rxns))
 
     while True:
-        oldSatRxnVec = np.copy(satRxnVec)
+        old_sub = comp_satRxnVec.copy()
 
         # Marking first reactions, then metabolites, iteratively.
-        satRxnVec = np.logical_and((np.dot(rxnMat, satMetVec) - sumRxnVec == 0) * 1, 
-                                   rxnProc) * 1
-        satMetVec = (np.dot(np.transpose(prodMat), satRxnVec) + satMetVec > 0) * 1
+        comp_satRxnVec = (comp_rxnMat @ comp_satMetVec == sub_sumRxnVec) * 1
+        comp_satMetVec = (comp_prodMat_T @ comp_satRxnVec + comp_satMetVec > 0) * 1
 
         # Checking if all satisfied nodes have been marked.
-        if np.array_equal(oldSatRxnVec, satRxnVec):
+        if np.array_equal(old_sub, comp_satRxnVec):
             break
-    
+
+    # Map back to full-size vectors.
+    satMetVec = np.zeros(n_mets)
+    satMetVec[involved_mets] = comp_satMetVec
+
+    satRxnVec = np.zeros(n_rxns)
+    satRxnVec[active_rxns] = comp_satRxnVec
+
     return satMetVec, satRxnVec
