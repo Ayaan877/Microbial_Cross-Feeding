@@ -2,7 +2,7 @@ import numpy as np
 from prune_check import isAllCoreProduced
 
 def buildAutonomousNetwork(pathway_list, rxnMat, prodMat, sumRxnVec, 
-                           nutrientSet, Currency, coreTBPs, prune, rng=None):
+                           nutrientSet, Currency, coreTBPs, prune, rng=None, verbose=False):
     """
     pathway_list : list of 8 pathways (each pathway = list of reaction indices)
     coreTBPs     : array of 8 target metabolite indices
@@ -22,6 +22,9 @@ def buildAutonomousNetwork(pathway_list, rxnMat, prodMat, sumRxnVec,
 
     combined_rxns = np.array(list(combined_rxns), dtype=int)
 
+    if verbose:
+        print(f"Combined network size before pruning: {len(combined_rxns)} reactions")
+
     satRxnVec = np.zeros(rxnMat.shape[0], dtype=int)
     satRxnVec[combined_rxns] = 1
     
@@ -39,8 +42,9 @@ def buildAutonomousNetwork(pathway_list, rxnMat, prodMat, sumRxnVec,
                     removed_any = True
 
             if not removed_any:
-                # print("No more removable reactions → terminating.")
-                # print(f'Final network size = {len(currSatRxns)}')
+                if verbose:
+                    print("No more removable reactions → terminating.")
+                    print(f'Final network size = {len(currSatRxns)}')
                 break
 
         return np.nonzero(currSatRxnVec)[0]

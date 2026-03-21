@@ -11,11 +11,11 @@ import time
 if __name__ == "__main__":
     mode = "batch"
     all_paths, data_dir = loadPaths(mode=mode, dataset=6)
-    paths = [all_paths[i][2] for i in range(8)] # Take 1st pathway for each target
+    paths = [all_paths[i][3] for i in range(8)] # Take 1st pathway for each target
 
     start = time.time()
     MinNet = buildAutonomousNetwork(paths, rxnMat, prodMat, sumRxnVec, 
-                                    nutrientSet, Currency, Core, prune=True)
+                                    nutrientSet, Currency, Core, prune=True, verbose=True)
     print(f"Time taken: {(time.time() - start)} seconds")
 
     with open('MinNet_test.pkl', "wb") as f:
