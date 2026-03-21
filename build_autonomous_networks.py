@@ -12,11 +12,12 @@ if __name__ == "__main__":
     mode = sys.argv[1]
     pruning = sys.argv[2].lower()
     dataset = sys.argv[3]
+    auto_dataset = sys.argv[4]
     all_paths, data_dir = loadPaths(mode=mode, dataset=dataset)
 
     start_time = time.time()
     if pruning == "prune":
-        output_file = f"AutoNets{data_dir}.pkl"
+        output_file = f"AutoNets{data_dir}_{auto_dataset}.pkl"
         output_dir = Path(f"AutoNets{data_dir}_P")
         output_dir.mkdir(exist_ok=True)
         output_path = output_dir / output_file
@@ -27,7 +28,7 @@ if __name__ == "__main__":
                                         nutrientSet, Currency, Core, prune=True, 
                                         n_processes=32, save_path=output_path)
     if pruning == "noprune":
-        output_file = f"AutoNets{data_dir}.pkl"
+        output_file = f"AutoNets{data_dir}_{auto_dataset}.pkl"
         output_dir = Path(f"AutoNets{data_dir}_NP")
         output_dir.mkdir(exist_ok=True)
         output_path = output_dir / output_file

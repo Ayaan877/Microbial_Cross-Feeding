@@ -16,7 +16,8 @@ source venv/bin/activate
 # arg1 = single or batch
 # arg2 = prune or noprune
 # arg3 = dataset number
+# arg4 = auto dataset number
 
-python build_autonomous_networks.py single prune 6
+python build_autonomous_networks.py single prune 6 2
 
 echo "Finished autonomous network generation at $(date)"
