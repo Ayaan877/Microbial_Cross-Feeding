@@ -35,7 +35,7 @@ def splitByDemand(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
 
     # Figuring out which reactions can be performed at this step.
     procRxnVec = ((np.dot(rMat, metState != 0) - sumRxnVec) == 0) * 1
-    procRxnVec[scopeRxns == 0] = 0
+    procRxnVec[sumRxnVec == 0] = 0
 
     # Continuing calculation till no more reactions can be performed
     isChecked = np.zeros(len(rxnMat))
@@ -109,7 +109,7 @@ def splitByDemand(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
         # Recalculating performable reactions.
         procRxnVec = ((np.dot(rMat, np.sum(shareMatrix, axis = 0) != 0) - sumRxnVec) == 0) * 1
         procRxnVec[np.where(isChecked)] = 0
-        procRxnVec[scopeRxns == 0] = 0
+        procRxnVec[sumRxnVec == 0] = 0
 
     if isCoreProduced[Core].all():
         return runningE, runningB, True
