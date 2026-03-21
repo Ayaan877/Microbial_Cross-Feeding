@@ -16,8 +16,8 @@ if __name__ == "__main__":
     minimal = sys.argv[2]
     dataset = sys.argv[3]
 
-    autonet_dir = f"AutoNets{dataset}_{mode}_{minimal}"
-    autonet_data = f"AutoNets{dataset}_{mode}.pkl"
+    autonet_dir = f"AutoNets{dataset}_{mode.capitalize()}_{minimal}"
+    autonet_data = f"AutoNets{dataset}_{mode.capitalize()}.pkl"
     autonet_path = f"{autonet_dir}/{autonet_data}"
     num_workers = 32
 
