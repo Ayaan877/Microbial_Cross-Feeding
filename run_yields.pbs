@@ -19,6 +19,6 @@ export NUM_WORKERS=32
 # arg2 = NP or P
 # arg3 = dataset number
 
-python get_yields.py single P 6
+python get_yields.py single P 6 2
 
 echo "Finished yield calculation at $(date)"

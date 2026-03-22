@@ -2,7 +2,7 @@
 #PBS -N MinPaths_B
 #PBS -q cpu
 #PBS -l select=1:ncpus=8:mem=32gb
-#PBS -l walltime=250:00:00
+#PBS -l walltime=100:00:00
 #PBS -J 1-8
 #PBS -o logs/
 #PBS -e logs/
@@ -20,6 +20,6 @@ TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 # arg2 = batch or single
 # arg3 = dataset number
 
-python build_many_minimal_paths.py $TARGET batch 2
+python build_many_minimal_paths.py $TARGET batch 3
 
 echo "Finished path discovery rate estimation for $TARGET at $(date)"

@@ -33,7 +33,7 @@ def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
     unique_counts = []
 
     attempt = 0
-    max_attempts = 100
+    max_attempts = 500
     plateau_window = 5
     plateau_threshold = 2  # Stop if we find <= 2 new unique networks in the last 5 attempts
 

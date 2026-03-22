@@ -20,6 +20,6 @@ TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 # arg2 = batch or single
 # arg3 = dataset number
 
-python build_minimal_paths.py $TARGET single 7
+python build_minimal_paths.py $TARGET single 6
 
 echo "Finished single pruning job for target: $TARGET at $(date)"

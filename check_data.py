@@ -36,34 +36,37 @@ Check Pathways
 '''
 Pathway Discovery Rate
 '''
-# dataset = 1
-# prune_mode = "Batch"
-# file = "013"
+dataset = 2
+prune_mode = "Batch"
+files = ["009", "013", "022", "025", "041", "065", "097", "117"]
+fig, axes = plt.subplots(2, 4, figsize=(16, 8))
+for ax, file in zip(axes.flat, files):
+    with open(f"NumPaths{dataset}_{prune_mode}/C00{file}_Pathways.pkl", "rb") as f:
+        results = pickle.load(f)
 
-# with open(f"NumPaths{dataset}_{prune_mode}/C00{file}_Pathways.pkl", "rb") as f:
-#     results = pickle.load(f)
+    unique_counts = np.array(results['unique_counts'])
+    attempts = np.array(results['attempts'])*8
 
-# unique_counts = np.array(results['unique_counts'])
-# attempts = np.array(results['attempts'])*8
-
-# plt.plot(attempts, unique_counts,'o-')
-# plt.title(f"Unique Pathway Discovery Rate - C00{file}")
-# plt.xlabel("# of Attempts")
-# plt.ylabel("Unique Pathways")
-# plt.grid()
-# plt.show()
+    ax.plot(attempts, unique_counts,'o-')
+    ax.set_title(f"C00{file}")
+    ax.set_xlabel("# of Attempts")
+    ax.set_ylabel("Unique Pathways")
+    ax.grid()
+fig.suptitle(f"Unique Pathway Discovery Rate ({prune_mode})")
+plt.tight_layout()
+plt.show()
 
 '''
 Autonomous Networks and Yields
 '''
-dataset = 6
-mode = "Single"
-minimal = "NP"
+# dataset = 6
+# mode = "Single"
+# minimal = "P"
 
-with open(f"AutoNets{dataset}_{mode}_{minimal}/AutoNets{dataset}_{mode}.pkl", "rb") as f:
-    autonets = pickle.load(f)
+# with open(f"AutoNets{dataset}_{mode}_{minimal}/AutoNets{dataset}_{mode}.pkl", "rb") as f:
+#     autonets = pickle.load(f)
 
-print(f"Number of autonomous networks: {len(autonets)}")
+# print(f"Number of autonomous networks: {len(autonets)}")
 
 # net_sizes = np.array([len(net) for net in autonets])
 
@@ -87,6 +90,6 @@ print(f"Number of autonomous networks: {len(autonets)}")
 # ax[0].set_xlabel("Network Size (# reactions)")
 # ax[0].set_ylabel("Fraction of Networks")
 
-# fig.suptitle("Efficiency of Viable Autonomous Networks (Unpruned)")
+# fig.suptitle(f"Efficiency of Viable Autonomous Networks ({mode}-{minimal})")
 # plt.tight_layout()
 # plt.show()
