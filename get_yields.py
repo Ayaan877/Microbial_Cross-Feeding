@@ -43,11 +43,9 @@ if __name__ == "__main__":
             viability[i] = status
 
             if (i + 1) % 500 == 0:
-                elapsed_so_far = time.time() - start
-                rate = (i + 1) / elapsed_so_far
-                eta = (num_nets - i - 1) / rate
-                print(f"  Processed {i + 1}/{num_nets} "
-                        f"({rate:.1f} nets/s, ETA {eta/60:.1f} min)")
+                processed_ratio = (i + 1) / num_nets
+                viable_ratio = np.sum(viability[:i+1]) / (i + 1)
+                print(f"  Processed {i + 1}/{num_nets} ({processed_ratio:.2%}), viable: {np.sum(viability[:i+1])}/{i + 1} ({viable_ratio:.2%})")
 
     elapsed = time.time() - start
     valid = np.sum(viability)
