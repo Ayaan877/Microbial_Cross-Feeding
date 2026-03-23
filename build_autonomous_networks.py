@@ -2,18 +2,26 @@ import sys
 import time
 from pathlib import Path
 from datetime import datetime
-from load_paths import loadPaths
-from generate_autoNets import allAutonomousNetworks
 from load_data import *
 
 if __name__ == "__main__":
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
-    mode = sys.argv[1]
-    pruning = sys.argv[2].lower()
-    dataset = sys.argv[3]
-    auto_dataset = sys.argv[4]
-    all_paths, data_dir = loadPaths(mode=mode, dataset=dataset)
+    data = sys.argv[1]
+    mode = sys.argv[2]
+    pruning = sys.argv[3].lower()
+    dataset = sys.argv[4]
+    auto_dataset = sys.argv[5]
+
+    if data == "MinNets":
+        from load_paths import loadPaths
+        from generate_autoNets import allAutonomousNetworks
+        all_paths, data_dir = loadPaths(mode=mode, dataset=dataset)
+
+    if data == "NumPaths":
+        from load_numpaths import loadNumPaths
+        from generate_random_autoNets import allAutonomousNetworks
+        all_paths, data_dir = loadNumPaths(mode=mode, dataset=dataset)
 
     start_time = time.time()
     if pruning == "prune":

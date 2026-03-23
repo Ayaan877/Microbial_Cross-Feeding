@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N AutoNetsB_P
+#PBS -N RandAutoB_P
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=250:00:00
@@ -18,6 +18,6 @@ source venv/bin/activate
 # arg3 = dataset number
 # arg4 = auto dataset number
 
-python build_autonomous_networks.py batch prune 6 2
+python build_autonomous_networks.py NumPaths batch prune 3 1
 
 echo "Finished autonomous network generation at $(date)"
