@@ -1,10 +1,9 @@
 .venv
 .vscode
-test.py
-reverse_scope_old.py
 __pycache__
-revScope.py
 MinNets*
 NumPaths*
 AutoNets*
 logs
+test.py
+verify_data.py

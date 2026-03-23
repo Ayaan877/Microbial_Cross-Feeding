@@ -32,23 +32,3 @@ def isAllCoreProduced(remRxns, satRxns, rxnMat, prodMat, sumRxnVec,
                                               nutrientSet, Currency)
 
     return all(tempSatMets[t] for t in coreTBPs)
-
-#-------------------------------------------------------------------------
-
-def isFitterSubset(remRxns, satRxns, rxnMat, prodMat, sumRxnVec, 
-                   nutrientSet, Currency, coreTBP, stoich_matrix, Energy):
-    
-    tempSatMets, tempSatRxns = prunedSatsMets(remRxns, satRxns, rxnMat, prodMat, sumRxnVec, 
-                                              nutrientSet, Currency)
-
-    mulFac = [1, 3, 3]
-    # Checking if this still produces the core molecule, and 
-    # generates at least as much ATP/NADH/NADPH.
-    if coreTBP in np.nonzero(tempSatMets)[0]:
-        newCost= sum([sum(stoich_matrix[rxn][Energy] * mulFac) 
-                      for rxn in np.nonzero(tempSatRxns)[0]])
-        oldCost = sum([sum(stoich_matrix[rxn][Energy] * mulFac) 
-                      for rxn in np.nonzero(satRxns)[0]])
-        if newCost >= oldCost:
-            return True
-    return False

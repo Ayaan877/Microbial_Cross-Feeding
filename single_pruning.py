@@ -2,8 +2,6 @@ import numpy as np
 import time
 from prune_check import isCoreProduced
 
-### Serial Algorithm ###
-
 def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
                    coreTBP, nutrientSet, Currency, rng=None):
     """
