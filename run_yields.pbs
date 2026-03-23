@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N Yields_SP
+#PBS -N Yields_BP
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=24:00:00
@@ -19,6 +19,6 @@ export NUM_WORKERS=32
 # arg2 = NP or P
 # arg3 = dataset number
 
-python get_yields.py single P 6 1
+python get_yields.py batch P 6 1
 
 echo "Finished yield calculation at $(date)"
