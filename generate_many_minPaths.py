@@ -23,7 +23,6 @@ def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
                              nutrientSet, Currency, n_cores, randMinNetwork,
                              save_path=None):
 
-    print("Running reverse scope...")
     satMets, satRxns = giveRevScope(rxnMat, prodMat, sumRxnVec,
                                     nutrientSet, Currency, target)
 

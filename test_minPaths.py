@@ -17,11 +17,10 @@ if __name__ == "__main__":
     target_id = inv_met_map[target]
     target_name = cpd_string_dict[target_id]
     print(f"Testing pruning on target: {target_id} - {target_name}")
-    print("Running reverse scope...")
     
     start = time.time()
     satMets, satRxns = giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, target)
-    print(f"Reverse scope complete, with {np.sum(satRxns)} satisfied reactions. Starting pruning...")
+    print(f"Starting pruning...")
     print(f"Time taken for reverse scope: {time.time() - start:.2f} seconds")
     
     start = time.time()

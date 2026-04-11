@@ -15,12 +15,12 @@ if __name__ == "__main__":
 
     if data == "MinNets":
         from load_paths import loadPaths
-        from generate_autoNets import allAutonomousNetworks
+        from generate_minNet_autoNets import allAutonomousNetworks
         all_paths, data_dir = loadPaths(mode=mode, dataset=dataset)
 
     if data == "NumPaths":
         from load_numpaths import loadNumPaths
-        from generate_random_autoNets import allAutonomousNetworks
+        from generate_numPath_autoNets import allAutonomousNetworks
         all_paths, data_dir = loadNumPaths(mode=mode, dataset=dataset)
 
     start_time = time.time()

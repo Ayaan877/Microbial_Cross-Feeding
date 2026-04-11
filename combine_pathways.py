@@ -1,5 +1,5 @@
 import numpy as np
-from prune_check import isAllCoreProduced
+from prune_check import isCoreProduced
 
 def buildAutonomousNetwork(pathway_list, rxnMat, prodMat, sumRxnVec, 
                            nutrientSet, Currency, coreTBPs, prune, rng=None, verbose=False):
@@ -36,7 +36,7 @@ def buildAutonomousNetwork(pathway_list, rxnMat, prodMat, sumRxnVec,
             removed_any = False
 
             for rxn in rng.permutation(currSatRxns):
-                if isAllCoreProduced(rxn, currSatRxnVec, rxnMat, prodMat,
+                if isCoreProduced(rxn, currSatRxnVec, rxnMat, prodMat,
                                     sumRxnVec, nutrientSet, Currency, coreTBPs):
                     currSatRxnVec[rxn] = 0
                     removed_any = True

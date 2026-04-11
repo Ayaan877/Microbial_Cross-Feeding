@@ -23,7 +23,6 @@ def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
     Returns: A list of unique pathways from the medium to the precursor. 
     '''
     
-    print("Running reverse scope...")
     satMets, satRxns = giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, target)
 
     unique_nets = set()

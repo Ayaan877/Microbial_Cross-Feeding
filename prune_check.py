@@ -16,19 +16,12 @@ def prunedSatsMets(remRxns, satRxns, rxnMat, prodMat, sumRxnVec,
 
 def isCoreProduced(remRxns, satRxns, rxnMat, prodMat, sumRxnVec, 
                     nutrientSet, Currency, coreTBP):
-
-    tempSatMets, tempSatRxns = prunedSatsMets(remRxns, satRxns, rxnMat, prodMat, sumRxnVec, 
-                                              nutrientSet, Currency)
-    
-    # Checking if this still produces the core molecule.
-    return bool(tempSatMets[coreTBP])
-
-#-------------------------------------------------------------------------
-
-def isAllCoreProduced(remRxns, satRxns, rxnMat, prodMat, sumRxnVec,
-                      nutrientSet, Currency, coreTBPs):
-
+    """
+    Check whether core metabolite(s) are still produced after removing
+    reactions. coreTBP can be a single index or a list/array of indices.
+    """
     tempSatMets, tempSatRxns = prunedSatsMets(remRxns, satRxns, rxnMat, prodMat, sumRxnVec, 
                                               nutrientSet, Currency)
 
-    return all(tempSatMets[t] for t in coreTBPs)
+    cores = np.atleast_1d(np.asarray(coreTBP)).ravel()
+    return all(tempSatMets[c] for c in cores)

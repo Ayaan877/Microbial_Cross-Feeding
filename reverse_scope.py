@@ -24,6 +24,7 @@ def giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, coreTBP):
 
     satMets, satRxns are sets of metabolites and reactions, with their custom IDs.
     """
+    print(f"Running reverse scope...", flush=True)
 
     # Initializing all the vectors to propagate the satisfied subgraph search.
     seedVec, rxnProc = np.zeros(len(np.transpose(rxnMat))), np.zeros(len(rxnMat))
@@ -49,11 +50,17 @@ def giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, coreTBP):
             return satMets, satRxns
 
         # Calculating the new metabolites that need to be produced
-        # due to the new steps added to the reverse scope.
         deltaMetVec = np.logical_xor(currScopeMets, 
                                      np.logical_and(currScopeMets, satMets)) * 1
 
         # If the full reverse scope has been reached, stopping and returning the marked set.
         if set(np.nonzero(currScopeMets)[0]).issubset(set(np.nonzero(prevScopeMets)[0])):
-            print(f'Reverse scope complete with {np.sum(satMets)} metabolites and {np.sum(satRxns)} reactions.', flush=True)
+            print(f'Reverse scope complete with {int(np.sum(satMets))} metabolites and {int(np.sum(satRxns))} reactions.', flush=True)
+
+            # Verify all requested cores are satisfied.
+            cores = np.atleast_1d(np.asarray(coreTBP)).ravel()
+            unsatisfied = [int(c) for c in cores if not satMets[c]]
+            if unsatisfied:
+                raise ValueError(f"Reverse scope failed to satisfy target(s): {unsatisfied}")
+
             return satMets, satRxns      
