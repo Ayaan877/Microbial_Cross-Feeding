@@ -4,7 +4,6 @@ Returns: Minimal autonomous network (and saves it)
 '''
 from load_paths import loadPaths
 from combine_pathways import buildAutonomousNetwork
-from calculate_yield import *
 from load_data import *
 import time
 

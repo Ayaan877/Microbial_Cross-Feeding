@@ -34,7 +34,6 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
             if isCoreProduced(batch, currSatRxnVec, rxnMat, prodMat, 
                               sumRxnVec, nutrientSet, Currency, coreTBP):
 
-                print(f"Removing batch of {batch_size}")
                 currSatRxnVec[batch] = 0
                 fail_count = 0
 
