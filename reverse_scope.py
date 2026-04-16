@@ -1,5 +1,5 @@
 import numpy as np
-from satisfiability_check import markSatMetsRxns
+from satisfiability_check import markSatMetsRxns, make_sparse
 
 def giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, coreTBP):
     """
@@ -26,8 +26,16 @@ def giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, coreTBP):
     """
     print(f"Running reverse scope...", flush=True)
 
+    # Convert to sparse once if needed (cached for repeated calls).
+    sp_rxnMat = make_sparse(rxnMat)
+    sp_prodMat = make_sparse(prodMat)
+    sp_rxnMat_T = sp_rxnMat.T.tocsr()
+
+    n_rxns, n_mets = sp_rxnMat.get_shape()
+
     # Initializing all the vectors to propagate the satisfied subgraph search.
-    seedVec, rxnProc = np.zeros(len(np.transpose(rxnMat))), np.zeros(len(rxnMat))
+    seedVec = np.zeros(n_mets)
+    rxnProc = np.zeros(n_rxns)
     seedVec[coreTBP] = 1
     currScopeMets = np.copy(seedVec)
     prevScopeMets = np.copy(seedVec)
@@ -37,12 +45,13 @@ def giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, coreTBP):
         prevScopeMets = np.logical_or(currScopeMets, prevScopeMets)
 
         # Propagating reverse scope.
-        rxnProc = (np.dot(prodMat, deltaMetVec) + rxnProc > 0) * 1
-        currScopeMets = (np.dot(np.transpose(rxnMat), np.dot(prodMat, deltaMetVec)) > 0) * 1
+        prod_delta = np.asarray(sp_prodMat.dot(deltaMetVec)).ravel()
+        rxnProc = (prod_delta + rxnProc > 0) * 1
+        currScopeMets = (np.asarray(sp_rxnMat_T.dot(prod_delta)).ravel() > 0) * 1
         currScopeMets = np.logical_xor(currScopeMets, np.logical_and(currScopeMets, prevScopeMets))
 
         # Marking the satisfied metabolites and reactions.
-        satMets, satRxns = markSatMetsRxns(rxnProc, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency)
+        satMets, satRxns = markSatMetsRxns(rxnProc, sp_rxnMat, sp_prodMat, sumRxnVec, nutrientSet, Currency)
 
         # If core has been reached, checking if everything is marked, then returning.
         if np.array_equal(satRxns, rxnProc):

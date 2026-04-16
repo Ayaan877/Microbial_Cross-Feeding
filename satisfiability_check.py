@@ -1,4 +1,19 @@
 import numpy as np
+from scipy import sparse
+
+# Cache to avoid repeated dense→sparse conversion for the same arrays.
+sparse_cache = {}
+
+def make_sparse(arr):
+    """Convert to CSR, caching by array id to avoid redundant conversions."""
+    if sparse.issparse(arr):
+        return arr
+    key = id(arr)
+    if key in sparse_cache and sparse_cache[key].shape == arr.shape:
+        return sparse_cache[key]
+    sp = sparse.csr_matrix(arr)
+    sparse_cache[key] = sp
+    return sp
 
 def markSatMetsRxns(rxnProc, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency):
     """
@@ -6,6 +21,9 @@ def markSatMetsRxns(rxnProc, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency):
     markes all reactions and metabolites in the list of reactions that are 
     'satisfied', i.e. which can be reached via simply a seed set of the 
     given nutrients and currency metabolites.
+
+    Accepts both dense (ndarray) and sparse (csr_matrix) inputs for
+    rxnMat and prodMat.  Internally converts to sparse for speed.
 
     RETURNS:
 
@@ -24,19 +42,22 @@ def markSatMetsRxns(rxnProc, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency):
         satMetVec[seeds] = 1
         return satMetVec, np.zeros(n_rxns)
 
+    # Convert to sparse once if needed (cached for repeated calls).
+    sp_rxnMat = make_sparse(rxnMat)
+    sp_prodMat = make_sparse(prodMat)
+
     # Extract submatrices for active reactions only.
-    sub_rxnMat = rxnMat[active_rxns]
-    sub_prodMat = prodMat[active_rxns]
+    sub_rxnMat = sp_rxnMat[active_rxns]
+    sub_prodMat = sp_prodMat[active_rxns]
     sub_sumRxnVec = sumRxnVec[active_rxns]
 
     # Compress metabolite dimension: keep only columns involved in any
     # active reaction plus the seed metabolites.
-    seed_mask = np.zeros(n_mets, dtype=bool)
-    seed_mask[seeds] = True
-    involved_mets = np.nonzero(np.any(sub_rxnMat, axis=0) | np.any(sub_prodMat, axis=0) | seed_mask)[0]
+    involved_mets = np.union1d(
+        np.union1d(sub_rxnMat.indices, sub_prodMat.indices), seeds)
 
     comp_rxnMat = sub_rxnMat[:, involved_mets]
-    comp_prodMat_T = sub_prodMat[:, involved_mets].T
+    comp_prodMat_T = sub_prodMat[:, involved_mets].T.tocsr()
     
     # Map seed indices into compressed metabolite space.
     met_to_local = np.empty(n_mets, dtype=np.intp)
@@ -52,8 +73,10 @@ def markSatMetsRxns(rxnProc, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency):
         old_sub = comp_satRxnVec.copy()
 
         # Marking first reactions, then metabolites, iteratively.
-        comp_satRxnVec = (comp_rxnMat @ comp_satMetVec == sub_sumRxnVec) * 1
-        comp_satMetVec = (comp_prodMat_T @ comp_satRxnVec + comp_satMetVec > 0) * 1
+        comp_satRxnVec = (np.asarray(comp_rxnMat.dot(comp_satMetVec)).ravel()
+                          == sub_sumRxnVec) * 1.0
+        comp_satMetVec = (np.asarray(comp_prodMat_T.dot(comp_satRxnVec)).ravel()
+                          + comp_satMetVec > 0) * 1.0
 
         # Checking if all satisfied nodes have been marked.
         if np.array_equal(old_sub, comp_satRxnVec):

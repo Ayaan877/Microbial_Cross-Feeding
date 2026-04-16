@@ -7,5 +7,4 @@ AutoNets*
 logs
 test.py
 verify_data.py
-build_cross_feeding.py
-test_cross_feeding.py
+*cross_feeding*.py
