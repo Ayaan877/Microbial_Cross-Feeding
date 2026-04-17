@@ -7,100 +7,70 @@ from reverse_scope import giveRevScope
 from batch_pruning import randMinNetwork
 
 
-def prune_worker(args):
-    """Multiprocessing worker: prune the shared reverse-scope network."""
-    (satRxns, rxnMat, prodMat, sumRxnVec,
-     coreTBPs, nutrientSet, Currency, seed) = args
+worker_data = {}
 
+def init_worker(data):
+    global worker_data
+    worker_data = data
+
+def prune_worker(seed):
+    """Multiprocessing worker: prune the shared reverse-scope network."""
+    d = worker_data
     rng = np.random.default_rng(seed)
-    return randMinNetwork(satRxns, rxnMat, prodMat, sumRxnVec,
-                          coreTBPs, nutrientSet, Currency, rng=rng)
+    return randMinNetwork(d['satRxns'], d['rxnMat'], d['prodMat'], d['sumRxnVec'],
+                          d['coreTBPs'], d['nutrientSet'], d['Currency'], rng=rng)
 
 def generate_revScopeAutoNets(rxnMat, prodMat, sumRxnVec, nutrientSet,
                               Currency, coreTBPs, n_target=50000,
                               n_workers=32, batch_size=None,
-                              save_path=None, checkpoint_every=1000):
+                              save_path=None, save_interval=1000):
     """
     Generate `n_target` unique minimal autonomous networks by repeatedly
     batch-pruning the same reverse-scope subgraph with different seeds.
-
-    Periodically saves a checkpoint every `checkpoint_every` new unique
-    networks (default 1000) so progress is not lost if the job is killed.
     """
     if batch_size is None:
         batch_size = n_workers
 
     satMets, satRxns = giveRevScope(rxnMat, prodMat, sumRxnVec,
                                     nutrientSet, Currency, coreTBPs)
-    print(f"Reverse scope found {int(np.sum(satRxns))} reactions.", flush=True)
+    print(f"Reverse scope found {int(np.sum(satRxns))} reactions.")
 
-    # Resume from checkpoint if it exists
-    checkpoint_path = str(save_path) + ".ckpt" if save_path else None
     unique_nets = set()
-    if checkpoint_path:
-        try:
-            with open(checkpoint_path, "rb") as f:
-                loaded = pickle.load(f)
-            unique_nets = set(tuple(sorted(net)) for net in loaded)
-            print(f"Resumed from checkpoint: {len(unique_nets)} unique autonets.", flush=True)
-        except FileNotFoundError:
-            pass
-
     attempts = 0
-    last_checkpoint_count = len(unique_nets)
+    processed = 0
 
-    with Pool(processes=n_workers) as pool:
+    data = dict(satRxns=satRxns, rxnMat=rxnMat, prodMat=prodMat, sumRxnVec=sumRxnVec,
+                coreTBPs=coreTBPs, nutrientSet=nutrientSet, Currency=Currency)
+
+    with Pool(processes=n_workers, initializer=init_worker, initargs=(data,)) as pool:
         while len(unique_nets) < n_target:
             attempts += 1
-            seeds = np.random.randint(0, 2**31, size=batch_size)
-
-            worker_args = [(satRxns, rxnMat, prodMat, sumRxnVec,
-                            coreTBPs, nutrientSet, Currency, int(s))
-                           for s in seeds]
+            seeds = [int(s) for s in np.random.randint(0, 2**31, size=batch_size)]
 
             start = time.time()
-            results = pool.map(prune_worker, worker_args)
+            results = pool.map(prune_worker, seeds)
             elapsed = time.time() - start
 
             for net in results:
                 unique_nets.add(tuple(sorted(net)))
 
+            processed += len(results)
             print(f"[{datetime.now().strftime('%H:%M:%S')}] "
-                  f"[Attempt {attempts}] {len(unique_nets)} unique autonets, {elapsed:.1f}s ",
-                  flush=True)
+                  f"[Attempt {attempts}] {len(unique_nets)} unique autonets, {elapsed:.1f}s ")
 
-            # Periodic checkpoint
-            if (checkpoint_path and
-                    len(unique_nets) - last_checkpoint_count >= checkpoint_every):
-                _save_nets(unique_nets, checkpoint_path)
-                last_checkpoint_count = len(unique_nets)
-                print(f"  Checkpoint saved ({len(unique_nets)} nets).", flush=True)
+            if save_path is not None and processed % save_interval < batch_size:
+                with open(save_path, "wb") as f:
+                    pickle.dump([np.array(net) for net in unique_nets], f)
+                print(f"Checkpoint: {processed} processed, {len(unique_nets)} unique networks saved")
 
     networks = [np.array(net) for net in unique_nets]
-    print(f"Finished: {len(networks)} unique autonets in {attempts} attempts.", flush=True)
+    print(f"Finished: {len(networks)} unique autonets in {attempts} attempts.")
 
     if save_path is not None:
-        _save_nets(unique_nets, save_path)
-        print(f"Saved to {save_path}", flush=True)
-        # Clean up checkpoint
-        if checkpoint_path:
-            import os
-            try:
-                os.remove(checkpoint_path)
-            except OSError:
-                pass
-
+        with open(save_path, "wb") as f:
+            pickle.dump(networks, f)
+        print(f"Saved to {save_path}")
     return networks
-
-
-def _save_nets(unique_nets, path):
-    """Write the current set of unique networks to disk atomically."""
-    tmp_path = str(path) + ".tmp"
-    networks = [np.array(net) for net in unique_nets]
-    with open(tmp_path, "wb") as f:
-        pickle.dump(networks, f)
-    import os
-    os.replace(tmp_path, path)
 
 
 if __name__ == "__main__":
