@@ -6,6 +6,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
     """
     Wrapper for batch-based pruning followed by single-reaction cleanup.
     """
+    print(f"Batch pruning network...", flush=True)
     if rng is None:
         rng = np.random.default_rng()
 
@@ -23,7 +24,6 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
             break
 
         batch_size = max(1, int(n_curr * batch_frac))
-        # print(f"[batch] Current size={n_curr}, batch_size={batch_size}")
 
         # ------------------------------------------------
         # Batchwise Reaction Removal Phase
@@ -57,7 +57,6 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
                     removed_any = True
 
             if not removed_any:
-                print("No more removable reactions → terminating.", flush=True)
                 print(f'Minimal network size = {len(currSatRxns)}', flush=True)
                 break
     

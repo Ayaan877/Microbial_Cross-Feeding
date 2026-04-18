@@ -11,7 +11,7 @@ def get_intermediates(net, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, ex
                                  sumRxnVec, nutrientSet, Currency)
     produced = set(np.nonzero(satMets)[0])
     intermediates = np.array(sorted(produced - set(excluded)))
-    return intermediates, satMets
+    return intermediates
 
 
 def get_byproducts(net, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, excluded):
@@ -19,11 +19,11 @@ def get_byproducts(net, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, exclu
     Metabolites produced by the network that are not consumed as reactants
     by any reaction in the network, excluding precursors/currency/nutrients/energy.
     """
-    intermediates, satMets = get_intermediates(net, rxnMat, prodMat, sumRxnVec,
+    intermediates = get_intermediates(net, rxnMat, prodMat, sumRxnVec,
                                                nutrientSet, Currency, excluded)
     reactVec = np.logical_or.reduce(rxnMat[net]) if len(net) > 0 else np.zeros(rxnMat.shape[1], dtype=bool)
     byproducts = np.array([m for m in intermediates if not reactVec[m]])
-    return byproducts, satMets
+    return byproducts
 
 
 def get_candidates(net, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, 
@@ -32,10 +32,10 @@ def get_candidates(net, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency,
     excluded = sorted(set(Currency + Energy + Core + nutrientSet))
 
     if use_byproducts:
-        candidates, satMets = get_byproducts(net, rxnMat, prodMat, sumRxnVec,
+        candidates = get_byproducts(net, rxnMat, prodMat, sumRxnVec,
                                        nutrientSet, Currency, excluded)
     else:
-        candidates, satMets = get_intermediates(net, rxnMat, prodMat, sumRxnVec,
+        candidates = get_intermediates(net, rxnMat, prodMat, sumRxnVec,
                                           nutrientSet, Currency, excluded)
-    return candidates, satMets
+    return candidates
 
