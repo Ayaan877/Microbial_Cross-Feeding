@@ -20,6 +20,6 @@ export NUM_WORKERS=32
 # arg3 = dataset number
 # arg4 = version number
 
-python get_yields.py batch P 3 1
+python get_yields.py batch P 3 2
 
 echo "Finished yield calculation at $(date)"
