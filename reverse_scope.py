@@ -24,7 +24,7 @@ def giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, coreTBP):
 
     satMets, satRxns are sets of metabolites and reactions, with their custom IDs.
     """
-    print(f"Running reverse scope...", flush=True)
+    # print(f"Running reverse scope...", flush=True)
 
     # Convert to sparse once if needed (cached for repeated calls).
     sp_rxnMat = make_sparse(rxnMat)
@@ -55,7 +55,7 @@ def giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, coreTBP):
 
         # If core has been reached, checking if everything is marked, then returning.
         if np.array_equal(satRxns, rxnProc):
-            print('All reactions are satisfied.', flush=True)
+            # print('All reactions are satisfied.', flush=True)
             return satMets, satRxns
 
         # Calculating the new metabolites that need to be produced
@@ -64,7 +64,7 @@ def giveRevScope(rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, coreTBP):
 
         # If the full reverse scope has been reached, stopping and returning the marked set.
         if set(np.nonzero(currScopeMets)[0]).issubset(set(np.nonzero(prevScopeMets)[0])):
-            print(f'Reverse scope complete with {int(np.sum(satMets))} metabolites and {int(np.sum(satRxns))} reactions.', flush=True)
+            # print(f'Reverse scope complete with {int(np.sum(satMets))} metabolites and {int(np.sum(satRxns))} reactions.', flush=True)
 
             # Verify all requested cores are satisfied.
             cores = np.atleast_1d(np.asarray(coreTBP)).ravel()

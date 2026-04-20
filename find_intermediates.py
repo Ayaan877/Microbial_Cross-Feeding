@@ -27,9 +27,9 @@ def get_byproducts(net, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, exclu
 
 
 def get_candidates(net, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, 
-                   Core, Energy, use_byproducts=False):
+                   Core, use_byproducts):
     
-    excluded = sorted(set(Currency + Energy + Core + nutrientSet))
+    excluded = sorted(set(Currency + Core + nutrientSet))
 
     if use_byproducts:
         candidates = get_byproducts(net, rxnMat, prodMat, sumRxnVec,
@@ -39,3 +39,19 @@ def get_candidates(net, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency,
                                           nutrientSet, Currency, excluded)
     return candidates
 
+if __name__ == "__main__":
+    import pickle
+    from load_data import *
+
+    with open("AutoNets_revScope/AutoNets_revScope_2.pkl", "rb") as f:
+        all_autonets = pickle.load(f)
+
+    net_A = all_autonets[2395]
+    net_B = all_autonets[1965]
+
+    candidates_A = get_candidates(net_A, rxnMat, prodMat, sumRxnVec,
+                                   nutrientSet, Currency, Core, use_byproducts=False)
+    candidates_B = get_candidates(net_B, rxnMat, prodMat, sumRxnVec,
+                                   nutrientSet, Currency, Core, use_byproducts=False)
+    common = np.array(sorted(list(set(candidates_A) & set(candidates_B))), dtype=int)
+    

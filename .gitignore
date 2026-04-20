@@ -7,5 +7,3 @@ AutoNets*
 logs
 test.py
 verify_data.py
-*cross_feeding*.py
-find_currency_bypass.py
