@@ -27,7 +27,7 @@ def crossfeed_worker(args):
             net_A, net_B,
             d['rxnMat'], d['prodMat'], d['sumRxnVec'],
             d['nutrientSet'], d['Currency'], d['Core'],
-            use_byproducts=False, max_attempts=10, max_runs=3)
+            use_byproducts=d['use_byproducts'], max_attempts=10, max_runs=3)
 
     if result is None:
         return {
@@ -41,31 +41,20 @@ def crossfeed_worker(args):
         'success': True,
         'i_A': i_A,
         'i_B': i_B,
-        'auto_A_size': len(net_A),
-        'auto_B_size': len(net_B),
-        'cross_A': result['cross_A'],
-        'cross_B': result['cross_B'],
-        'cross_A_size': len(result['cross_A']),
-        'cross_B_size': len(result['cross_B']),
-        'A_donated': int(result['A_donated']),
-        'B_donated': int(result['B_donated']),
-        'A_ext_core': int(result['A_ext_core']),
-        'B_ext_core': int(result['B_ext_core']),
-        'pathway_AB': result['pathway_AB'],
-        'pathway_BA': result['pathway_BA'],
+        'result': result,
     }
 
 
-def pair_key(r):
+def pair_key(result):
     """Canonical unordered key for deduplication by network content."""
-    return tuple(sorted([tuple(sorted(r['cross_A'])), tuple(sorted(r['cross_B']))]))
+    return tuple(sorted([tuple(sorted(result['cross_A'])), tuple(sorted(result['cross_B']))]))
 
 
 def generate_crossfeeding_pairs(autonets, rxnMat, prodMat, sumRxnVec,
                                 nutrientSet, Currency, Core,
                                 n_target=50000, n_workers=32,
                                 batch_size=None, save_path=None,
-                                save_interval=1000):
+                                save_interval=1000, use_byproducts=False):
     """
     Generate up to `n_target` unique cross-feeding pairs from an ensemble
     of autonomous networks by randomly sampling network pairs and calling
@@ -88,7 +77,7 @@ def generate_crossfeeding_pairs(autonets, rxnMat, prodMat, sumRxnVec,
 
     data = dict(autonets=autonets, rxnMat=rxnMat, prodMat=prodMat,
                 sumRxnVec=sumRxnVec, nutrientSet=nutrientSet,
-                Currency=Currency, Core=Core)
+                Currency=Currency, Core=Core, use_byproducts=use_byproducts)
 
     with Pool(processes=n_workers, initializer=init_worker, initargs=(data,)) as pool:
         while len(unique_pairs) < n_target:
@@ -119,17 +108,18 @@ def generate_crossfeeding_pairs(autonets, rxnMat, prodMat, sumRxnVec,
                           f"(sizes {r['auto_A_size']}, {r['auto_B_size']})")
                 else:
                     total_successes += 1
-                    key = pair_key(r)
+                    res = r['result']
+                    key = pair_key(res)
                     is_new = key not in unique_pairs
                     if is_new:
-                        unique_pairs[key] = r
+                        unique_pairs[key] = res
                         batch_new += 1
                     print(f"  {'NEW   ' if is_new else 'DUP   '}: "
                           f"nets [{r['i_A']}, {r['i_B']}] | "
-                          f"A: {r['auto_A_size']}→{r['cross_A_size']} rxns | "
-                          f"B: {r['auto_B_size']}→{r['cross_B_size']} rxns | "
-                          f"A donates met {r['A_donated']} | "
-                          f"B donates met {r['B_donated']}")
+                          f"A: {len(res['auto_A'])} --> {len(res['cross_A'])} rxns | "
+                          f"B: {len(res['auto_B'])} --> {len(res['cross_B'])} rxns | "
+                          f"A donates met {res['A_donated']} | "
+                          f"B donates met {res['B_donated']}")
 
             print(f"[{datetime.now().strftime('%H:%M:%S')}] "
                   f"Batch {attempts}: {batch_new} new | "
