@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N Byp_CrossNets
+#PBS -N Int_CrossNets
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=10:00:00
@@ -17,6 +17,6 @@ source venv/bin/activate
 # arg2 = crossnet dataset number
 # arg3 = exchanged metabolite type (byp or int)
 
-python build_crossfeeders.py 2 1 byp
+python build_crossfeeders.py 2 2 int
 
 echo "Finished autonomous network generation at $(date)"
