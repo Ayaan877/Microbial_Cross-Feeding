@@ -77,9 +77,7 @@ pi = stoich_matrix.clip(min = 0.0)
 rxnMat = (rho != 0) * 1
 prodMat = (pi != 0) * 1
 
-# Filter degenerate reactions: reactions with no reactants or only currency
-# reactants (produce metabolites from nothing physical). Zero out their rows
-# so they are invisible to all downstream scope/pruning code.
+# Filter degenerate reactions: reactions with no reactants or only currency reactants
 currency_set = set(Currency)
 degenerate = []
 for r in range(rxnMat.shape[0]):
@@ -88,6 +86,9 @@ for r in range(rxnMat.shape[0]):
     if len(non_currency) == 0:
         degenerate.append(r)
 if degenerate:
+    stoich_matrix[degenerate] = 0
+    rho[degenerate] = 0
+    pi[degenerate] = 0
     rxnMat[degenerate] = 0
     prodMat[degenerate] = 0
 

@@ -4,8 +4,6 @@ from reverse_scope import giveRevScope
 from batch_pruning import *
 from satisfiability_check import markSatMetsRxns
 from prune_check import isCoreProduced
-import io
-from contextlib import redirect_stdout
 
 def remove_core_production(net, removed_core, rxnMat, prodMat, sumRxnVec,
                            nutrientSet, Currency, Core, intermediates):

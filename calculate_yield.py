@@ -18,27 +18,29 @@ def splitByDemand(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
     # Initializing yield counters for E and B.
     runningE, runningB = 0.0, 0.0
 
-    # Getting a vector of which reactions are in the scope of the network.
-    scopeRxns = np.zeros(len(stoich_matrix))
-    scopeRxns[orgRxns] = 1
-    isCoreProduced = np.zeros(len(np.transpose(stoich_matrix)))
+    # Getting the compact set of active reactions in this network.
+    nMets = len(np.transpose(stoich_matrix))
+    activeRxns = np.array(orgRxns, dtype = int)
+    nActive = len(activeRxns)
+    isCoreProduced = np.zeros(nMets)
 
     # Constructing a new metabolite state vector.
-    metState = np.zeros(len(np.transpose(stoich_matrix)))
+    metState = np.zeros(nMets)
     metState[ Currency + nutrientSet ] = 1
 
-    # Getting copies of the relevant matrices.
-    r = (np.copy(rho).T * scopeRxns).T
-    S = (np.copy(stoich_matrix).T * scopeRxns).T
-    rMat = (np.copy(rxnMat).T * scopeRxns).T
-    pMat = (np.copy(prodMat).T * scopeRxns).T
+    # Getting compact copies of the relevant matrices (active reactions only).
+    r = np.copy(rho[activeRxns])
+    S = np.copy(stoich_matrix[activeRxns])
+    rMat = np.copy(rxnMat[activeRxns])
+    pMat = np.copy(prodMat[activeRxns])
+    sumRxnVecActive = sumRxnVec[activeRxns]
 
     # Figuring out which reactions can be performed at this step.
-    procRxnVec = ((np.dot(rMat, metState != 0) - sumRxnVec) == 0) * 1
-    procRxnVec[sumRxnVec == 0] = 0
+    procRxnVec = ((np.dot(rMat, metState != 0) - sumRxnVecActive) == 0) * 1
+    procRxnVec[sumRxnVecActive == 0] = 0
 
     # Continuing calculation till no more reactions can be performed
-    isChecked = np.zeros(len(rxnMat))
+    isChecked = np.zeros(nActive)
 
     # Computing which reaction gets what share of which reactants.
     mask = np.abs(np.sum(r, axis = 0)) != 0
@@ -46,6 +48,9 @@ def splitByDemand(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
     shareMatrix[:, np.where(mask)[0]] = ((r * metState)[:, mask] / 
                                          np.abs(np.sum(r, axis = 0))[mask])
     shareMatrix[:, Currency] = -1
+
+    # Saving initial total demand for nutrients to maintain their share across rounds.
+    totalInitialDemand = np.abs(np.sum(r, axis = 0))
 
     while procRxnVec.any():
 
@@ -85,13 +90,11 @@ def splitByDemand(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
                 ratio = S[thisRxn, thisMet] / S[thisRxn, limRct]
 
                 # Updating E and B if these metabolites are produced or consumed.
-                if thisMet == 1:
-                    runningE += shareMatrix[thisRxn, limRct] * ratio
-                elif thisMet in [3, 4]:
+                if thisMet in Energy:
                     runningE += shareMatrix[thisRxn, limRct] * ratio
                 elif thisMet in Core:
                     if thisMet in ps:
-                        isCoreProduced[Core] = 1
+                        isCoreProduced[thisMet] = 1
                     runningB += shareMatrix[thisRxn, limRct] * ratio
 
             # Updating metabolite amounts post reaction.
@@ -101,17 +104,24 @@ def splitByDemand(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
 
         # Redistributing the produced metabolites among reactions by demand.
         r[np.where(isChecked)] = 0
-        mask = np.abs(np.sum(r, axis = 0)) != 0
-        shareMatrix[:, np.where(mask)[0]] = ((r * prodState)[:, mask] / 
-                                             np.abs(np.sum(r, axis = 0))[mask])
+        totalDemand = np.abs(np.sum(r, axis = 0))
+        newProdCols = np.where((prodState != 0) & (totalDemand != 0))[0]
+        if len(newProdCols) > 0:
+            shareMatrix[:, newProdCols] = ((r * prodState)[:, newProdCols] /
+                                           totalDemand[newProdCols])
         shareMatrix[:, Currency] = -1
 
+        # Maintaining nutrient shares across rounds using initial total demand.
+        for met in nutrientSet:
+            if totalInitialDemand[met] > 0:
+                shareMatrix[:, met] = r[:, met] / totalInitialDemand[met]
+
         # Recalculating performable reactions.
-        procRxnVec = ((np.dot(rMat, np.sum(shareMatrix, axis = 0) != 0) - sumRxnVec) == 0) * 1
+        procRxnVec = ((np.dot(rMat, np.sum(shareMatrix, axis = 0) != 0) - sumRxnVecActive) == 0) * 1
         procRxnVec[np.where(isChecked)] = 0
-        procRxnVec[sumRxnVec == 0] = 0
+        procRxnVec[sumRxnVecActive == 0] = 0
 
     if isCoreProduced[Core].all():
         return runningE, runningB, True
     else:
-        return -1.0, -1.0, False
+        return None, None, False

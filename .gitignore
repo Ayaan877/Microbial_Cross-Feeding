@@ -4,6 +4,9 @@ __pycache__
 MinNets*
 NumPaths*
 AutoNets*
+CrossNets*
 logs
 test.py
 verify_data.py
+calculate_crossfeeding_yield.py
+test_yields.py
