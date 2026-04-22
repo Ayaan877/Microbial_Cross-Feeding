@@ -44,7 +44,7 @@ def splitByDemand(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
 
     # Computing which reaction gets what share of which reactants.
     mask = np.abs(np.sum(r, axis = 0)) != 0
-    shareMatrix = np.zeros_like(S)
+    shareMatrix = np.zeros(S.shape, dtype=float)
     shareMatrix[:, np.where(mask)[0]] = ((r * metState)[:, mask] / 
                                          np.abs(np.sum(r, axis = 0))[mask])
     shareMatrix[:, Currency] = -1
@@ -70,14 +70,16 @@ def splitByDemand(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
 
             # Checking for limiting reactants.
             for thisReactant in reactants:
-                # Now assuming that all of this reactant is used up. Are others enough?
-                if not isLimiting(thisReactant, thisRxn, shareMatrix[thisRxn], S, reactants):
+                if isLimiting(thisReactant, thisRxn, shareMatrix[thisRxn], S, reactants):
                     allowedRct.append(thisReactant)
                     limRct = deepcopy(thisReactant)
                     break
 
             # If nothing is limiting, everything gets used.
             if not allowedRct:
+                if reactants:
+                    limRct = reactants[0]
+                else:
                     limRct = giveLimitingCurrency(r, thisRxn)
 
             # Updating metabolite amounts post reaction.

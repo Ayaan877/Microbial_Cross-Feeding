@@ -4,6 +4,7 @@ from reverse_scope import giveRevScope
 from batch_pruning import *
 from satisfiability_check import markSatMetsRxns
 from prune_check import isCoreProduced
+from autonomy_check import verify_autonomy
 
 def remove_core_production(net, removed_core, rxnMat, prodMat, sumRxnVec,
                            nutrientSet, Currency, Core, intermediates):
@@ -160,21 +161,6 @@ def build_pathway_pair(net_A, net_B, candidates_A, candidates_B,
     print(f"\nERROR: Cross-feeding construction failed after {max_attempts} attempts.",
           flush=True)
     return None
-
-
-def verify_autonomy(net, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, Core):
-    """
-    Check that any given network is viable i.e. can produce all cores with a 
-    specified nutrient set (which may include donated metabolites).
-    """
-    rxnVec = np.zeros(rxnMat.shape[0], dtype=int)
-    rxnVec[net] = 1
-    satMets, _ = markSatMetsRxns(rxnVec, rxnMat, prodMat,
-                                 sumRxnVec, nutrientSet, Currency)
-
-    missing_cores = [c for c in Core if not satMets[c]]
-
-    return len(missing_cores) == 0, missing_cores
 
 
 def augment_network(pruned_receiver, donor_pathway, donated_met, rxnMat, prodMat, sumRxnVec, 
