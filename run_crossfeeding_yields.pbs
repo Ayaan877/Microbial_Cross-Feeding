@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N Int_CrossYields
+#PBS -N Byp_CrossYields
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=24:00:00
@@ -18,6 +18,6 @@ export NUM_WORKERS=32
 # arg1 = dataset version
 # arg2 = byp or int
 
-python get_crossfeeding_yields.py 2 int
+python get_crossfeeding_yields.py 2 byp
 
 echo "Finished cross-feeding yield calculation at $(date)"
