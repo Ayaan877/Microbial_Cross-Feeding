@@ -1,0 +1,23 @@
+#!/bin/bash
+#PBS -N Int_CrossYields
+#PBS -q cpu
+#PBS -l select=1:ncpus=32:mem=32gb
+#PBS -l walltime=24:00:00
+#PBS -o logs/
+#PBS -e logs/
+
+cd $PBS_O_WORKDIR
+
+module purge
+module load compiler/anaconda3-23.07.0
+
+source venv/bin/activate
+
+export NUM_WORKERS=32
+
+# arg1 = dataset version
+# arg2 = byp or int
+
+python get_crossfeeding_yields.py 2 int
+
+echo "Finished cross-feeding yield calculation at $(date)"
