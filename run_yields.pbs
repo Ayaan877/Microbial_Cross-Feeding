@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N IterYields_RS
+#PBS -N SBD_Yields_RS
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=24:00:00
@@ -18,6 +18,6 @@ export NUM_WORKERS=32
 # arg1 = dataset version
 # arg2 = sbd or iter
 
-python get_yields.py 2 iter
+python get_yields.py 2 sbd
 
 echo "Finished yield calculation at $(date)"
