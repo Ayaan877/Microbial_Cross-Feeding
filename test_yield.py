@@ -5,7 +5,7 @@ from load_data import *
 from autonomy_check import verify_autonomy
 
 autonet_path = 'AutoNets_revScope/AutoNets_revScope_2.pkl'
-autonet_idx = 1925
+autonet_idx = 49265
 
 with open(autonet_path, 'rb') as f:
     AutoNets = pickle.load(f)

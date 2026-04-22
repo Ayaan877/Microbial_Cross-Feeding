@@ -56,5 +56,5 @@ if __name__ == "__main__":
     print(f"\nCompleted in {elapsed:.2f} seconds")
     print(f"Valid networks (all precursors produced): {valid}/{num_nets}")
 
-    with open(f"{autonet_dir}/Yields2_{autonet_data}", "wb") as f:
+    with open(f"{autonet_dir}/Yields_{autonet_data}_new", "wb") as f:
         pickle.dump((E_yields, B_yields, viability), f)
