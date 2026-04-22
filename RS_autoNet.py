@@ -1,7 +1,7 @@
 from reverse_scope import giveRevScope
 from batch_pruning import randMinNetwork
 
-def revScope_autonet(rxnMat, prodMat, sumRxnVec,
+def revScopeAutoNet(rxnMat, prodMat, sumRxnVec,
                             nutrientSet, Currency, coreTBPs):
     """
     Return one minimal autonomous network (numpy array of reaction indices).
@@ -20,7 +20,7 @@ if __name__ == "__main__":
     from satisfiability_check import markSatMetsRxns
 
     start = time.time()
-    net = revScope_autonet(rxnMat, prodMat, sumRxnVec,
+    net = revScopeAutoNet(rxnMat, prodMat, sumRxnVec,
                                   nutrientSet, Currency, Core)
     satRxnVec = np.zeros(rxnMat.shape[0], dtype=int)
     satRxnVec[net] = 1

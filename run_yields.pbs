@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N Yields_revScope
+#PBS -N IterYields_RS
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=24:00:00
@@ -15,11 +15,9 @@ source venv/bin/activate
 
 export NUM_WORKERS=32
 
-# arg1 = batch or single
-# arg2 = NP or P
-# arg3 = dataset number
-# arg4 = version number
+# arg1 = dataset version
+# arg2 = sbd or iter
 
-python get_yields.py 2
+python get_yields.py 2 iter
 
 echo "Finished yield calculation at $(date)"

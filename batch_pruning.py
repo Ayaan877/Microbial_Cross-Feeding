@@ -2,7 +2,7 @@ import numpy as np
 from prune_check import isCoreProduced
 
 def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
-                   coreTBP, nutrientSet, Currency, rng=None, init_frac=0.5):
+                   Core, nutrientSet, Currency, rng=None, init_frac=0.5):
     """
     Wrapper for batch-based pruning followed by single-reaction cleanup.
     """
@@ -32,7 +32,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
             batch = rng.choice(currSatRxns, size=batch_size, replace=False)
 
             if isCoreProduced(batch, currSatRxnVec, rxnMat, prodMat, 
-                              sumRxnVec, nutrientSet, Currency, coreTBP):
+                              sumRxnVec, nutrientSet, Currency, Core):
 
                 currSatRxnVec[batch] = 0
                 fail_count = 0
@@ -51,7 +51,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
 
             for rxn in rng.permutation(currSatRxns):
                 if isCoreProduced([rxn], currSatRxnVec, rxnMat, prodMat,
-                                  sumRxnVec, nutrientSet, Currency, coreTBP):
+                                  sumRxnVec, nutrientSet, Currency, Core):
 
                     currSatRxnVec[rxn] = 0
                     removed_any = True
@@ -65,7 +65,7 @@ def randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
 
 
 def alt_randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
-                   coreTBP, nutrientSet, Currency, donated_met, 
+                   protected_mets, nutrientSet, Currency, donated_met, 
                    rng=None, init_frac=0.5):
     """
     Wrapper for batch-based pruning followed by single-reaction cleanup,
@@ -104,9 +104,9 @@ def alt_randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
             batch = rng.choice(currSatRxns, size=batch_size, replace=False)
 
             viable   = isCoreProduced(batch, currSatRxnVec, rxnMat, prodMat,
-                                      sumRxnVec, augmented_nutrients, Currency, coreTBP)
+                                      sumRxnVec, augmented_nutrients, Currency, protected_mets)
             dependent = not isCoreProduced(batch, currSatRxnVec, rxnMat, prodMat,
-                                           sumRxnVec, base_nutrients, Currency, coreTBP)
+                                           sumRxnVec, base_nutrients, Currency, protected_mets)
 
             if viable and dependent:
                 currSatRxnVec[batch] = 0
@@ -125,9 +125,9 @@ def alt_randMinNetwork(satRxnVec, rxnMat, prodMat, sumRxnVec,
 
             for rxn in rng.permutation(currSatRxns):
                 viable   = isCoreProduced([rxn], currSatRxnVec, rxnMat, prodMat,
-                                          sumRxnVec, augmented_nutrients, Currency, coreTBP)
+                                          sumRxnVec, augmented_nutrients, Currency, protected_mets)
                 dependent = not isCoreProduced([rxn], currSatRxnVec, rxnMat, prodMat,
-                                               sumRxnVec, base_nutrients, Currency, coreTBP)
+                                               sumRxnVec, base_nutrients, Currency, protected_mets)
 
                 if viable and dependent:
                     currSatRxnVec[rxn] = 0

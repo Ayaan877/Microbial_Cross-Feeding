@@ -1,21 +1,35 @@
 from calculate_yield import *
+from calculate_yield_iterative import *
 from load_data import *
 import time
 import multiprocessing as mp
 import pickle
 import sys
 
-def compute_yield(net):
+def compute_yield_sbd(net):
     return splitByDemand(
         stoich_matrix, rxnMat, prodMat,
         sumRxnVec, rho, pi, nutrientSet,
         Energy, Currency, Core, net)
 
+def compute_yield_iter(net):
+    return splitByDemandIterative(
+        stoich_matrix, rxnMat, prodMat,
+        sumRxnVec, rho, pi, nutrientSet,
+        Energy, Currency, Core, net)
+
 if __name__ == "__main__":
-    # mode = sys.argv[1]
-    # minimal = sys.argv[2]
-    # dataset = sys.argv[3]
+
     version = sys.argv[1]
+    mode = sys.argv[2]
+
+    if mode == "sbd":
+        compute_yield = compute_yield_sbd
+    elif mode == "iter":
+        compute_yield = compute_yield_iter
+    else:
+        print(f"Unknown mode '{mode}'. Use 'sbd' or 'iter'.")
+        sys.exit(1)
 
     # autonet_dir = f"AutoNets{dataset}_{mode.capitalize()}_{minimal}"
     # autonet_data = f"AutoNets{dataset}_{mode.capitalize()}_{version}.pkl"
@@ -56,5 +70,5 @@ if __name__ == "__main__":
     print(f"\nCompleted in {elapsed:.2f} seconds")
     print(f"Valid networks (all precursors produced): {valid}/{num_nets}")
 
-    with open(f"{autonet_dir}/Yields_{autonet_data}_new", "wb") as f:
+    with open(f"{autonet_dir}/Yields2_{mode}_{autonet_data}", "wb") as f:
         pickle.dump((E_yields, B_yields, viability), f)

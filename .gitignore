@@ -9,3 +9,7 @@ logs
 test.py
 verify_data.py
 test_yield_vs_autonomy.py
+test_iterative.py
+test_crossfeed_yield.py
+calculate_crossfeeding_yield.py
+diag_convergence.py
