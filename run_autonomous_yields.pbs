@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N AutoP_Yields
+#PBS -N AutoPv1_Yields
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=10:00:00
@@ -14,11 +14,21 @@ module load compiler/anaconda3-23.07.0
 source venv/bin/activate
 
 # ── Config ───────────────────────────────────────────────────────────────────
-VERSION="1"             # autonet version
-MODE="sbd"              # (sbd : split-by-demand | iter: iterative)
+SOURCE="mp"             # rs (revscope) | mp (minpaths)
+VERSION="2"             # autonet version
+MODE="sbd"              # sbd (split-by-demand) | iter (iterative)
 NUM_WORKERS=32          # parallel workers
+
+# MinPaths (mp) settings — only used when SOURCE=mp
+PRUNER="batch"          # batch | single
+PRUNING="prune"         # prune | noprune
+PATHS_VERSION="1"       # minpath dataset version
 # ─────────────────────────────────────────────────────────────────────────────
 
-python get_autoNet_yields.py $VERSION $MODE $NUM_WORKERS
+if [ "$SOURCE" = "mp" ]; then
+    python get_autoNet_yields.py $SOURCE $VERSION $MODE $NUM_WORKERS $PRUNER $PRUNING $PATHS_VERSION
+else
+    python get_autoNet_yields.py $SOURCE $VERSION $MODE $NUM_WORKERS
+fi
 
 echo "Finished yield calculation at $(date)"

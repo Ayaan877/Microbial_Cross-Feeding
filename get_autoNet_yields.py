@@ -20,10 +20,18 @@ def compute_yield_iter(net):
 
 if __name__ == "__main__":
 
-    # Args supplied by PBS script (see run_yields.pbs)
-    version     = sys.argv[1]        # autonet version
-    mode        = sys.argv[2]        # sbd | iter
-    num_workers = int(sys.argv[3])
+    # Args supplied by PBS script (see run_autonomous_yields.pbs)
+    # Usage (rs):  get_autoNet_yields.py rs  <version> <mode> <num_workers>
+    # Usage (mp):  get_autoNet_yields.py mp  <version> <mode> <num_workers> <pruner> <pruning> <paths_version>
+    #   pruner  : batch | single
+    #   pruning : prune | noprune
+    source      = sys.argv[1]        # rs | mp
+    version     = sys.argv[2]        # autonet version
+    mode        = sys.argv[3]        # sbd | iter
+    num_workers = int(sys.argv[4])
+
+    if source not in ("rs", "mp"):
+        raise ValueError(f"Unknown SOURCE '{source}'. Use 'rs' or 'mp'.")
 
     if mode == "sbd":
         compute_yield = compute_yield_sbd
@@ -32,8 +40,16 @@ if __name__ == "__main__":
     else:
         raise ValueError(f"Unknown MODE '{mode}'. Use 'sbd' or 'iter'.")
 
-    autonet_path = f"data/networks/autonets_rs_P_v{version}.pkl"
-    output_path  = f"data/yields/yields_auto_rs_P_v{version}_{mode}.pkl"
+    if source == "rs":
+        autonet_path = f"data/networks/autonets_rs_P_v{version}.pkl"
+        output_path  = f"data/yields/yields_auto_rs_P_v{version}_{mode}.pkl"
+    else:  # mp
+        pruner        = sys.argv[5]       # batch | single
+        pruning       = sys.argv[6]       # prune | noprune
+        paths_version = sys.argv[7]       # minpath dataset version
+        prune_suffix  = "P" if pruning == "prune" else "NP"
+        autonet_path  = f"data/networks/autonets_mp_{pruner}_{prune_suffix}_pv{paths_version}_v{version}.pkl"
+        output_path   = f"data/yields/yields_auto_mp_{pruner}_{prune_suffix}_pv{paths_version}_v{version}_{mode}.pkl"
 
     with open(autonet_path, "rb") as f:
         AutoNets = pickle.load(f)
