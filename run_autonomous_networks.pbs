@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N NumPath_AutoNet_NP
+#PBS -N NumPath_AutoNet_P
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=250:00:00
@@ -13,7 +13,7 @@ N_WORKERS=32
 
 # NumPaths settings (used when MODE=NumPaths)
 BATCH_MODE="batch"      # batch | single
-PRUNING="noprune"       # prune | noprune
+PRUNING="prune"       # prune | noprune
 INPUT_DATASET_ID="2"    # numpath version
 OUTPUT_DATASET_ID="2"   # output autonet version
 
