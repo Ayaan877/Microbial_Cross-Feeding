@@ -20,6 +20,6 @@ CROSSNET_ID="1"         # crossnet version
 NUM_WORKERS=32          # parallel workers
 # ─────────────────────────────────────────────────────────────────────────────
 
-python get_crossfeeding_yields.py $VERSION $CROSSNET_TYPE $CROSSNET_ID $NUM_WORKERS
+python get_crossNet_yields.py $VERSION $CROSSNET_TYPE $CROSSNET_ID $NUM_WORKERS
 
 echo "Finished cross-feeding yield calculation at $(date)"

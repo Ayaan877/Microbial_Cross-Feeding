@@ -4,7 +4,6 @@ from pathlib import Path
 
 NETWORKS_DIR = Path("data/networks")
 
-
 def load_autonets_rs(version):
     """Load revScope autonomous networks (always pruned)."""
     path = NETWORKS_DIR / f"autonets_rs_P_v{version}.pkl"

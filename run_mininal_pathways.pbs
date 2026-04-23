@@ -25,6 +25,6 @@ source venv/bin/activate
 
 TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
-python build_many_minPaths.py $TARGET $MODE $PATH_ID $N_WORKERS $MAX_ATTEMPTS $PLATEAU_WINDOW $PLATEAU_THRESHOLD
+python build_minPaths.py $TARGET $MODE $PATH_ID $N_WORKERS $MAX_ATTEMPTS $PLATEAU_WINDOW $PLATEAU_THRESHOLD
 
 echo "Finished path discovery for $TARGET at $(date)"

@@ -14,7 +14,7 @@ def process_network(args):
 
     return tuple(sorted(network))
 
-def allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec,
+def generate_minPathAutoNets(all_paths, rxnMat, prodMat, sumRxnVec,
                              nutrientSet, Currency, coreTBPs, prune,
                              n_target, n_workers, chunk_size=100,
                              save_path=None, save_interval=100,

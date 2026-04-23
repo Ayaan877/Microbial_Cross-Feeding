@@ -32,7 +32,7 @@ source venv/bin/activate
 if [ "$MODE" = "RevScope" ]; then
     python build_autonomous_networks.py $MODE $DATASET_ID $N_TARGET $N_WORKERS
 else
-    python build_autonomous_networks.py $MODE $BATCH_MODE $PRUNING $INPUT_DATASET_ID $OUTPUT_DATASET_ID $N_TARGET $N_WORKERS
+    python build_autoNets.py $MODE $BATCH_MODE $PRUNING $INPUT_DATASET_ID $OUTPUT_DATASET_ID $N_TARGET $N_WORKERS
 fi
 
 echo "Finished autonomous network generation at $(date)"

@@ -2,13 +2,13 @@ import sys
 import time
 from pathlib import Path
 from datetime import datetime
-from generate_many_minPaths import generate_pruned_networks
+from generate_minPaths import generate_pruned_networks
 from load_data import *
 
 if __name__ == "__main__":
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
-    # Args supplied by PBS script (see run_many_minPaths.pbs)
+    # Args supplied by PBS script (see run_minimal_pathways.pbs)
     target_name       = sys.argv[1]        # KEGG metabolite ID
     mode              = sys.argv[2].lower()  # batch | single
     path_id           = sys.argv[3]        # output version label

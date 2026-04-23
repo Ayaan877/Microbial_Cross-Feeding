@@ -34,6 +34,6 @@ module load compiler/anaconda3-23.07.0
 
 source venv/bin/activate
 
-python build_crossfeeders.py $AUTONET_ID $CROSSNET_ID $EXCHANGED_MET $N_TARGET $N_WORKERS
+python build_crossNets.py $AUTONET_ID $CROSSNET_ID $EXCHANGED_MET $N_TARGET $N_WORKERS
 
 echo "Finished cross-feeding network generation at $(date)"

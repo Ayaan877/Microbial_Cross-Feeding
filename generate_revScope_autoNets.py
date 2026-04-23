@@ -6,7 +6,6 @@ from multiprocessing import Pool
 from reverse_scope import giveRevScope
 from batch_pruning import randMinNetwork
 
-
 worker_data = {}
 
 def init_worker(data):

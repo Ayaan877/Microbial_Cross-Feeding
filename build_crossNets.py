@@ -4,7 +4,7 @@ import time
 from load_data import *
 from pathlib import Path
 from datetime import datetime
-from generate_crossfeeding_pairs import generate_crossfeeding_pairs
+from generate_crossNets import generate_crossfeeding_pairs
 
 if __name__ == "__main__":
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")

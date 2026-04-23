@@ -47,8 +47,8 @@ if __name__ == "__main__":
 
     else:
         if MODE == "NumPaths":
-            from load_numpaths import loadNumPaths
-            from generate_numPath_autoNets import allAutonomousNetworks
+            from load_minPaths import loadNumPaths
+            from generate_minPath_autoNets import generate_minPathAutoNets
             all_paths = loadNumPaths(mode=BATCH_MODE, dataset=INPUT_DATASET_ID)
 
         pruning = PRUNING.lower()
@@ -60,7 +60,7 @@ if __name__ == "__main__":
         print(f"Generating {'pruned' if do_prune else 'unpruned'} autonomous networks from paths (pruner={BATCH_MODE}, v{INPUT_DATASET_ID})...")
         print(f"  Output: {output_path}")
 
-        AutoNets = allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec,
+        AutoNets = generate_minPathAutoNets(all_paths, rxnMat, prodMat, sumRxnVec,
                                         nutrientSet, Currency, Core, prune=do_prune,
                                         n_target=N_TARGET, n_workers=N_WORKERS,
                                         save_path=output_path)

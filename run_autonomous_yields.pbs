@@ -19,6 +19,6 @@ MODE="sbd"              # (sbd : split-by-demand | iter: iterative)
 NUM_WORKERS=32          # parallel workers
 # ─────────────────────────────────────────────────────────────────────────────
 
-python get_yields.py $VERSION $MODE $NUM_WORKERS
+python get_autoNet_yields.py $VERSION $MODE $NUM_WORKERS
 
 echo "Finished yield calculation at $(date)"
