@@ -5,7 +5,7 @@ from calculate_crossfeeding_yield import splitByDemand_crossfeeding
 from load_data import *
 from autonomy_check import verify_autonomy
 
-autonet_path = 'AutoNets_revScope/AutoNets_revScope_2.pkl'
+autonet_path = 'data/networks/autonets_rs_P_v2.pkl'
 autonet_idx = 49265
 
 with open(autonet_path, 'rb') as f:
@@ -36,7 +36,7 @@ print(f'  Biomass yield: {B_single}')
 print(f'  Time: {t1 - t0:.3f} s')
 
 # Cross-feeding pair yield test
-crossnet_path = 'CrossNets_revScope/CrossNets_revScope2_byp2.pkl'
+crossnet_path = 'data/networks/crossnets_rs_P_v2_byp_v2.pkl'
 crossnet_idx = 1976
 
 with open(crossnet_path, 'rb') as f:

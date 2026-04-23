@@ -10,4 +10,6 @@ test.py
 verify_data.py
 test_yield_vs_autonomy.py
 test_iterative.py
-diag_convergence.py
+plot_biomass_outperformers.py
+calculate_crossfeeding_yield_iterative.py
+outperformer_crossfeeders.py

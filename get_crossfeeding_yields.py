@@ -19,16 +19,16 @@ def compute_crossfeeding_yield(crossPair):
 
 if __name__ == "__main__":
 
-    version = sys.argv[1]       # dataset version, e.g. 2
-    crossnet_type = sys.argv[2] # byp or int
+    version       = sys.argv[1]       # autonet version, e.g. 2
+    crossnet_type = sys.argv[2]       # byp or int
+    crossnet_id   = sys.argv[3]       # crossnet run version, e.g. 1
 
     if crossnet_type not in ("byp", "int"):
         print(f"Unknown crossnet_type '{crossnet_type}'. Use 'byp' or 'int'.")
         sys.exit(1)
 
-    crossnet_dir = "CrossNets_revScope"
-    crossnet_data = f"CrossNets_revScope{version}_{crossnet_type}{version}.pkl"
-    crossnet_path = f"{crossnet_dir}/{crossnet_data}"
+    crossnet_path = f"data/networks/crossnets_rs_P_v{version}_{crossnet_type}_v{crossnet_id}.pkl"
+    output_path   = f"data/yields/yields_cross_rs_P_v{version}_{crossnet_type}_v{crossnet_id}_sbd.pkl"
     num_workers = 32
 
     with open(crossnet_path, "rb") as f:
@@ -74,7 +74,8 @@ if __name__ == "__main__":
     print(f"\nCompleted in {elapsed:.2f} seconds")
     print(f"Viable pairs (both organisms produce all precursors): {valid}/{num_pairs}")
 
-    output_path = f"{crossnet_dir}/Yields_{crossnet_data}"
+    import os
+    os.makedirs("data/yields", exist_ok=True)
     with open(output_path, "wb") as f:
         pickle.dump({
             'E_A':        E_A_yields,

@@ -20,6 +20,11 @@ def compute_yield_iter(net):
 
 if __name__ == "__main__":
 
+    autonet_dataset = 3
+    prune_mode = "Batch"
+    minimality = "NP"
+    
+
     version = sys.argv[1]
     mode = sys.argv[2]
 
@@ -31,13 +36,8 @@ if __name__ == "__main__":
         print(f"Unknown mode '{mode}'. Use 'sbd' or 'iter'.")
         sys.exit(1)
 
-    # autonet_dir = f"AutoNets{dataset}_{mode.capitalize()}_{minimal}"
-    # autonet_data = f"AutoNets{dataset}_{mode.capitalize()}_{version}.pkl"
-    # autonet_path = f"{autonet_dir}/{autonet_data}"
-
-    autonet_dir = f"AutoNets_revScope"
-    autonet_data = f"AutoNets_revScope_{version}.pkl"
-    autonet_path = f"{autonet_dir}/{autonet_data}"
+    autonet_path = f"data/networks/autonets_rs_P_v{version}.pkl"
+    output_path  = f"data/yields/yields_auto_rs_P_v{version}_{mode}.pkl"
     num_workers = 32
 
     with open(autonet_path, "rb") as f:
@@ -70,5 +70,8 @@ if __name__ == "__main__":
     print(f"\nCompleted in {elapsed:.2f} seconds")
     print(f"Valid networks (all precursors produced): {valid}/{num_nets}")
 
-    with open(f"{autonet_dir}/Yields_{mode}_{autonet_data}", "wb") as f:
+    import os
+    os.makedirs("data/yields", exist_ok=True)
+    with open(output_path, "wb") as f:
         pickle.dump((E_yields, B_yields, viability), f)
+    print(f"Saved yields to {output_path}")

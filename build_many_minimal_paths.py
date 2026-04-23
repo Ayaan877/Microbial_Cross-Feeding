@@ -25,9 +25,9 @@ if __name__ == "__main__":
     print(f"Running target: {target}")
     print(f"Target ID: {target_id}")
 
-    output_file = f"{target_id}_Pathways.pkl"
-    output_dir = Path(f"NumPaths{dataset}_{mode.capitalize()}")
-    output_dir.mkdir(exist_ok=True)
+    output_file = f"paths_{mode}_{target_id}_v{dataset}.pkl"
+    output_dir = Path("data/paths")
+    output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / output_file
 
     start_time = time.time()

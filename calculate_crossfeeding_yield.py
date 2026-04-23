@@ -59,7 +59,6 @@ def splitByDemand_crossfeeding(stoich_matrix, rxnMat, prodMat, sumRxnVec,
         metState[np.unique(seedMets + nMets)] = 1
 
     # Building coupled matrices: A subnet + B subnet + 2 exchange links.
-    # Index active rows directly to avoid constructing full-matrix copies.
     nPairRxns = nA + nB + 2
     S = np.zeros((nPairRxns, 2 * nMets))
     r = np.zeros((nPairRxns, 2 * nMets))

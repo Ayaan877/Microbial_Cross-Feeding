@@ -14,11 +14,11 @@ if __name__ == "__main__":
     crossnet_id = sys.argv[2]
     exchanged_met = sys.argv[3]
 
-    output_dir = Path("CrossNets_revScope")
-    output_dir.mkdir(exist_ok=True)
-    output_path = output_dir / f"CrossNets_revScope{dataset_id}_{exchanged_met}{crossnet_id}.pkl"
+    output_dir = Path("data/networks")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / f"crossnets_rs_P_v{dataset_id}_{exchanged_met}_v{crossnet_id}.pkl"
 
-    load_path = f"AutoNets_revScope/AutoNets_revScope_{dataset_id}.pkl"
+    load_path = f"data/networks/autonets_rs_P_v{dataset_id}.pkl"
     with open(load_path, "rb") as f:
             all_autonets = pickle.load(f)
 

@@ -2,39 +2,29 @@ import pickle
 import numpy as np
 from pathlib import Path
 
+NETWORKS_DIR = Path("data/networks")
 
-def load_autonets(mode, dataset, pruned=True):
-    """
-    Load autonomous networks from pickle files.
-    """
+
+def load_autonets_rs(version):
+    """Load revScope autonomous networks (always pruned)."""
+    path = NETWORKS_DIR / f"autonets_rs_P_v{version}.pkl"
+    with open(path, "rb") as f:
+        nets = pickle.load(f)
+    print(f"Loaded {len(nets)} autonomous networks from {path}")
+    return nets
+
+
+def load_autonets_np(pruner, paths_version, version, pruned=True):
+    """Load NumPaths-derived autonomous networks."""
     suffix = "P" if pruned else "NP"
-    dir_name = f"AutoNets{dataset}_{mode}_{suffix}"
-    dir_path = Path(dir_name)
-
-    if not dir_path.exists():
-        raise FileNotFoundError(f"Directory not found: {dir_path}")
-
-    pkl_files = sorted(dir_path.glob("*.pkl"))
-    # Filter out yield files
-    pkl_files = [f for f in pkl_files if "Yield" not in f.name]
-
-    if not pkl_files:
-        raise FileNotFoundError(f"No AutoNet pickle files found in {dir_path}")
-
-    all_nets = []
-    for pkl_file in pkl_files:
-        with open(pkl_file, "rb") as f:
-            nets = pickle.load(f)
-        if isinstance(nets, list):
-            all_nets.extend(nets)
-        else:
-            all_nets.append(nets)
-
-    print(f"Loaded {len(all_nets)} autonomous networks from {dir_path}")
-    return all_nets
+    path = NETWORKS_DIR / f"autonets_np_{pruner}_{suffix}_pv{paths_version}_v{version}.pkl"
+    with open(path, "rb") as f:
+        nets = pickle.load(f)
+    print(f"Loaded {len(nets)} autonomous networks from {path}")
+    return nets
 
 
 if __name__ == "__main__":
-    nets = load_autonets(mode="Batch", dataset=3, pruned=False)
+    nets = load_autonets_rs(version=2)
     for i, net in enumerate(nets[:5]):
         print(f"  Network {i}: {len(net)} reactions")

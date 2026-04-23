@@ -333,7 +333,7 @@ if __name__ == "__main__":
     from load_data import *
     import time 
 
-    with open("AutoNets_revScope/AutoNets_revScope_2.pkl", "rb") as f:
+    with open("data/networks/autonets_rs_P_v2.pkl", "rb") as f:
         all_autonets = pickle.load(f)
 
     net_A = all_autonets[530]

@@ -13,11 +13,6 @@ module load compiler/anaconda3-23.07.0
 
 source venv/bin/activate
 
-# arg1 = single or batch
-# arg2 = prune or noprune
-# arg3 = dataset number
-# arg4 = auto dataset number
-
-python build_autonomous_networks.py NumPaths batch noprune 3 1
+python build_autonomous_networks.py
 
 echo "Finished autonomous network generation at $(date)"
