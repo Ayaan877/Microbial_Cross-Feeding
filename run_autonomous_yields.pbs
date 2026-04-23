@@ -15,14 +15,14 @@ source venv/bin/activate
 
 # ── Config ───────────────────────────────────────────────────────────────────
 SOURCE="mp"             # rs (revscope) | mp (minpaths)
-VERSION="2"             # autonet version
+VERSION="1"             # autonet version
 MODE="sbd"              # sbd (split-by-demand) | iter (iterative)
 NUM_WORKERS=32          # parallel workers
 
 # MinPaths (mp) settings — only used when SOURCE=mp
 PRUNER="batch"          # batch | single
 PRUNING="prune"         # prune | noprune
-PATHS_VERSION="1"       # minpath dataset version
+PATHS_VERSION="2"       # minpath dataset version
 # ─────────────────────────────────────────────────────────────────────────────
 
 if [ "$SOURCE" = "mp" ]; then
