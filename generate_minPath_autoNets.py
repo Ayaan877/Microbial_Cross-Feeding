@@ -3,11 +3,12 @@ import pickle
 from multiprocessing import Pool
 from combine_pathways import buildAutonomousNetwork
 
+# Module-level global populated in parent before Pool creation.
+# On Linux (fork), workers inherit this via copy-on-write — no IPC serialization cost.
 worker_data = {}
 
-def init_worker(data):
-    global worker_data
-    worker_data = data
+def init_worker():
+    pass  # data already available via fork inheritance
 
 
 def process_network(args):
@@ -28,16 +29,19 @@ def generate_minPathAutoNets(all_paths, rxnMat, prodMat, sumRxnVec,
                              nutrientSet, Currency, coreTBPs, prune,
                              n_target, n_workers, chunk_size=100,
                              save_path=None, save_interval=5000,
+                             max_attempts=500000,
                              seed=None):
 
     print(f"Using {n_workers} processes")
-    print(f"Target: {n_target} unique networks")
+    print(f"Target: {n_target} unique networks, max {max_attempts} attempts")
 
     master_rng = np.random.default_rng(seed)
     n_targets = len(all_paths)
     path_counts = [len(paths) for paths in all_paths]
     print(f"Pathway counts per target: {path_counts}")
 
+    # Populate module-level global BEFORE Pool() so forked workers inherit it.
+    global worker_data
     worker_data = dict(
         all_paths=all_paths, rxnMat=rxnMat, prodMat=prodMat,
         sumRxnVec=sumRxnVec, nutrientSet=nutrientSet,
@@ -45,11 +49,13 @@ def generate_minPathAutoNets(all_paths, rxnMat, prodMat, sumRxnVec,
     )
 
     def combo_generator():
-        while True:
+        attempt = 0
+        while attempt < max_attempts:
             indices = tuple(int(master_rng.integers(path_counts[t])) for t in range(n_targets))
             yield (indices, int(master_rng.integers(2**31)))
+            attempt += 1
 
-    pool = Pool(processes=n_workers, initializer=init_worker, initargs=(worker_data,))
+    pool = Pool(processes=n_workers, initializer=init_worker)
 
     seen_networks = set()
     minimal_networks = []
