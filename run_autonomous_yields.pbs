@@ -15,7 +15,7 @@ source venv/bin/activate
 
 # ── Config ───────────────────────────────────────────────────────────────────
 SOURCE="mp"             # rs (revscope) | mp (minpaths)
-VERSION="1"             # autonet version
+VERSION="2"             # autonet version
 MODE="sbd"              # sbd (split-by-demand) | iter (iterative)
 NUM_WORKERS=32          # parallel workers
 
