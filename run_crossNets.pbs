@@ -20,8 +20,8 @@ module load compiler/anaconda3-23.07.0
 #PBS -e logs/
 
 # ── Config ───────────────────────────────────────────────────────────────────
-DATASET_ID="2"          # autonet version to load
-CROSSNET_ID="2"         # output crossnet version label
+DATASET_ID="1"          # autonet version to load
+CROSSNET_ID="1"         # output crossnet version label
 EXCHANGED_MET="int"     # byp | int
 N_TARGET=50000
 N_WORKERS=32

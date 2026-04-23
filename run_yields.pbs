@@ -14,7 +14,7 @@ module load compiler/anaconda3-23.07.0
 source venv/bin/activate
 
 # ── Config ───────────────────────────────────────────────────────────────────
-VERSION="2"             # autonet version
+VERSION="1"             # autonet version
 MODE="sbd"              # sbd | iter
 NUM_WORKERS=32
 # ─────────────────────────────────────────────────────────────────────────────

@@ -334,7 +334,7 @@ if __name__ == "__main__":
     import time
 
     # ── Config ──────────────────────────────────────────────────────────────
-    AUTONET_VERSION = "2"   # autonet dataset version
+    AUTONET_VERSION = "1"   # autonet dataset version
     NET_IDX_A       = 530
     NET_IDX_B       = 825
     # ──────────────────────────────────────────────────────────────────

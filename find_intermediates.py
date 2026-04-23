@@ -44,7 +44,7 @@ if __name__ == "__main__":
     from load_data import *
 
     # ── Config ──────────────────────────────────────────────────────────────
-    AUTONET_VERSION = "2"   # autonet dataset version
+    AUTONET_VERSION = "1"   # autonet dataset version
     NET_IDX_A       = 2395
     NET_IDX_B       = 1965
     # ──────────────────────────────────────────────────────────────────

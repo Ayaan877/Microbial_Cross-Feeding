@@ -1,10 +1,7 @@
 .venv
 .vscode
 __pycache__
-MinNets*
-NumPaths*
-AutoNets*
-CrossNets*
+old_data
 logs
 test.py
 verify_data.py

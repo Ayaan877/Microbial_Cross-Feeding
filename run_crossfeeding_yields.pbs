@@ -14,9 +14,9 @@ module load compiler/anaconda3-23.07.0
 source venv/bin/activate
 
 # ── Config ───────────────────────────────────────────────────────────────────
-VERSION="2"             # autonet version
+VERSION="1"             # autonet version
 CROSSNET_TYPE="byp"     # byp | int
-CROSSNET_ID="2"         # crossnet run version
+CROSSNET_ID="1"         # crossnet run version
 NUM_WORKERS=32
 # ─────────────────────────────────────────────────────────────────────────────
 

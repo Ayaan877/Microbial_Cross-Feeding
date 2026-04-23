@@ -25,6 +25,6 @@ def load_autonets_np(pruner, paths_version, version, pruned=True):
 
 
 if __name__ == "__main__":
-    nets = load_autonets_rs(version=2)
+    nets = load_autonets_rs(version=1)
     for i, net in enumerate(nets[:5]):
         print(f"  Network {i}: {len(net)} reactions")

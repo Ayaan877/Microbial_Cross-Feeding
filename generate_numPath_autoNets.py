@@ -16,7 +16,7 @@ def process_network(args):
 
 def allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec,
                              nutrientSet, Currency, coreTBPs, prune,
-                             min_unique=50000, max_attempts=500000,
+                             n_target=50000,
                              n_processes=None, chunk_size=100,
                              save_path=None, save_interval=100,
                              seed=None):
@@ -25,7 +25,7 @@ def allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec,
         n_processes = 32
 
     print(f"Using {n_processes} processes")
-    print(f"Target: {min_unique} unique networks, max {max_attempts} attempts")
+    print(f"Target: {n_target} unique networks")
 
     master_rng = np.random.default_rng(seed)
     n_targets = len(all_paths)
@@ -33,8 +33,7 @@ def allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec,
     print(f"Pathway counts per target: {path_counts}")
 
     def combo_generator():
-        attempt = 0
-        while attempt < max_attempts:
+        while True:
             combo = tuple(
                 all_paths[t][master_rng.integers(path_counts[t])]
                 for t in range(n_targets)
@@ -42,7 +41,6 @@ def allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec,
             yield (combo, rxnMat, prodMat, sumRxnVec,
                    nutrientSet, Currency, coreTBPs, prune,
                    master_rng.integers(2**31))
-            attempt += 1
 
     pool = Pool(processes=n_processes)
 
@@ -63,11 +61,11 @@ def allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec,
                 with open(save_path, "wb") as f:
                     pickle.dump(minimal_networks, f)
 
-        if len(minimal_networks) >= min_unique:
-            print(f"Reached {min_unique} unique networks after {processed} attempts")
+        if len(minimal_networks) >= n_target:
+            print(f"Reached {n_target} unique networks after {processed} attempts")
             break
 
-    pool.close()
+    pool.terminate()
     pool.join()
 
     if save_path is not None:

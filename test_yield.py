@@ -6,8 +6,8 @@ from load_data import *
 from autonomy_check import verify_autonomy
 
 # ── Config ───────────────────────────────────────────────────────────────────
-AUTONET_VERSION  = "2"   # autonet dataset version
-CROSSNET_VERSION = "2"   # crossnet run version
+AUTONET_VERSION  = "1"   # autonet dataset version
+CROSSNET_VERSION = "1"   # crossnet run version
 CROSSNET_TYPE    = "byp" # 'byp' or 'int'
 AUTONET_IDX      = 49265
 CROSSNET_IDX     = 1976

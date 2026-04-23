@@ -19,7 +19,7 @@ def loadNumPaths(mode, dataset):
 
 if __name__ == "__main__":
     mode = "batch"
-    dataset = 3
+    dataset = 1
     all_paths = loadNumPaths(mode=mode, dataset=dataset)
 
     print(f'Paths: data/paths/ | pruner={mode} | version={dataset}')
