@@ -16,13 +16,13 @@ if __name__ == "__main__":
         N_TARGET   = int(sys.argv[3])
         N_WORKERS  = int(sys.argv[4])
     else:
-        # python build_autonomous_networks.py NumPaths <batch_mode> <pruning> <input_dataset> <output_dataset> <n_target> <n_processes>
+        # python build_autonomous_networks.py NumPaths <batch_mode> <pruning> <input_dataset> <output_dataset> <n_target> <n_workers>
         BATCH_MODE        = sys.argv[2]   # batch | single
         PRUNING           = sys.argv[3]   # prune | noprune
         INPUT_DATASET_ID  = sys.argv[4]
         OUTPUT_DATASET_ID = sys.argv[5]
         N_TARGET          = int(sys.argv[6])
-        N_PROCESSES       = int(sys.argv[7])
+        N_WORKERS         = int(sys.argv[7])
 
     start_time = time.time()
 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
         AutoNets = allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec,
                                         nutrientSet, Currency, Core, prune=do_prune,
-                                        n_target=N_TARGET, n_processes=N_PROCESSES,
+                                        n_target=N_TARGET, n_workers=N_WORKERS,
                                         save_path=output_path)
 
         total_time = time.time() - start_time

@@ -9,11 +9,11 @@
 
 # ── Config ───────────────────────────────────────────────────────────────────
 MODE="batch"            # batch | single
-DATASET="1"             # output version label
-N_CORES=8
-MAX_ATTEMPTS=500
-PLATEAU_WINDOW=10
-PLATEAU_THRESHOLD=1
+PATH_ID="1"             # output version label
+N_WORKERS=8             # parallel workers
+MAX_ATTEMPTS=500        # max attempts per target
+PLATEAU_WINDOW=10       # attempts to consider for plateau detection
+PLATEAU_THRESHOLD=1     # plateau if new paths per window =< threshold
 # ─────────────────────────────────────────────────────────────────────────────
 
 cd $PBS_O_WORKDIR
@@ -25,6 +25,6 @@ source venv/bin/activate
 
 TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
-python build_many_minPaths.py $TARGET $MODE $DATASET $N_CORES $MAX_ATTEMPTS $PLATEAU_WINDOW $PLATEAU_THRESHOLD
+python build_many_minPaths.py $TARGET $MODE $PATH_ID $N_WORKERS $MAX_ATTEMPTS $PLATEAU_WINDOW $PLATEAU_THRESHOLD
 
 echo "Finished path discovery for $TARGET at $(date)"

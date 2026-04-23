@@ -20,7 +20,7 @@ def single_variant(args):
 
 
 def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
-                             nutrientSet, Currency, n_cores, randMinNetwork,
+                             nutrientSet, Currency, n_workers, randMinNetwork,
                              save_path=None, max_attempts=500,
                              plateau_window=5, plateau_threshold=2):
 
@@ -34,11 +34,11 @@ def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
 
     attempt = 0
 
-    with Pool(processes=n_cores) as pool:
+    with Pool(processes=n_workers) as pool:
         while attempt < max_attempts:
 
             attempt += 1
-            seeds = np.random.randint(0, 10**9, size=n_cores)
+            seeds = np.random.randint(0, 10**9, size=n_workers)
 
             variant_args = [(satRxns, rxnMat, prodMat, sumRxnVec,
                              target, nutrientSet, Currency,

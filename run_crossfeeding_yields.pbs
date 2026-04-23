@@ -16,8 +16,8 @@ source venv/bin/activate
 # ── Config ───────────────────────────────────────────────────────────────────
 VERSION="1"             # autonet version
 CROSSNET_TYPE="byp"     # byp | int
-CROSSNET_ID="1"         # crossnet run version
-NUM_WORKERS=32
+CROSSNET_ID="1"         # crossnet version
+NUM_WORKERS=32          # parallel workers
 # ─────────────────────────────────────────────────────────────────────────────
 
 python get_crossfeeding_yields.py $VERSION $CROSSNET_TYPE $CROSSNET_ID $NUM_WORKERS

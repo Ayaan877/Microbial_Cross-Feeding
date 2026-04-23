@@ -15,8 +15,8 @@ source venv/bin/activate
 
 # ── Config ───────────────────────────────────────────────────────────────────
 VERSION="1"             # autonet version
-MODE="sbd"              # sbd | iter
-NUM_WORKERS=32
+MODE="sbd"              # (sbd : split-by-demand | iter: iterative)
+NUM_WORKERS=32          # parallel workers
 # ─────────────────────────────────────────────────────────────────────────────
 
 python get_yields.py $VERSION $MODE $NUM_WORKERS

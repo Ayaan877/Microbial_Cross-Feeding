@@ -52,7 +52,7 @@ def pair_key(result):
 
 def generate_crossfeeding_pairs(autonets, rxnMat, prodMat, sumRxnVec,
                                 nutrientSet, Currency, Core,
-                                n_target=50000, n_workers=32,
+                                n_target, n_workers,
                                 batch_size=None, save_path=None,
                                 save_interval=1000, use_byproducts=False):
     """

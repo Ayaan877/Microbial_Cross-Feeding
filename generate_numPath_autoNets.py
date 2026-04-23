@@ -16,15 +16,11 @@ def process_network(args):
 
 def allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec,
                              nutrientSet, Currency, coreTBPs, prune,
-                             n_target=50000,
-                             n_processes=None, chunk_size=100,
+                             n_target, n_workers, chunk_size=100,
                              save_path=None, save_interval=100,
                              seed=None):
 
-    if n_processes is None:
-        n_processes = 32
-
-    print(f"Using {n_processes} processes")
+    print(f"Using {n_workers} processes")
     print(f"Target: {n_target} unique networks")
 
     master_rng = np.random.default_rng(seed)
@@ -42,7 +38,7 @@ def allAutonomousNetworks(all_paths, rxnMat, prodMat, sumRxnVec,
                    nutrientSet, Currency, coreTBPs, prune,
                    master_rng.integers(2**31))
 
-    pool = Pool(processes=n_processes)
+    pool = Pool(processes=n_workers)
 
     seen_networks = set()
     minimal_networks = []

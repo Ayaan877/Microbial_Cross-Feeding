@@ -9,17 +9,17 @@
 # ── Config ───────────────────────────────────────────────────────────────────
 MODE="NumPaths"         # RevScope | NumPaths
 N_TARGET=50000          # target number of unique networks (both modes)
+N_WORKERS=32
 
 # NumPaths settings (used when MODE=NumPaths)
 BATCH_MODE="batch"      # batch | single
 PRUNING="noprune"       # prune | noprune
-INPUT_DATASET_ID="1"
-OUTPUT_DATASET_ID="1"
-N_PROCESSES=32
+INPUT_DATASET_ID="1"    # numpath version
+OUTPUT_DATASET_ID="1"   # output autonet version
 
 # RevScope settings (used when MODE=RevScope)
-DATASET_ID="1"
-N_WORKERS=32
+DATASET_ID="1"         # output autonet version
+
 # ─────────────────────────────────────────────────────────────────────────────
 
 cd $PBS_O_WORKDIR
@@ -32,7 +32,7 @@ source venv/bin/activate
 if [ "$MODE" = "RevScope" ]; then
     python build_autonomous_networks.py $MODE $DATASET_ID $N_TARGET $N_WORKERS
 else
-    python build_autonomous_networks.py $MODE $BATCH_MODE $PRUNING $INPUT_DATASET_ID $OUTPUT_DATASET_ID $N_TARGET $N_PROCESSES
+    python build_autonomous_networks.py $MODE $BATCH_MODE $PRUNING $INPUT_DATASET_ID $OUTPUT_DATASET_ID $N_TARGET $N_WORKERS
 fi
 
 echo "Finished autonomous network generation at $(date)"
