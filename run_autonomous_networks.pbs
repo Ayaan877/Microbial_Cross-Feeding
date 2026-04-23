@@ -14,7 +14,7 @@ N_WORKERS=32
 # NumPaths settings (used when MODE=NumPaths)
 BATCH_MODE="batch"      # batch | single
 PRUNING="noprune"       # prune | noprune
-INPUT_DATASET_ID="1"    # numpath version
+INPUT_DATASET_ID="2"    # numpath version
 OUTPUT_DATASET_ID="1"   # output autonet version
 
 # RevScope settings (used when MODE=RevScope)
@@ -30,7 +30,7 @@ module load compiler/anaconda3-23.07.0
 source venv/bin/activate
 
 if [ "$MODE" = "RevScope" ]; then
-    python build_autonomous_networks.py $MODE $DATASET_ID $N_TARGET $N_WORKERS
+    python build_autoNets.py $MODE $DATASET_ID $N_TARGET $N_WORKERS
 else
     python build_autoNets.py $MODE $BATCH_MODE $PRUNING $INPUT_DATASET_ID $OUTPUT_DATASET_ID $N_TARGET $N_WORKERS
 fi

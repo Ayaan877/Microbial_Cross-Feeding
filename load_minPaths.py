@@ -6,7 +6,7 @@ CORE_METS = [
     "C00041", "C00065", "C00097", "C00117"]
 
 
-def loadNumPaths(mode, dataset):
+def loadMinPaths(mode, dataset):
     all_targets = []
 
     for met in CORE_METS:
@@ -20,7 +20,7 @@ def loadNumPaths(mode, dataset):
 if __name__ == "__main__":
     mode = "batch"
     dataset = 1
-    all_paths = loadNumPaths(mode=mode, dataset=dataset)
+    all_paths = loadMinPaths(mode=mode, dataset=dataset)
 
     print(f'Paths: data/paths/ | pruner={mode} | version={dataset}')
     for i, met in enumerate(CORE_METS):

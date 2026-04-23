@@ -9,7 +9,7 @@ from generate_crossNets import generate_crossfeeding_pairs
 if __name__ == "__main__":
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
-    # Args supplied by PBS script (see run_crossNets.pbs)
+    # Args supplied by PBS script (see run_crossfeeding_networks.pbs)
     autonet_id    = sys.argv[1]        # autonet version
     crossnet_id   = sys.argv[2]        # output crossnet version label
     exchanged_met = sys.argv[3].lower()  # byp | int

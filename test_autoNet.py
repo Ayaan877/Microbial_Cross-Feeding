@@ -3,7 +3,7 @@ NUMPATHS AUTONOMOUS NETWORK CONSTRUCTION TEST
 Loads a NumPaths dataset, takes one pathway per target, and builds a
 single autonomous network as a quick sanity check.
 '''
-from load_minPaths import loadNumPaths
+from load_minPaths import loadMinPaths
 from combine_pathways import buildAutonomousNetwork
 from load_data import *
 import pickle
@@ -11,8 +11,8 @@ import time
 
 if __name__ == "__main__":
     mode = "batch"
-    all_paths, data_dir = loadNumPaths(mode=mode, dataset=1)
-    paths = [all_paths[i][0] for i in range(8)]  # Take 1st pathway for each target
+    all_paths = loadMinPaths(mode=mode, dataset=2)
+    paths = [all_paths[i][0] for i in range(8)]
 
     start = time.time()
     MinNet = buildAutonomousNetwork(paths, rxnMat, prodMat, sumRxnVec,

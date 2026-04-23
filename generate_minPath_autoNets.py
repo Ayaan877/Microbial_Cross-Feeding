@@ -9,6 +9,7 @@ def init_worker(data):
     global worker_data
     worker_data = data
 
+
 def process_network(args):
     combo_indices, seed = args
     d = worker_data
