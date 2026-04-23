@@ -331,13 +331,19 @@ def build_crossfeeding_pair(net_A, net_B, rxnMat, prodMat, sumRxnVec,
 if __name__ == "__main__":
     import pickle
     from load_data import *
-    import time 
+    import time
 
-    with open("data/networks/autonets_rs_P_v2.pkl", "rb") as f:
+    # ── Config ──────────────────────────────────────────────────────────────
+    AUTONET_VERSION = "2"   # autonet dataset version
+    NET_IDX_A       = 530
+    NET_IDX_B       = 825
+    # ──────────────────────────────────────────────────────────────────
+
+    with open(f"data/networks/autonets_rs_P_v{AUTONET_VERSION}.pkl", "rb") as f:
         all_autonets = pickle.load(f)
 
-    net_A = all_autonets[530]
-    net_B = all_autonets[825]
+    net_A = all_autonets[NET_IDX_A]
+    net_B = all_autonets[NET_IDX_B]
 
     start = time.time()
     crossfeeders = build_crossfeeding_pair(

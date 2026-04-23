@@ -8,10 +8,15 @@ from load_data import *
 if __name__ == "__main__":
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
-    target_name = sys.argv[1]
-    mode = sys.argv[2].lower()
-    dataset = sys.argv[3]
-    
+    # Args supplied by PBS script (see run_many_minPaths.pbs)
+    target_name       = sys.argv[1]        # KEGG metabolite ID
+    mode              = sys.argv[2].lower()  # batch | single
+    dataset           = sys.argv[3]        # output version label
+    n_cores           = int(sys.argv[4])
+    max_attempts      = int(sys.argv[5])
+    plateau_window    = int(sys.argv[6])
+    plateau_threshold = int(sys.argv[7])
+
     target = met_map[target_name]
     target_id = inv_met_map[target]
 
@@ -31,9 +36,11 @@ if __name__ == "__main__":
     output_path = output_dir / output_file
 
     start_time = time.time()
-    results = generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec, nutrientSet, 
-                                       Currency, n_cores=8, randMinNetwork=randMinNetwork,
-                                       save_path=output_path)
+    results = generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec, nutrientSet,
+                                       Currency, n_cores=n_cores, randMinNetwork=randMinNetwork,
+                                       save_path=output_path, max_attempts=max_attempts,
+                                       plateau_window=plateau_window,
+                                       plateau_threshold=plateau_threshold)
 
     if results:
         print(f"{len(results['networks'])} variants generated in {results['attempts'][-1]} attempts")

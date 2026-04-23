@@ -1,9 +1,9 @@
 from calculate_crossfeeding_yield import splitByDemand_crossfeeding
 from load_data import *
+import sys
 import time
 import multiprocessing as mp
 import pickle
-import sys
 
 def compute_crossfeeding_yield(crossPair):
     result = splitByDemand_crossfeeding(
@@ -19,17 +19,17 @@ def compute_crossfeeding_yield(crossPair):
 
 if __name__ == "__main__":
 
-    version       = sys.argv[1]       # autonet version, e.g. 2
-    crossnet_type = sys.argv[2]       # byp or int
-    crossnet_id   = sys.argv[3]       # crossnet run version, e.g. 1
+    # Args supplied by PBS script (see run_crossfeeding_yields.pbs)
+    version       = sys.argv[1]        # autonet version
+    crossnet_type = sys.argv[2]        # byp | int
+    crossnet_id   = sys.argv[3]        # crossnet run version
+    num_workers   = int(sys.argv[4])
 
     if crossnet_type not in ("byp", "int"):
-        print(f"Unknown crossnet_type '{crossnet_type}'. Use 'byp' or 'int'.")
-        sys.exit(1)
+        raise ValueError(f"Unknown crossnet_type '{crossnet_type}'. Use 'byp' or 'int'.")
 
     crossnet_path = f"data/networks/crossnets_rs_P_v{version}_{crossnet_type}_v{crossnet_id}.pkl"
     output_path   = f"data/yields/yields_cross_rs_P_v{version}_{crossnet_type}_v{crossnet_id}_sbd.pkl"
-    num_workers = 32
 
     with open(crossnet_path, "rb") as f:
         CrossNets = pickle.load(f)

@@ -43,11 +43,17 @@ if __name__ == "__main__":
     import pickle
     from load_data import *
 
-    with open("data/networks/autonets_rs_P_v2.pkl", "rb") as f:
+    # ── Config ──────────────────────────────────────────────────────────────
+    AUTONET_VERSION = "2"   # autonet dataset version
+    NET_IDX_A       = 2395
+    NET_IDX_B       = 1965
+    # ──────────────────────────────────────────────────────────────────
+
+    with open(f"data/networks/autonets_rs_P_v{AUTONET_VERSION}.pkl", "rb") as f:
         all_autonets = pickle.load(f)
 
-    net_A = all_autonets[2395]
-    net_B = all_autonets[1965]
+    net_A = all_autonets[NET_IDX_A]
+    net_B = all_autonets[NET_IDX_B]
 
     candidates_A = get_candidates(net_A, rxnMat, prodMat, sumRxnVec,
                                    nutrientSet, Currency, Core, use_byproducts=False)

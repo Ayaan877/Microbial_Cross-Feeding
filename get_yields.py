@@ -1,10 +1,10 @@
 from calculate_yield import *
 from calculate_yield_iterative import *
 from load_data import *
+import sys
 import time
 import multiprocessing as mp
 import pickle
-import sys
 
 def compute_yield_sbd(net):
     return splitByDemand(
@@ -20,25 +20,20 @@ def compute_yield_iter(net):
 
 if __name__ == "__main__":
 
-    autonet_dataset = 3
-    prune_mode = "Batch"
-    minimality = "NP"
-    
-
-    version = sys.argv[1]
-    mode = sys.argv[2]
+    # Args supplied by PBS script (see run_yields.pbs)
+    version     = sys.argv[1]        # autonet version
+    mode        = sys.argv[2]        # sbd | iter
+    num_workers = int(sys.argv[3])
 
     if mode == "sbd":
         compute_yield = compute_yield_sbd
     elif mode == "iter":
         compute_yield = compute_yield_iter
     else:
-        print(f"Unknown mode '{mode}'. Use 'sbd' or 'iter'.")
-        sys.exit(1)
+        raise ValueError(f"Unknown MODE '{mode}'. Use 'sbd' or 'iter'.")
 
     autonet_path = f"data/networks/autonets_rs_P_v{version}.pkl"
     output_path  = f"data/yields/yields_auto_rs_P_v{version}_{mode}.pkl"
-    num_workers = 32
 
     with open(autonet_path, "rb") as f:
         AutoNets = pickle.load(f)

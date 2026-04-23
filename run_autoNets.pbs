@@ -6,6 +6,22 @@
 #PBS -o logs/
 #PBS -e logs/
 
+# ── Config ───────────────────────────────────────────────────────────────────
+MODE="NumPaths"         # RevScope | NumPaths
+
+# NumPaths settings (used when MODE=NumPaths)
+BATCH_MODE="batch"      # batch | single
+PRUNING="noprune"       # prune | noprune
+INPUT_DATASET_NUM="3"
+OUTPUT_DATASET_NUM="1"
+N_PROCESSES=32
+
+# RevScope settings (used when MODE=RevScope)
+DATASET_ID="2"
+N_TARGET=50000
+N_WORKERS=32
+# ─────────────────────────────────────────────────────────────────────────────
+
 cd $PBS_O_WORKDIR
 
 module purge
@@ -13,6 +29,10 @@ module load compiler/anaconda3-23.07.0
 
 source venv/bin/activate
 
-python build_autonomous_networks.py
+if [ "$MODE" = "RevScope" ]; then
+    python build_autonomous_networks.py $MODE $DATASET_ID $N_TARGET $N_WORKERS
+else
+    python build_autonomous_networks.py $MODE $BATCH_MODE $PRUNING $INPUT_DATASET_NUM $OUTPUT_DATASET_NUM $N_PROCESSES
+fi
 
 echo "Finished autonomous network generation at $(date)"

@@ -6,13 +6,18 @@ from pathlib import Path
 from datetime import datetime
 from generate_crossfeeding_pairs import generate_crossfeeding_pairs
 
-
 if __name__ == "__main__":
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
-    dataset_id = sys.argv[1]
-    crossnet_id = sys.argv[2]
-    exchanged_met = sys.argv[3]
+    # Args supplied by PBS script (see run_crossNets.pbs)
+    dataset_id    = sys.argv[1]        # autonet version
+    crossnet_id   = sys.argv[2]        # output crossnet version label
+    exchanged_met = sys.argv[3].lower()  # byp | int
+    n_target      = int(sys.argv[4])
+    n_workers     = int(sys.argv[5])
+
+    if exchanged_met not in ("byp", "int"):
+        raise ValueError(f"Invalid exchanged_met: '{exchanged_met}'. Must be 'byp' or 'int'.")
 
     output_dir = Path("data/networks")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -27,24 +32,22 @@ if __name__ == "__main__":
 
     start_time = time.time()
 
-    if exchanged_met.lower() == "byp":
+    if exchanged_met == "byp":
         pairs = generate_crossfeeding_pairs(
             all_autonets, rxnMat, prodMat, sumRxnVec,
             nutrientSet, Currency, Core,
-            n_target=50000,
-            n_workers=32,
+            n_target=n_target,
+            n_workers=n_workers,
             save_path=output_path,
             use_byproducts=True)
-    elif exchanged_met.lower() == "int":
+    else:
         pairs = generate_crossfeeding_pairs(
             all_autonets, rxnMat, prodMat, sumRxnVec,
             nutrientSet, Currency, Core,
-            n_target=50000,
-            n_workers=32,
+            n_target=n_target,
+            n_workers=n_workers,
             save_path=output_path,
             use_byproducts=False)
-    else:
-        raise ValueError(f"Invalid exchanged_met: {exchanged_met}. Must be 'byp' or 'int'.")
 
     total_time = time.time() - start_time
 

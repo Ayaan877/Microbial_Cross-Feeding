@@ -1,27 +1,27 @@
+import sys
 import time
 from pathlib import Path
 from datetime import datetime
 from load_data import *
 
-# --- Configuration ---
-MODE    = "NumPaths"  # "NumPaths" | "RevScope"
-
-# --- NumPaths settings ---
-BATCH_MODE              = "batch"     # "batch" | "single"
-PRUNING                 = "noprune"   # "prune" | "noprune"
-INPUT_DATASET_NUM       = "3"         # input dataset number
-OUTPUT_DATASET_NUM      = "1"         # output dataset label
-N_PROCESSES             = 32          # parallel worker processes
-
-# --- RevScope settings ---
-DATASET_ID   = "2"         # output filename label
-N_TARGET     = 50000       # target number of unique networks
-N_WORKERS    = 32          # parallel worker processes
-
-# =============================================================================
-
 if __name__ == "__main__":
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+    # Args supplied by PBS script (see run_autoNets.pbs)
+    MODE = sys.argv[1]   # RevScope | NumPaths
+
+    if MODE == "RevScope":
+        # python build_autonomous_networks.py RevScope <dataset_id> <n_target> <n_workers>
+        DATASET_ID = sys.argv[2]
+        N_TARGET   = int(sys.argv[3])
+        N_WORKERS  = int(sys.argv[4])
+    else:
+        # python build_autonomous_networks.py NumPaths <batch_mode> <pruning> <input_dataset> <output_dataset> <n_processes>
+        BATCH_MODE        = sys.argv[2]   # batch | single
+        PRUNING           = sys.argv[3]   # prune | noprune
+        INPUT_DATASET_NUM = sys.argv[4]
+        OUTPUT_DATASET_NUM = sys.argv[5]
+        N_PROCESSES       = int(sys.argv[6])
 
     start_time = time.time()
 

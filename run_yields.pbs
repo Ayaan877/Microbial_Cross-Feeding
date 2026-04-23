@@ -13,11 +13,12 @@ module load compiler/anaconda3-23.07.0
 
 source venv/bin/activate
 
-export NUM_WORKERS=32
+# ── Config ───────────────────────────────────────────────────────────────────
+VERSION="2"             # autonet version
+MODE="sbd"              # sbd | iter
+NUM_WORKERS=32
+# ─────────────────────────────────────────────────────────────────────────────
 
-# arg1 = dataset version
-# arg2 = sbd or iter
-
-python get_yields.py 2 sbd
+python get_yields.py $VERSION $MODE $NUM_WORKERS
 
 echo "Finished yield calculation at $(date)"

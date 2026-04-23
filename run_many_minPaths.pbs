@@ -7,6 +7,15 @@
 #PBS -o logs/
 #PBS -e logs/
 
+# ── Config ───────────────────────────────────────────────────────────────────
+MODE="batch"            # batch | single
+DATASET="3"             # output version label
+N_CORES=8
+MAX_ATTEMPTS=500
+PLATEAU_WINDOW=10
+PLATEAU_THRESHOLD=1
+# ─────────────────────────────────────────────────────────────────────────────
+
 cd $PBS_O_WORKDIR
 
 module purge
@@ -16,10 +25,6 @@ source venv/bin/activate
 
 TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
-# arg1 = target molecule
-# arg2 = batch or single
-# arg3 = dataset number
+python build_many_minPaths.py $TARGET $MODE $DATASET $N_CORES $MAX_ATTEMPTS $PLATEAU_WINDOW $PLATEAU_THRESHOLD
 
-python build_many_minimal_paths.py $TARGET batch 3
-
-echo "Finished path discovery rate estimation for $TARGET at $(date)"
+echo "Finished path discovery for $TARGET at $(date)"

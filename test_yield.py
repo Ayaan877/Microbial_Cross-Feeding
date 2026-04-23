@@ -5,15 +5,23 @@ from calculate_crossfeeding_yield import splitByDemand_crossfeeding
 from load_data import *
 from autonomy_check import verify_autonomy
 
-autonet_path = 'data/networks/autonets_rs_P_v2.pkl'
-autonet_idx = 49265
+# ── Config ───────────────────────────────────────────────────────────────────
+AUTONET_VERSION  = "2"   # autonet dataset version
+CROSSNET_VERSION = "2"   # crossnet run version
+CROSSNET_TYPE    = "byp" # 'byp' or 'int'
+AUTONET_IDX      = 49265
+CROSSNET_IDX     = 1976
+# ─────────────────────────────────────────────────────────────────────────────
+
+autonet_path  = f'data/networks/autonets_rs_P_v{AUTONET_VERSION}.pkl'
+crossnet_path = f'data/networks/crossnets_rs_P_v{AUTONET_VERSION}_{CROSSNET_TYPE}_v{CROSSNET_VERSION}.pkl'
 
 with open(autonet_path, 'rb') as f:
     AutoNets = pickle.load(f)
 
 print(f'Loaded {len(AutoNets)} autonomous networks from {autonet_path}')
 
-autonet = AutoNets[autonet_idx]
+autonet = AutoNets[AUTONET_IDX]
 
 viable, missing_cores = verify_autonomy(autonet, rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, Core)
 produced_cores = [c for c in Core if c not in missing_cores]
@@ -29,15 +37,14 @@ E_single, B_single, status_single = splitByDemand(
 t1 = time.time()
 
 print('\nSingle-network yield test')
-print(f'  Network index: {autonet_idx}')
+print(f'  Network index: {AUTONET_IDX}')
 print(f'  Viable: {status_single}')
 print(f'  Energy yield: {E_single}')
 print(f'  Biomass yield: {B_single}')
 print(f'  Time: {t1 - t0:.3f} s')
 
 # Cross-feeding pair yield test
-crossnet_path = 'data/networks/crossnets_rs_P_v2_byp_v2.pkl'
-crossnet_idx = 1976
+crossnet_idx = CROSSNET_IDX
 
 with open(crossnet_path, 'rb') as f:
     CrossNets = pickle.load(f)
