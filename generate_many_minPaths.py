@@ -5,18 +5,22 @@ import numpy as np
 import pickle
 import time
 
+worker_data = {}
 
-def single_variant(args):
-    '''
-    Multiprocessing worker function for each variant
-    '''
-    (satRxns, rxnMat, prodMat, sumRxnVec,
-     target, nutrientSet, Currency, seed, randMinNetwork) = args
+def init_worker(data):
+    global worker_data
+    worker_data = data
 
+
+def single_variant(seed):
+    '''
+    Multiprocessing worker function for each variant.
+    Large shared arrays are loaded once via init_worker; only seed is passed per call.
+    '''
+    d = worker_data
     rng = np.random.default_rng(seed)
-
-    return randMinNetwork(satRxns, rxnMat, prodMat, sumRxnVec,
-                          target, nutrientSet, Currency, rng=rng)
+    return d['randMinNetwork'](d['satRxns'], d['rxnMat'], d['prodMat'], d['sumRxnVec'],
+                               d['target'], d['nutrientSet'], d['Currency'], rng=rng)
 
 
 def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
@@ -27,6 +31,13 @@ def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
     satMets, satRxns = giveRevScope(rxnMat, prodMat, sumRxnVec,
                                     nutrientSet, Currency, target)
 
+    worker_data = dict(
+        satRxns=satRxns, rxnMat=rxnMat, prodMat=prodMat,
+        sumRxnVec=sumRxnVec, target=target,
+        nutrientSet=nutrientSet, Currency=Currency,
+        randMinNetwork=randMinNetwork,
+    )
+
     unique_nets = set()
 
     attempts_list = []
@@ -34,20 +45,15 @@ def generate_pruned_networks(target, rxnMat, prodMat, sumRxnVec,
 
     attempt = 0
 
-    with Pool(processes=n_workers) as pool:
+    with Pool(processes=n_workers, initializer=init_worker, initargs=(worker_data,)) as pool:
         while attempt < max_attempts:
 
             attempt += 1
             seeds = np.random.randint(0, 10**9, size=n_workers)
 
-            variant_args = [(satRxns, rxnMat, prodMat, sumRxnVec,
-                             target, nutrientSet, Currency,
-                             seed, randMinNetwork)
-                            for seed in seeds]
-
             start = time.time()
 
-            new_nets = pool.map(single_variant, variant_args)
+            new_nets = pool.map(single_variant, seeds)
 
             elapsed = time.time() - start
 

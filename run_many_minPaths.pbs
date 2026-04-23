@@ -1,15 +1,15 @@
 #!/bin/bash
-#PBS -N MinPaths
+#PBS -N MinPaths_opt
 #PBS -q cpu
 #PBS -l select=1:ncpus=8:mem=32gb
-#PBS -l walltime=100:00:00
+#PBS -l walltime=10:00:00
 #PBS -J 1-8
 #PBS -o logs/
 #PBS -e logs/
 
 # ── Config ───────────────────────────────────────────────────────────────────
 MODE="batch"            # batch | single
-PATH_ID="1"             # output version label
+PATH_ID="2"             # output version label
 N_WORKERS=8             # parallel workers
 MAX_ATTEMPTS=500        # max attempts per target
 PLATEAU_WINDOW=10       # attempts to consider for plateau detection
