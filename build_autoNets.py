@@ -53,7 +53,7 @@ if __name__ == "__main__":
 
         pruning = PRUNING.lower()
         prune_suffix = "P" if pruning == "prune" else "NP"
-        output_file = f"autonets_np_{BATCH_MODE}_{prune_suffix}_pv{INPUT_DATASET_ID}_v{OUTPUT_DATASET_ID}.pkl"
+        output_file = f"autonets_mp_{BATCH_MODE}_{prune_suffix}_pv{INPUT_DATASET_ID}_v{OUTPUT_DATASET_ID}.pkl"
         output_path = output_dir / output_file
 
         do_prune = pruning == "prune"

@@ -13,10 +13,10 @@ def load_autonets_rs(version):
     return nets
 
 
-def load_autonets_np(pruner, paths_version, version, pruned=True):
-    """Load NumPaths-derived autonomous networks."""
+def load_autonets_mp(pruner, paths_version, version, pruned=True):
+    """Load MinPaths-derived autonomous networks."""
     suffix = "P" if pruned else "NP"
-    path = NETWORKS_DIR / f"autonets_np_{pruner}_{suffix}_pv{paths_version}_v{version}.pkl"
+    path = NETWORKS_DIR / f"autonets_mp_{pruner}_{suffix}_pv{paths_version}_v{version}.pkl"
     with open(path, "rb") as f:
         nets = pickle.load(f)
     print(f"Loaded {len(nets)} autonomous networks from {path}")
