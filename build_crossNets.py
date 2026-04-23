@@ -4,7 +4,7 @@ import time
 from load_data import *
 from pathlib import Path
 from datetime import datetime
-from generate_crossNets import generate_crossfeeding_pairs
+from generate_crossNets import generate_crossNets
 
 if __name__ == "__main__":
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     start_time = time.time()
 
     if exchanged_met == "byp":
-        pairs = generate_crossfeeding_pairs(
+        pairs = generate_crossNets(
             all_autonets, rxnMat, prodMat, sumRxnVec,
             nutrientSet, Currency, Core,
             n_target=n_target,
@@ -41,7 +41,7 @@ if __name__ == "__main__":
             save_path=output_path,
             use_byproducts=True)
     else:
-        pairs = generate_crossfeeding_pairs(
+        pairs = generate_crossNets(
             all_autonets, rxnMat, prodMat, sumRxnVec,
             nutrientSet, Currency, Core,
             n_target=n_target,

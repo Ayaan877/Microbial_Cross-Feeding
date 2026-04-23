@@ -50,7 +50,7 @@ def pair_key(result):
     return tuple(sorted([tuple(sorted(result['cross_A'])), tuple(sorted(result['cross_B']))]))
 
 
-def generate_crossfeeding_pairs(autonets, rxnMat, prodMat, sumRxnVec,
+def generate_crossNets(autonets, rxnMat, prodMat, sumRxnVec,
                                 nutrientSet, Currency, Core,
                                 n_target, n_workers,
                                 batch_size=None, save_path=None,

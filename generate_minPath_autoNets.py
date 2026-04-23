@@ -27,7 +27,7 @@ def process_network(args):
 def generate_minPathAutoNets(all_paths, rxnMat, prodMat, sumRxnVec,
                              nutrientSet, Currency, coreTBPs, prune,
                              n_target, n_workers, chunk_size=100,
-                             save_path=None, save_interval=100,
+                             save_path=None, save_interval=5000,
                              seed=None):
 
     print(f"Using {n_workers} processes")
