@@ -3,16 +3,25 @@ import pickle
 from multiprocessing import Pool
 from combine_pathways import buildAutonomousNetwork
 
+worker_data = {}
+
+def init_worker(data):
+    global worker_data
+    worker_data = data
+
 def process_network(args):
-    (combo, rxnMat, prodMat, sumRxnVec,
-     nutrientSet, Currency, coreTBPs, prune, seed) = args
+    combo_indices, seed = args
+    d = worker_data
 
     rng = np.random.default_rng(seed)
+    combo = tuple(d['all_paths'][t][combo_indices[t]] for t in range(len(combo_indices)))
 
-    network = buildAutonomousNetwork(combo, rxnMat, prodMat, sumRxnVec, nutrientSet,
-                                     Currency, coreTBPs, prune=prune, rng=rng)
+    network = buildAutonomousNetwork(combo, d['rxnMat'], d['prodMat'], d['sumRxnVec'],
+                                     d['nutrientSet'], d['Currency'], d['coreTBPs'],
+                                     prune=d['prune'], rng=rng)
 
     return tuple(sorted(network))
+
 
 def generate_minPathAutoNets(all_paths, rxnMat, prodMat, sumRxnVec,
                              nutrientSet, Currency, coreTBPs, prune,
@@ -28,17 +37,18 @@ def generate_minPathAutoNets(all_paths, rxnMat, prodMat, sumRxnVec,
     path_counts = [len(paths) for paths in all_paths]
     print(f"Pathway counts per target: {path_counts}")
 
+    worker_data = dict(
+        all_paths=all_paths, rxnMat=rxnMat, prodMat=prodMat,
+        sumRxnVec=sumRxnVec, nutrientSet=nutrientSet,
+        Currency=Currency, coreTBPs=coreTBPs, prune=prune,
+    )
+
     def combo_generator():
         while True:
-            combo = tuple(
-                all_paths[t][master_rng.integers(path_counts[t])]
-                for t in range(n_targets)
-            )
-            yield (combo, rxnMat, prodMat, sumRxnVec,
-                   nutrientSet, Currency, coreTBPs, prune,
-                   master_rng.integers(2**31))
+            indices = tuple(int(master_rng.integers(path_counts[t])) for t in range(n_targets))
+            yield (indices, int(master_rng.integers(2**31)))
 
-    pool = Pool(processes=n_workers)
+    pool = Pool(processes=n_workers, initializer=init_worker, initargs=(worker_data,))
 
     seen_networks = set()
     minimal_networks = []

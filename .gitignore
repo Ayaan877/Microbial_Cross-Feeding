@@ -2,6 +2,7 @@
 .vscode
 __pycache__
 old_data
+data
 logs
 test.py
 verify_data.py

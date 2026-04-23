@@ -11,7 +11,7 @@ import time
 
 if __name__ == "__main__":
     mode = "batch"
-    all_paths, data_dir = loadNumPaths(mode=mode, dataset=3)
+    all_paths, data_dir = loadNumPaths(mode=mode, dataset=1)
     paths = [all_paths[i][0] for i in range(8)]  # Take 1st pathway for each target
 
     start = time.time()
@@ -19,5 +19,5 @@ if __name__ == "__main__":
                                     nutrientSet, Currency, Core, prune=True, verbose=True)
     print(f"Time taken: {(time.time() - start)} seconds")
 
-    with open('AutoNet_test.pkl', "wb") as f:
+    with open('autoNet_test.pkl', "wb") as f:
             pickle.dump(MinNet, f)

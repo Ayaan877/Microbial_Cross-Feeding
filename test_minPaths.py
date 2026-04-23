@@ -13,7 +13,7 @@ if __name__ == "__main__":
     with open("inv_rxn_map.pkl", "rb") as f:
         inv_rxn_map = pickle.load(f)
 
-    target = Core[0] # Test on C00022 (Pyruvate)
+    target = Core[2] # Test on C00022 (Pyruvate)
     target_id = inv_met_map[target]
     target_name = cpd_string_dict[target_id]
     print(f"Testing pruning on target: {target_id} - {target_name}")
@@ -30,6 +30,6 @@ if __name__ == "__main__":
     rxn_ids = [inv_rxn_map[idx] for idx in min_rxns]
 
     print("\nPrecursor Name:", target_id, target_name)
-    print("Satisfied Metabolites:", np.sum(satMets))
-    print("Satisfied Reactions:", np.sum(satRxns))
-    print("Minimal Reactions:", rxn_ids)
+    print("Satisfied Metabolites:", int(np.sum(satMets)))
+    print("Satisfied Reactions:", int(np.sum(satRxns)))
+    print(f"Minimal Reactions ({len(rxn_ids)}): {rxn_ids}") 
