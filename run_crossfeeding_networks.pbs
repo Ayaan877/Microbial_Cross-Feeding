@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N CrossP_MP_v1
+#PBS -N CrossP_byp_v1
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=10:00:00
@@ -17,7 +17,7 @@ source venv/bin/activate
 SOURCE="mp"             # rs (revscope) | mp (minpaths)
 AUTONET_ID="1"          # input autonet version
 CROSSNET_ID="1"         # output crossnet version label
-EXCHANGED_MET="int"     # byp | int
+EXCHANGED_MET="byp"     # byp | int
 N_TARGET=50000          # number of unique cross-feeding networks
 N_WORKERS=32            # parallel workers
 
