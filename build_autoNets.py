@@ -8,7 +8,7 @@ if __name__ == "__main__":
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     # Args supplied by PBS script (see run_autonomous_networks.pbs)
-    MODE = sys.argv[1]   # RevScope | NumPaths
+    MODE = sys.argv[1]   # RevScope | MinPaths
 
     if MODE == "RevScope":
         # python build_autoNets.py RevScope <dataset_id> <n_target> <n_workers>
@@ -16,7 +16,7 @@ if __name__ == "__main__":
         N_TARGET   = int(sys.argv[3])
         N_WORKERS  = int(sys.argv[4])
     else:
-        # python build_autoNets.py NumPaths <batch_mode> <pruning> <input_dataset> <output_dataset> <n_target> <n_workers>
+        # python build_autoNets.py MinPaths <batch_mode> <pruning> <input_dataset> <output_dataset> <n_target> <n_workers>
         BATCH_MODE        = sys.argv[2]   # batch | single
         PRUNING           = sys.argv[3]   # prune | noprune
         INPUT_DATASET_ID  = sys.argv[4]
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
         total_time = time.time() - start_time
 
-    elif MODE == "NumPaths":
+    elif MODE == "MinPaths":
 
         from load_minPaths import loadMinPaths
         from generate_minPath_autoNets import generate_minPathAutoNets

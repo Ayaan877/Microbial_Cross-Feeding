@@ -1,6 +1,6 @@
 '''
-NUMPATHS AUTONOMOUS NETWORK CONSTRUCTION TEST
-Loads a NumPaths dataset, takes one pathway per target, and builds a
+MINPATHS AUTONOMOUS NETWORK CONSTRUCTION TEST
+Loads a MinPaths dataset, takes one pathway per target, and builds a
 single autonomous network as a quick sanity check.
 '''
 from load_minPaths import loadMinPaths

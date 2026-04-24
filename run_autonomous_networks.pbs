@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N NumPath_AutoNet_P
+#PBS -N AutoNP_MP_v1
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=100:00:00
@@ -7,15 +7,15 @@
 #PBS -e logs/
 
 # ── Config ───────────────────────────────────────────────────────────────────
-MODE="NumPaths"         # RevScope | NumPaths
+MODE="MinPaths"         # RevScope | MinPaths
 N_TARGET=50000          # target number of unique networks (both modes)
 N_WORKERS=32
 
-# NumPaths settings (used when MODE=NumPaths)
+# MinPaths settings (used when MODE=MinPaths)
 BATCH_MODE="batch"      # batch | single
-PRUNING="prune"       # prune | noprune
-INPUT_DATASET_ID="2"    # numpath version
-OUTPUT_DATASET_ID="2"   # output autonet version
+PRUNING="noprune"       # prune | noprune
+INPUT_DATASET_ID="2"    # minpath version
+OUTPUT_DATASET_ID="1"   # output autonet version
 
 # RevScope settings (used when MODE=RevScope)
 DATASET_ID="1"         # output autonet version
