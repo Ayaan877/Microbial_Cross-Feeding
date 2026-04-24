@@ -1,31 +1,10 @@
 #!/bin/bash
-#PBS -N Int_CrossNets
+#PBS -N CrossP_MP_v1
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=10:00:00
 #PBS -o logs/
 #PBS -e logs/
-
-cd $PBS_O_WORKDIR
-
-module purge
-module load compiler/anaconda3-23.07.0
-
-#!/bin/bash
-#PBS -N Int_CrossNets
-#PBS -q cpu
-#PBS -l select=1:ncpus=32:mem=32gb
-#PBS -l walltime=10:00:00
-#PBS -o logs/
-#PBS -e logs/
-
-# ── Config ───────────────────────────────────────────────────────────────────
-AUTONET_ID="1"          # input autonet version
-CROSSNET_ID="1"         # output crossnet version label
-EXCHANGED_MET="int"     # byp | int
-N_TARGET=50000          # number of unique cross-feeding networks
-N_WORKERS=32            # parallel workers
-# ─────────────────────────────────────────────────────────────────────────────
 
 cd $PBS_O_WORKDIR
 
@@ -34,6 +13,24 @@ module load compiler/anaconda3-23.07.0
 
 source venv/bin/activate
 
-python build_crossNets.py $AUTONET_ID $CROSSNET_ID $EXCHANGED_MET $N_TARGET $N_WORKERS
+# ── Config ───────────────────────────────────────────────────────────────────
+SOURCE="mp"             # rs (revscope) | mp (minpaths)
+AUTONET_ID="1"          # input autonet version
+CROSSNET_ID="1"         # output crossnet version label
+EXCHANGED_MET="int"     # byp | int
+N_TARGET=50000          # number of unique cross-feeding networks
+N_WORKERS=32            # parallel workers
+
+# MinPaths (mp) settings — only used when SOURCE=mp
+PRUNER="batch"          # batch | single
+PRUNING="prune"         # prune | noprune
+PATHS_VERSION="2"       # minpath dataset version
+# ─────────────────────────────────────────────────────────────────────────────
+
+if [ "$SOURCE" = "mp" ]; then
+    python build_crossNets.py $SOURCE $AUTONET_ID $CROSSNET_ID $EXCHANGED_MET $N_TARGET $N_WORKERS $PRUNER $PRUNING $PATHS_VERSION
+else
+    python build_crossNets.py $SOURCE $AUTONET_ID $CROSSNET_ID $EXCHANGED_MET $N_TARGET $N_WORKERS
+fi
 
 echo "Finished cross-feeding network generation at $(date)"
