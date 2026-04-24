@@ -20,16 +20,29 @@ def compute_crossfeeding_yield(crossPair):
 if __name__ == "__main__":
 
     # Args supplied by PBS script (see run_crossfeeding_yields.pbs)
-    version       = sys.argv[1]        # autonet version
-    crossnet_type = sys.argv[2]        # byp | int
+    # rs: get_crossNet_yields.py rs <autonet_id> <crossnet_id> <crossnet_type> <num_workers>
+    # mp: get_crossNet_yields.py mp <autonet_id> <crossnet_id> <crossnet_type> <num_workers> <pruner> <pruning> <paths_version>
+    source        = sys.argv[1]        # rs | mp
+    autonet_id    = sys.argv[2]        # autonet version
     crossnet_id   = sys.argv[3]        # crossnet run version
-    num_workers   = int(sys.argv[4])
+    crossnet_type = sys.argv[4]        # byp | int
+    num_workers   = int(sys.argv[5])
 
+    if source not in ("rs", "mp"):
+        raise ValueError(f"Unknown source '{source}'. Use 'rs' or 'mp'.")
     if crossnet_type not in ("byp", "int"):
         raise ValueError(f"Unknown crossnet_type '{crossnet_type}'. Use 'byp' or 'int'.")
 
-    crossnet_path = f"data/networks/crossnets_rs_P_v{version}_{crossnet_type}_v{crossnet_id}.pkl"
-    output_path   = f"data/yields/yields_cross_rs_P_v{version}_{crossnet_type}_v{crossnet_id}_sbd.pkl"
+    if source == "rs":
+        crossnet_path = f"data/networks/crossnets_rs_P_v{autonet_id}_{crossnet_type}_v{crossnet_id}.pkl"
+        output_path   = f"data/yields/yields_cross_rs_P_v{autonet_id}_{crossnet_type}_v{crossnet_id}_sbd.pkl"
+    else:
+        pruner       = sys.argv[6]   # batch | single
+        pruning      = sys.argv[7]   # prune | noprune
+        paths_version = sys.argv[8]  # paths dataset version
+        suffix = "P" if pruning == "prune" else "NP"
+        crossnet_path = f"data/networks/crossnets_mp_{pruner}_{suffix}_pv{paths_version}_v{autonet_id}_{crossnet_type}_v{crossnet_id}.pkl"
+        output_path   = f"data/yields/yields_cross_mp_{pruner}_{suffix}_pv{paths_version}_v{autonet_id}_{crossnet_type}_v{crossnet_id}_sbd.pkl"
 
     with open(crossnet_path, "rb") as f:
         CrossNets = pickle.load(f)

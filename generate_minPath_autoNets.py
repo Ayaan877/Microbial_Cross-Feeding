@@ -4,12 +4,7 @@ from multiprocessing import Pool
 from combine_pathways import buildAutonomousNetwork
 
 # Module-level global populated in parent before Pool creation.
-# On Linux (fork), workers inherit this via copy-on-write — no IPC serialization cost.
 worker_data = {}
-
-def init_worker():
-    pass  # data already available via fork inheritance
-
 
 def process_network(args):
     combo_indices, seed = args
@@ -55,7 +50,7 @@ def generate_minPathAutoNets(all_paths, rxnMat, prodMat, sumRxnVec,
             yield (indices, int(master_rng.integers(2**31)))
             attempt += 1
 
-    pool = Pool(processes=n_workers, initializer=init_worker)
+    pool = Pool(processes=n_workers)
 
     seen_networks = set()
     minimal_networks = []

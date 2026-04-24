@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N Byp_CrossYields
+#PBS -N CrossBypP_Yields
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=24:00:00
@@ -14,12 +14,22 @@ module load compiler/anaconda3-23.07.0
 source venv/bin/activate
 
 # ── Config ───────────────────────────────────────────────────────────────────
-VERSION="1"             # autonet version
-CROSSNET_TYPE="byp"     # byp | int
+SOURCE="mp"             # revscope (rs) | minpath (mp)
+AUTONET_ID="1"          # autonet version
 CROSSNET_ID="1"         # crossnet version
+CROSSNET_TYPE="byp"     # byproduct (byp) | intermediate (int)
 NUM_WORKERS=32          # parallel workers
+
+# MinPaths (mp) settings — only used when SOURCE=mp
+PRUNER="batch"          # batch | single
+PRUNING="prune"         # prune | noprune
+PATHS_VERSION="2"       # paths dataset version
 # ─────────────────────────────────────────────────────────────────────────────
 
-python get_crossNet_yields.py $VERSION $CROSSNET_TYPE $CROSSNET_ID $NUM_WORKERS
+if [ "$SOURCE" = "mp" ]; then
+    python get_crossNet_yields.py $SOURCE $AUTONET_ID $CROSSNET_ID $CROSSNET_TYPE $NUM_WORKERS $PRUNER $PRUNING $PATHS_VERSION
+else
+    python get_crossNet_yields.py $SOURCE $AUTONET_ID $CROSSNET_ID $CROSSNET_TYPE $NUM_WORKERS
+fi
 
 echo "Finished cross-feeding yield calculation at $(date)"
