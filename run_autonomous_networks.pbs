@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N AutoNP_MP_v1
+#PBS -N AutoNP_v2
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=100:00:00
@@ -15,7 +15,7 @@ N_WORKERS=32
 BATCH_MODE="batch"      # batch | single
 PRUNING="noprune"       # prune | noprune
 INPUT_DATASET_ID="2"    # minpath version
-OUTPUT_DATASET_ID="1"   # output autonet version
+OUTPUT_DATASET_ID="2"   # output autonet version
 
 # RevScope settings (used when MODE=RevScope)
 DATASET_ID="1"         # output autonet version
