@@ -2,7 +2,7 @@
 #PBS -N MinPaths_opt
 #PBS -q cpu
 #PBS -l select=1:ncpus=8:mem=32gb
-#PBS -l walltime=10:00:00
+#PBS -l walltime=24:00:00
 #PBS -J 1-8
 #PBS -o logs/
 #PBS -e logs/
