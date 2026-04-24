@@ -17,7 +17,7 @@ source venv/bin/activate
 SOURCE="mp"             # rs (revscope) | mp (minpaths)
 AUTONET_ID="1"          # input autonet version
 CROSSNET_ID="1"         # output crossnet version label
-EXCHANGED_MET="int"     # byproduct (byp) | intermediate (int)
+EXCHANGED_MET="byp"     # byproduct (byp) | intermediate (int)
 N_TARGET=50000          # number of unique cross-feeding networks
 N_WORKERS=25            # parallel workers
 
