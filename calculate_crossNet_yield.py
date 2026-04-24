@@ -222,3 +222,49 @@ def splitByDemand_crossfeeding(stoich_matrix, rxnMat, prodMat, sumRxnVec,
         'flux_A_to_B': float(fluxAtoB),
         'flux_B_to_A': float(fluxBtoA),
     }
+
+
+if __name__ == "__main__":
+    import time
+    from load_data import *
+    from load_minPaths import loadMinPaths
+    from crossfeeding_minPaths import build_crossfeeding_pair_from_paths
+
+    # ── Config ───────────────────────────────────────────────────────────────
+    PATHS_VERSION  = "1"
+    PATHS_MODE     = "batch"
+    USE_BYPRODUCTS = True
+    MAX_ATTEMPTS   = 10
+    # ─────────────────────────────────────────────────────────────────────────
+
+    all_paths = loadMinPaths(mode=PATHS_MODE, dataset=PATHS_VERSION)
+
+    print("Building cross-feeding pair...")
+    crossPair = build_crossfeeding_pair_from_paths(
+        all_paths, rxnMat, prodMat, sumRxnVec,
+        nutrientSet, Currency, Core,
+        use_byproducts=USE_BYPRODUCTS,
+        max_attempts=MAX_ATTEMPTS)
+
+    if crossPair is None:
+        print("Failed to construct cross-feeding pair.")
+    else:
+        print(f"\nPair built successfully.")
+        print(f"  cross_A: {len(crossPair['cross_A'])} rxns | cross_B: {len(crossPair['cross_B'])} rxns")
+        print(f"  A donates met {crossPair['A_donated']} ({inv_met_map[crossPair['A_donated']]}) "
+              f"--> B uses for core {crossPair['B_ext_core']} ({inv_met_map[crossPair['B_ext_core']]})")
+        print(f"  B donates met {crossPair['B_donated']} ({inv_met_map[crossPair['B_donated']]}) "
+              f"--> A uses for core {crossPair['A_ext_core']} ({inv_met_map[crossPair['A_ext_core']]})")
+
+        t0 = time.time()
+        result = splitByDemand_crossfeeding(
+            stoich_matrix, rxnMat, prodMat, sumRxnVec,
+            rho, pi, nutrientSet, Energy, Currency, Core, crossPair)
+        t1 = time.time()
+
+        print("\nYield results:")
+        print(f"  Pair viable: {result['pair_viable']}")
+        print(f"  Network A — viable: {result['viable_A']}, E: {result['E_A']:.6f}, B: {result['B_A']:.6f}")
+        print(f"  Network B — viable: {result['viable_B']}, E: {result['E_B']:.6f}, B: {result['B_B']:.6f}")
+        print(f"  Flux A→B: {result['flux_A_to_B']:.6f}, Flux B→A: {result['flux_B_to_A']:.6f}")
+        print(f"  Time: {t1 - t0:.3f} s")

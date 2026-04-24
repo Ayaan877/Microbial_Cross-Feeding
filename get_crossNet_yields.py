@@ -1,4 +1,4 @@
-from calculate_crossfeeding_yield import splitByDemand_crossfeeding
+from calculate_crossNet_yield import splitByDemand_crossfeeding
 from load_data import *
 import sys
 import time

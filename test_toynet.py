@@ -2,7 +2,7 @@
 TOY NETWORK YIELD TEST
 Returns: Energy/Biomass yields for a network
 '''
-from calculate_yield import *
+from calculate_autoNet_yield import *
 from load_data import * # load 'toynet.csv' in load_data
 
 AutoNet1 = [0, 1, 6] # Uses R1, R2 & R7

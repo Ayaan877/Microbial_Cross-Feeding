@@ -5,7 +5,7 @@ import io
 from contextlib import redirect_stdout
 from datetime import datetime
 from multiprocessing import Pool
-from cross_feeding import build_crossfeeding_pair
+from crossfeeding import build_crossfeeding_pair
 
 worker_data = {}
 

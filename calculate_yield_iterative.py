@@ -1,5 +1,5 @@
 import numpy as np
-from calculate_yield import isLimiting, giveLimitingCurrency
+from calculate_autoNet_yield import isLimiting, giveLimitingCurrency
 
 
 def findLimRct(j, reactants, shareMatrix, S):

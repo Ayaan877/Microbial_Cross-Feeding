@@ -1,7 +1,7 @@
 import pickle
 import time
-from calculate_yield import splitByDemand
-from calculate_crossfeeding_yield import splitByDemand_crossfeeding
+from calculate_autoNet_yield import splitByDemand
+from calculate_crossNet_yield import splitByDemand_crossfeeding
 from load_data import *
 from autonomy_check import verify_autonomy
 

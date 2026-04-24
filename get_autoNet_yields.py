@@ -1,5 +1,5 @@
-from calculate_yield import *
-from calculate_yield_iterative import *
+from calculate_autoNet_yield import *
+from calculate_autoNet_yield_iterative import *
 from load_data import *
 import sys
 import time
