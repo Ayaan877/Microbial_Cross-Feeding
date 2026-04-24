@@ -22,7 +22,7 @@ NUM_WORKERS=32          # parallel workers
 
 # MinPaths (mp) settings — only used when SOURCE=mp
 PRUNER="batch"          # batch | single
-PRUNING="prune"         # prune | noprune
+PRUNING="noprune"         # prune | noprune
 PATHS_VERSION="2"       # paths dataset version
 # ─────────────────────────────────────────────────────────────────────────────
 

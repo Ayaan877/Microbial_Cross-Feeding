@@ -10,25 +10,27 @@ from generate_crossNets_minPaths import generate_crossNets_minPaths
 if __name__ == "__main__":
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
-    # Usage: build_crossNets_minPaths.py <pruner> <paths_version> <crossnet_id> <exchanged_met> <n_target> <n_workers>
+    # Usage: build_crossNets_minPaths.py <pruner> <paths_version> <autonet_id> <crossnet_id> <exchanged_met> <n_target> <n_workers>
     #
     # pruner        : batch | single
     # paths_version : minpath dataset version (e.g. 1)
+    # autonet_id    : autonet version label (for naming consistency)
     # crossnet_id   : output crossnet version label
     # exchanged_met : byp | int
     # n_target      : number of unique cross-feeding pairs to generate
     # n_workers     : number of parallel workers
     #
-    # Output file: crossnets_mp_<pruner>_NP_pv<paths_version>_v<crossnet_id>_<exchanged_met>.pkl
+    # Output file: crossnets_mp_<pruner>_NP_pv<paths_version>_v<autonet_id>_<exchanged_met>_v<crossnet_id>.pkl
     # "NP" (noprune) identifies these networks as built directly from raw MinPaths
     # without any post-assembly pruning.
 
     pruner        = sys.argv[1]          # batch | single
     paths_version = sys.argv[2]          # minpath dataset version
-    crossnet_id   = sys.argv[3]          # output crossnet version label
-    exchanged_met = sys.argv[4].lower()  # byp | int
-    n_target      = int(sys.argv[5])
-    n_workers     = int(sys.argv[6])
+    autonet_id    = sys.argv[3]          # autonet version label
+    crossnet_id   = sys.argv[4]          # output crossnet version label
+    exchanged_met = sys.argv[5].lower()  # byp | int
+    n_target      = int(sys.argv[6])
+    n_workers     = int(sys.argv[7])
 
     if pruner not in ("batch", "single"):
         raise ValueError(f"Invalid pruner: '{pruner}'. Must be 'batch' or 'single'.")
@@ -39,7 +41,7 @@ if __name__ == "__main__":
     output_dir.mkdir(parents=True, exist_ok=True)
 
     output_path = output_dir / (
-        f"crossnets_mp_{pruner}_NP_pv{paths_version}_v{crossnet_id}_{exchanged_met}.pkl"
+        f"crossnets_mp_{pruner}_NP_pv{paths_version}_v{autonet_id}_{exchanged_met}_v{crossnet_id}.pkl"
     )
 
     print(f"Loading MinPaths (pruner={pruner}, version={paths_version})...")

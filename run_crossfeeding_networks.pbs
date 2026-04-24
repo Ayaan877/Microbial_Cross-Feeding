@@ -28,7 +28,7 @@ PATHS_VERSION="2"       # minpath dataset version
 # ─────────────────────────────────────────────────────────────────────────────
 
 if [ "$SOURCE" = "mp" ] && [ "$PRUNING" = "noprune" ]; then
-    python build_crossNets_minPaths.py $PRUNER $PATHS_VERSION $CROSSNET_ID $EXCHANGED_MET $N_TARGET $N_WORKERS
+    python build_crossNets_minPaths.py $PRUNER $PATHS_VERSION $AUTONET_ID $CROSSNET_ID $EXCHANGED_MET $N_TARGET $N_WORKERS
 elif [ "$SOURCE" = "mp" ]; then
     python build_crossNets.py $SOURCE $AUTONET_ID $CROSSNET_ID $EXCHANGED_MET $N_TARGET $N_WORKERS $PRUNER $PRUNING $PATHS_VERSION
 else
