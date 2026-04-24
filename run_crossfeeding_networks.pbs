@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N CrossP_byp_v1
+#PBS -N CrossNP_byp
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=24:00:00
@@ -23,11 +23,13 @@ N_WORKERS=32            # parallel workers
 
 # MinPaths (mp) settings — only used when SOURCE=mp
 PRUNER="batch"          # batch | single
-PRUNING="prune"         # prune | noprune
+PRUNING="noprune"         # prune | noprune
 PATHS_VERSION="2"       # minpath dataset version
 # ─────────────────────────────────────────────────────────────────────────────
 
-if [ "$SOURCE" = "mp" ]; then
+if [ "$SOURCE" = "mp" ] && [ "$PRUNING" = "noprune" ]; then
+    python build_crossNets_minPaths.py $PRUNER $PATHS_VERSION $CROSSNET_ID $EXCHANGED_MET $N_TARGET $N_WORKERS
+elif [ "$SOURCE" = "mp" ]; then
     python build_crossNets.py $SOURCE $AUTONET_ID $CROSSNET_ID $EXCHANGED_MET $N_TARGET $N_WORKERS $PRUNER $PRUNING $PATHS_VERSION
 else
     python build_crossNets.py $SOURCE $AUTONET_ID $CROSSNET_ID $EXCHANGED_MET $N_TARGET $N_WORKERS
