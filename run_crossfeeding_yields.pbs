@@ -22,14 +22,14 @@ NUM_WORKERS=32          # parallel workers
 
 # MinPaths (mp) settings — only used when SOURCE=mp
 PRUNER="batch"          # batch | single
-PRUNING="noprune"         # prune | noprune
+PRUNING="prune"         # prune | noprune
 PATHS_VERSION="2"       # paths dataset version
 # ─────────────────────────────────────────────────────────────────────────────
 
 if [ "$SOURCE" = "mp" ]; then
-    python get_crossNet_yields.py $SOURCE $AUTONET_ID $CROSSNET_ID $CROSSNET_TYPE $NUM_WORKERS $PRUNER $PRUNING $PATHS_VERSION
+    python get_alt_crossNet_yields.py $SOURCE $AUTONET_ID $CROSSNET_ID $CROSSNET_TYPE $NUM_WORKERS $PRUNER $PRUNING $PATHS_VERSION
 else
-    python get_crossNet_yields.py $SOURCE $AUTONET_ID $CROSSNET_ID $CROSSNET_TYPE $NUM_WORKERS
+    python get_alt_crossNet_yields.py $SOURCE $AUTONET_ID $CROSSNET_ID $CROSSNET_TYPE $NUM_WORKERS
 fi
 
 echo "Finished cross-feeding yield calculation at $(date)"
