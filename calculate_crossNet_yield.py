@@ -192,8 +192,8 @@ def splitByDemand_crossfeeding(stoich_matrix, rxnMat, prodMat, sumRxnVec,
         totalDemandPair = np.abs(np.sum(r, axis = 0))
         newProdCols = np.where((prodState != 0) & (totalDemandPair != 0))[0]
         if len(newProdCols) > 0:
-            shareMatrix[:, newProdCols] = ((r * prodState)[:, newProdCols] /
-                                           totalDemandPair[newProdCols])
+            shareMatrix[:, newProdCols] += ((r * prodState)[:, newProdCols] /
+                                            totalDemandPair[newProdCols])
         if len(currencyAB) > 0:
             shareMatrix[:, currencyAB] = -1
 

@@ -41,15 +41,17 @@ if __name__ == "__main__":
         raise ValueError(f"Unknown MODE '{mode}'. Use 'sbd' or 'iter'.")
 
     if source == "rs":
-        autonet_path = f"data/networks/autonets_rs_P_v{version}.pkl"
-        output_path  = f"data/yields/yields_auto_rs_P_v{version}_{mode}.pkl"
+        subdir        = sys.argv[5] if len(sys.argv) > 5 else ""
+        autonet_path  = f"data/networks/autonets_rs_P_v{version}.pkl"
+        output_path   = f"data/yields/{subdir}/yields_auto_rs_P_v{version}_{mode}.pkl" if subdir else f"data/yields/yields_auto_rs_P_v{version}_{mode}.pkl"
     else:  # mp
         pruner        = sys.argv[5]       # batch | single
         pruning       = sys.argv[6]       # prune | noprune
         paths_version = sys.argv[7]       # minpath dataset version
+        subdir        = sys.argv[8] if len(sys.argv) > 8 else ""
         prune_suffix  = "P" if pruning == "prune" else "NP"
         autonet_path  = f"data/networks/autonets_mp_{pruner}_{prune_suffix}_pv{paths_version}_v{version}.pkl"
-        output_path   = f"data/yields/yields_auto_mp_{pruner}_{prune_suffix}_pv{paths_version}_v{version}_{mode}.pkl"
+        output_path   = f"data/yields/{subdir}/yields_auto_mp_{pruner}_{prune_suffix}_pv{paths_version}_v{version}_{mode}.pkl" if subdir else f"data/yields/yields_auto_mp_{pruner}_{prune_suffix}_pv{paths_version}_v{version}_{mode}.pkl"
 
     with open(autonet_path, "rb") as f:
         AutoNets = pickle.load(f)
@@ -82,7 +84,7 @@ if __name__ == "__main__":
     print(f"Valid networks (all precursors produced): {valid}/{num_nets}")
 
     import os
-    os.makedirs("data/yields", exist_ok=True)
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
     with open(output_path, "wb") as f:
         pickle.dump((E_yields, B_yields, viability), f)
     print(f"Saved yields to {output_path}")

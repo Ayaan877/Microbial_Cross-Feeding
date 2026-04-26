@@ -34,15 +34,17 @@ if __name__ == "__main__":
         raise ValueError(f"Unknown crossnet_type '{crossnet_type}'. Use 'byp' or 'int'.")
 
     if source == "rs":
+        subdir        = sys.argv[6] if len(sys.argv) > 6 else ""
         crossnet_path = f"data/networks/crossnets_rs_P_v{autonet_id}_{crossnet_type}_v{crossnet_id}.pkl"
-        output_path   = f"data/yields/yields_cross_rs_P_v{autonet_id}_{crossnet_type}_v{crossnet_id}_sbd.pkl"
+        output_path   = f"data/yields/{subdir}/yields_cross_rs_P_v{autonet_id}_{crossnet_type}_v{crossnet_id}_sbd.pkl" if subdir else f"data/yields/yields_cross_rs_P_v{autonet_id}_{crossnet_type}_v{crossnet_id}_sbd.pkl"
     else:
-        pruner       = sys.argv[6]   # batch | single
-        pruning      = sys.argv[7]   # prune | noprune
-        paths_version = sys.argv[8]  # paths dataset version
-        suffix = "P" if pruning == "prune" else "NP"
+        pruner        = sys.argv[6]   # batch | single
+        pruning       = sys.argv[7]   # prune | noprune
+        paths_version = sys.argv[8]   # paths dataset version
+        subdir        = sys.argv[9] if len(sys.argv) > 9 else ""
+        suffix        = "P" if pruning == "prune" else "NP"
         crossnet_path = f"data/networks/crossnets_mp_{pruner}_{suffix}_pv{paths_version}_v{autonet_id}_{crossnet_type}_v{crossnet_id}.pkl"
-        output_path   = f"data/yields/yields_cross_mp_{pruner}_{suffix}_pv{paths_version}_v{autonet_id}_{crossnet_type}_v{crossnet_id}_sbd.pkl"
+        output_path   = f"data/yields/{subdir}/yields_cross_mp_{pruner}_{suffix}_pv{paths_version}_v{autonet_id}_{crossnet_type}_v{crossnet_id}_sbd.pkl" if subdir else f"data/yields/yields_cross_mp_{pruner}_{suffix}_pv{paths_version}_v{autonet_id}_{crossnet_type}_v{crossnet_id}_sbd.pkl"
 
     with open(crossnet_path, "rb") as f:
         CrossNets = pickle.load(f)
@@ -88,7 +90,7 @@ if __name__ == "__main__":
     print(f"Viable pairs (both organisms produce all precursors): {valid}/{num_pairs}")
 
     import os
-    os.makedirs("data/yields", exist_ok=True)
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
     with open(output_path, "wb") as f:
         pickle.dump({
             'E_A':        E_A_yields,

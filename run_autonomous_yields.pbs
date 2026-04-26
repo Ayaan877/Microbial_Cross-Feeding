@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N AutoNP_Yields
+#PBS -N AutoP_Yields
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=24:00:00
@@ -16,19 +16,20 @@ source venv/bin/activate
 # ── Config ───────────────────────────────────────────────────────────────────
 SOURCE="mp"             # rs (revscope) | mp (minpaths)
 VERSION="1"             # autonet version
-MODE="alt"              # sbd (split-by-demand) | iter (iterative) | alt (alternative)
+MODE="sbd"              # sbd (split-by-demand) | iter (iterative) | alt (alternative)
 NUM_WORKERS=32          # parallel workers
+SUBDIR="flux_accumulation"              # subdirectory within data/yields/ (leave empty to use data/yields/ directly)
 
 # MinPaths (mp) settings — only used when SOURCE=mp
 PRUNER="batch"          # batch | single
-PRUNING="noprune"         # prune | noprune
+PRUNING="prune"         # prune | noprune
 PATHS_VERSION="2"       # minpath dataset version
 # ─────────────────────────────────────────────────────────────────────────────
 
 if [ "$SOURCE" = "mp" ]; then
-    python get_alt_autoNet_yields.py $SOURCE $VERSION $MODE $NUM_WORKERS $PRUNER $PRUNING $PATHS_VERSION
+    python get_autoNet_yields.py $SOURCE $VERSION $MODE $NUM_WORKERS $PRUNER $PRUNING $PATHS_VERSION $SUBDIR
 else
-    python get_alt_autoNet_yields.py $SOURCE $VERSION $MODE $NUM_WORKERS
+    python get_autoNet_yields.py $SOURCE $VERSION $MODE $NUM_WORKERS $SUBDIR
 fi
 
 echo "Finished yield calculation at $(date)"

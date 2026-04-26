@@ -109,8 +109,8 @@ def splitByDemand(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
         totalDemand = np.abs(np.sum(r, axis = 0))
         newProdCols = np.where((prodState != 0) & (totalDemand != 0))[0]
         if len(newProdCols) > 0:
-            shareMatrix[:, newProdCols] = ((r * prodState)[:, newProdCols] /
-                                           totalDemand[newProdCols])
+            shareMatrix[:, newProdCols] += ((r * prodState)[:, newProdCols] /
+                                            totalDemand[newProdCols])
         shareMatrix[:, Currency] = -1
 
         # Maintaining nutrient shares across rounds using initial total demand.
