@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N StoichInt_P
+#PBS -N StoichByp_NP
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=24:00:00
@@ -21,11 +21,11 @@ NUM_WORKERS=32          # parallel workers
 
 # Cross-feeding settings — only used when NET_TYPE=cross
 CROSSNET_ID="1"         # crossnet run version
-CROSSNET_TYPE="int"     # byproduct (byp) | intermediate (int)
+CROSSNET_TYPE="byp"     # byproduct (byp) | intermediate (int)
 
 # MinPaths (mp) settings — only used when SOURCE=mp
 PRUNER="batch"          # batch | single
-PRUNING="prune"         # prune | noprune
+PRUNING="noprune"         # prune | noprune
 PATHS_VERSION="2"       # minpath dataset version
 # ─────────────────────────────────────────────────────────────────────────────
 
