@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N AutoP_Yields
+#PBS -N AutoNP_Yields
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=24:00:00
@@ -22,7 +22,7 @@ SUBDIR="flux_accumulation"              # subdirectory within data/yields/ (leav
 
 # MinPaths (mp) settings — only used when SOURCE=mp
 PRUNER="batch"          # batch | single
-PRUNING="prune"         # prune | noprune
+PRUNING="noprune"         # prune | noprune
 PATHS_VERSION="2"       # minpath dataset version
 # ─────────────────────────────────────────────────────────────────────────────
 
