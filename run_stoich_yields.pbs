@@ -1,0 +1,49 @@
+#!/bin/bash
+#PBS -N StoichByp_P
+#PBS -q cpu
+#PBS -l select=1:ncpus=32:mem=32gb
+#PBS -l walltime=24:00:00
+#PBS -o logs/
+#PBS -e logs/
+
+cd $PBS_O_WORKDIR
+
+module purge
+module load compiler/anaconda3-23.07.0
+
+source venv/bin/activate
+
+# ── Config ───────────────────────────────────────────────────────────────────
+NET_TYPE="cross"         # auto | cross
+SOURCE="mp"             # rs (revscope) | mp (minpaths)
+AUTONET_ID="1"          # autonet dataset version
+NUM_WORKERS=32          # parallel workers
+
+# Cross-feeding settings — only used when NET_TYPE=cross
+CROSSNET_ID="1"         # crossnet run version
+CROSSNET_TYPE="byp"     # byproduct (byp) | intermediate (int)
+
+# MinPaths (mp) settings — only used when SOURCE=mp
+PRUNER="batch"          # batch | single
+PRUNING="prune"         # prune | noprune
+PATHS_VERSION="2"       # minpath dataset version
+# ─────────────────────────────────────────────────────────────────────────────
+
+if [ "$NET_TYPE" = "auto" ]; then
+    if [ "$SOURCE" = "mp" ]; then
+        python get_stoich_yields.py auto mp $AUTONET_ID $NUM_WORKERS $PRUNER $PRUNING $PATHS_VERSION
+    else
+        python get_stoich_yields.py auto rs $AUTONET_ID $NUM_WORKERS
+    fi
+elif [ "$NET_TYPE" = "cross" ]; then
+    if [ "$SOURCE" = "mp" ]; then
+        python get_stoich_yields.py cross mp $AUTONET_ID $CROSSNET_ID $CROSSNET_TYPE $NUM_WORKERS $PRUNER $PRUNING $PATHS_VERSION
+    else
+        python get_stoich_yields.py cross rs $AUTONET_ID $CROSSNET_ID $CROSSNET_TYPE $NUM_WORKERS
+    fi
+else
+    echo "ERROR: Unknown NET_TYPE '$NET_TYPE'. Use 'auto' or 'cross'." >&2
+    exit 1
+fi
+
+echo "Finished stoichiometric yield calculation at $(date)"
