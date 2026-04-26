@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N CrossBypP_Yields
+#PBS -N CrossIntP_Yields
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=24:00:00
@@ -17,7 +17,7 @@ source venv/bin/activate
 SOURCE="mp"             # revscope (rs) | minpath (mp)
 AUTONET_ID="1"          # autonet version
 CROSSNET_ID="1"         # crossnet version
-CROSSNET_TYPE="byp"     # byproduct (byp) | intermediate (int)
+CROSSNET_TYPE="int"     # byproduct (byp) | intermediate (int)
 NUM_WORKERS=32          # parallel workers
 SUBDIR="flux_accumulation"              # subdirectory within data/yields/ (leave empty to use data/yields/ directly)
 
