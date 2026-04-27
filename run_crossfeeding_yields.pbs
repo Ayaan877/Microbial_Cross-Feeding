@@ -19,7 +19,7 @@ AUTONET_ID="1"          # autonet version
 CROSSNET_ID="1"         # crossnet version
 CROSSNET_TYPE="int"     # byproduct (byp) | intermediate (int)
 NUM_WORKERS=32          # parallel workers
-SUBDIR="flux_accumulation"              # subdirectory within data/yields/ (leave empty to use data/yields/ directly)
+SUBDIR="legacy_version"              # subdirectory within data/yields/ (leave empty to use data/yields/ directly)
 
 # MinPaths (mp) settings — only used when SOURCE=mp
 PRUNER="batch"          # batch | single
@@ -28,9 +28,9 @@ PATHS_VERSION="2"       # paths dataset version
 # ─────────────────────────────────────────────────────────────────────────────
 
 if [ "$SOURCE" = "mp" ]; then
-    python get_crossNet_yields.py $SOURCE $AUTONET_ID $CROSSNET_ID $CROSSNET_TYPE $NUM_WORKERS $PRUNER $PRUNING $PATHS_VERSION $SUBDIR
+    python get_alt_crossNet_yields.py $SOURCE $AUTONET_ID $CROSSNET_ID $CROSSNET_TYPE $NUM_WORKERS $PRUNER $PRUNING $PATHS_VERSION $SUBDIR
 else
-    python get_crossNet_yields.py $SOURCE $AUTONET_ID $CROSSNET_ID $CROSSNET_TYPE $NUM_WORKERS $SUBDIR
+    python get_alt_crossNet_yields.py $SOURCE $AUTONET_ID $CROSSNET_ID $CROSSNET_TYPE $NUM_WORKERS $SUBDIR
 fi
 
 echo "Finished cross-feeding yield calculation at $(date)"

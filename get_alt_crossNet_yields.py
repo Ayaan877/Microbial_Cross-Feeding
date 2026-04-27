@@ -174,11 +174,11 @@ def splitByDemand_crossfeeding_alt(stoich_matrix, rxnMat, prodMat, sumRxnVec,
                     runningEB += shareMatrix[thisRxn, limRct] * ratio
                 elif thisMet in trackedCore:
                     if thisMet in ps:
-                        isCoreProducedA[thisMet] = 1
+                        isCoreProducedA[Core] = 1
                     runningBA += shareMatrix[thisRxn, limRct] * ratio
                 elif thisMet in [c + nMets for c in trackedCore]:
                     if thisMet in ps:
-                        isCoreProducedB[thisMet - nMets] = 1
+                        isCoreProducedB[Core] = 1
                     runningBB += shareMatrix[thisRxn, limRct] * ratio
 
             for thisMet in reactants:

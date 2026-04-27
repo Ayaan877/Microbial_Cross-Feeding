@@ -28,8 +28,8 @@ def _giveLimitingCurrency(r, tRxn):
 def splitByDemand_alt(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
                       nutrientSet, Energy, Currency, Core, orgRxns):
     """
-    split_by_demand.py logic with the core-checking bug fixed:
-      isCoreProduced[Core] = 1  -->  isCoreProduced[thisMet] = 1
+    split_by_demand.py logic with the original core-checking bug restored:
+      isCoreProduced[Core] = 1  (bugged: marks all core mets produced at once)
 
     Key behavioural differences vs calculate_autoNet_yield.py:
       - Picks the first NON-limiting reactant (sbd.py: not isLimiting)
@@ -98,7 +98,7 @@ def splitByDemand_alt(stoich_matrix, rxnMat, prodMat, sumRxnVec, rho, pi,
                     runningE += shareMatrix[thisRxn, limRct] * ratio
                 elif thisMet in Core:
                     if thisMet in ps:
-                        isCoreProduced[thisMet] = 1  # fixed: was isCoreProduced[Core] = 1
+                        isCoreProduced[Core] = 1
                     runningB += shareMatrix[thisRxn, limRct] * ratio
 
             for thisMet in reactants:
