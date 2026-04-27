@@ -23,7 +23,7 @@ def giveLimitingCurrency(r, tRxn):
 
 # ---------------------------------------------------------------------------
 # Core algorithm: split_by_demand.py logic applied to cross-feeding pairs,
-# with the core-checking bug fixed.
+# with the original core-checking bug restored.
 # ---------------------------------------------------------------------------
 
 def splitByDemand_crossfeeding_alt(stoich_matrix, rxnMat, prodMat, sumRxnVec,
@@ -31,7 +31,7 @@ def splitByDemand_crossfeeding_alt(stoich_matrix, rxnMat, prodMat, sumRxnVec,
                                    Core, crossPair):
     """
     Coupled two-compartment extension of split_by_demand.py with the
-    core-checking bug fixed.
+    original core-checking bug restored.
 
     Key behavioural differences vs calculate_crossNet_yield.py:
       - Picks the first NON-limiting reactant (sbd.py: not isLimiting)
