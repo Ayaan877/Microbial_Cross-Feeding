@@ -1,8 +1,8 @@
 #!/bin/bash
 #PBS -N AutoP_RS
 #PBS -q cpu
-#PBS -l select=1:ncpus=32:mem=32gb
-#PBS -l walltime=24:00:00
+#PBS -l select=1:ncpus=8:mem=16gb
+#PBS -l walltime=10:00:00
 #PBS -o logs/
 #PBS -e logs/
 
@@ -17,7 +17,7 @@
 AUTONET_SUBDIR="autonets_rs_av2"
 AUTONET_FILE="P"
 N_TARGET=50000
-N_WORKERS=32
+N_WORKERS=8
 # ─────────────────────────────────────────────────────────────────────────────
 
 cd $PBS_O_WORKDIR
