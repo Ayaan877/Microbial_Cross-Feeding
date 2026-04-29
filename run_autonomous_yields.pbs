@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N AutoYields
+#PBS -N AutoNP_yields
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=24:00:00
