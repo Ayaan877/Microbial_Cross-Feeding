@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N AutoNP
+#PBS -N AutoP
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=24:00:00
@@ -15,7 +15,7 @@
 #   e.g. NP_pv2  →  autonets_NP_pv2.pkl
 #   e.g. P       →  autonets_P.pkl           (rs is always pruned)
 AUTONET_SUBDIR="autonets_mp_av2"
-AUTONET_FILE="NP_pv2"
+AUTONET_FILE="P_pv2"
 N_TARGET=50000
 N_WORKERS=32
 # ─────────────────────────────────────────────────────────────────────────────
