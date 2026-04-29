@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N MergedBypP_yields
+#PBS -N MergedIntP_yields
 #PBS -q cpu
 #PBS -l select=1:ncpus=8:mem=16gb
 #PBS -l walltime=10:00:00
@@ -14,7 +14,7 @@
 #   as yields_merged_{cross_type}_{cross_pruning}_cv{version}.pkl
 
 CROSSNET_SUBDIR="crossnets_mp_cv1"
-CROSSNET_FILE="byp_P"
+CROSSNET_FILE="int_P"
 YIELD_MODE="sbd"
 NUM_WORKERS=8
 # ─────────────────────────────────────────────────────────────────────────────
