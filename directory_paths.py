@@ -111,3 +111,21 @@ def resolve_yield_path(autonet_subdir, autonet_file, yield_mode,
             crossnet_subdir, crossnet_file)
         fname = f"yields_cross_{cross_type}_{cross_pruning}_cv{cv}.pkl"
     return YIELDS_DIR / subdir_name / fname
+
+
+def resolve_merged_yield_path(crossnet_subdir, crossnet_file, yield_mode):
+    """
+    Resolve the path for a merged-network yield pickle file.
+
+    The merged network is the union of both organisms' reactions in a cross-
+    feeding pair, treated as a single autonomous network for yield calculation.
+
+    crossnet_subdir : "crossnets_{source}_cv{cv}"
+    crossnet_file   : "{byp|int}_{P|NP}"
+    yield_mode      : "sbd" | "iter"
+    """
+    source, cv, cross_type, cross_pruning = parse_crossnet_spec(
+        crossnet_subdir, crossnet_file)
+    subdir_name = f"yields_{source}_{yield_mode}"
+    fname = f"yields_merged_{cross_type}_{cross_pruning}_cv{cv}.pkl"
+    return YIELDS_DIR / subdir_name / fname

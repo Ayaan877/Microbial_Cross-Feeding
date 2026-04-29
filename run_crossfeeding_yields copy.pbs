@@ -1,0 +1,31 @@
+#!/bin/bash
+#PBS -N merged_yields
+#PBS -q cpu
+#PBS -l select=1:ncpus=8:mem=16gb
+#PBS -l walltime=10:00:00
+#PBS -o logs/
+#PBS -e logs/
+
+# ── Config ───────────────────────────────────────────────────────────────────
+# CROSSNET_SUBDIR : crossnets_{source}_cv{version}
+# CROSSNET_FILE   : {byp|int}_{P|NP}
+# YIELD_MODE      : sbd | iter
+#   Yield files land in  data/yields/yields_{source}_{YIELD_MODE}/
+#   as yields_merged_{cross_type}_{cross_pruning}_cv{version}.pkl
+
+CROSSNET_SUBDIR="crossnets_mp_cv1"
+CROSSNET_FILE="byp_P"
+YIELD_MODE="sbd"
+NUM_WORKERS=8
+# ─────────────────────────────────────────────────────────────────────────────
+
+cd $PBS_O_WORKDIR
+
+module purge
+module load compiler/anaconda3-23.07.0
+
+source venv/bin/activate
+
+python get_merged_crossNet_yields.py $CROSSNET_SUBDIR $CROSSNET_FILE $YIELD_MODE $NUM_WORKERS
+
+echo "Finished merged cross-feeding yield calculation at $(date)"
