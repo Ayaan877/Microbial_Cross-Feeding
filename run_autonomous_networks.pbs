@@ -14,8 +14,8 @@
 # AUTONET_FILE   : {P|NP}_pv{path_version}  (mp)  or  P  (rs)
 #   e.g. NP_pv2  →  autonets_NP_pv2.pkl
 #   e.g. P       →  autonets_P.pkl           (rs is always pruned)
-AUTONET_SUBDIR="autonets_mp_av2"
-AUTONET_FILE="P_pv2"
+AUTONET_SUBDIR="autonets_rs_av2"
+AUTONET_FILE="P"
 N_TARGET=50000
 N_WORKERS=32
 # ─────────────────────────────────────────────────────────────────────────────
