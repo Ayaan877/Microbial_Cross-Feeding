@@ -227,17 +227,16 @@ def splitByDemand_crossfeeding(stoich_matrix, rxnMat, prodMat, sumRxnVec,
 if __name__ == "__main__":
     import time
     from load_data import *
-    from load_minPaths import loadMinPaths
+    from load_networks import load_minpaths
     from crossfeeding_minPaths import build_crossfeeding_pair_from_paths
 
     # ── Config ───────────────────────────────────────────────────────────────
     PATHS_VERSION  = "1"
-    PATHS_MODE     = "batch"
     USE_BYPRODUCTS = True
     MAX_ATTEMPTS   = 10
     # ─────────────────────────────────────────────────────────────────────────
 
-    all_paths = loadMinPaths(mode=PATHS_MODE, dataset=PATHS_VERSION)
+    all_paths = load_minpaths(f"paths_pv{PATHS_VERSION}")
 
     print("Building cross-feeding pair...")
     crossPair = build_crossfeeding_pair_from_paths(

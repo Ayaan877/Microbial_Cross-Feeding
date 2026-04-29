@@ -1,39 +1,32 @@
 import sys
 import time
-from pathlib import Path
 from datetime import datetime
 from load_data import *
+from directory_paths import parse_autonet_spec, resolve_autonet_path
 
 if __name__ == "__main__":
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     # Args supplied by PBS script (see run_autonomous_networks.pbs)
-    MODE = sys.argv[1]   # RevScope | MinPaths
+    # Usage: build_autoNets.py <autonet_subdir> <autonet_file> <n_target> <n_workers>
+    #
+    #   autonet_subdir : "autonets_{source}_av{version}"  e.g. "autonets_mp_av2"
+    #   autonet_file   : "{P|NP}_pv{path_version}"  (mp)  or  "P"  (rs)
+    #   n_target       : number of unique networks to generate
+    #   n_workers      : parallel worker count
+    autonet_subdir = sys.argv[1]
+    autonet_file   = sys.argv[2]
+    N_TARGET       = int(sys.argv[3])
+    N_WORKERS      = int(sys.argv[4])
 
-    if MODE == "RevScope":
-        # python build_autoNets.py RevScope <dataset_id> <n_target> <n_workers>
-        DATASET_ID = sys.argv[2]
-        N_TARGET   = int(sys.argv[3])
-        N_WORKERS  = int(sys.argv[4])
-    else:
-        # python build_autoNets.py MinPaths <batch_mode> <pruning> <input_dataset> <output_dataset> <n_target> <n_workers>
-        BATCH_MODE        = sys.argv[2]   # batch | single
-        PRUNING           = sys.argv[3]   # prune | noprune
-        INPUT_DATASET_ID  = sys.argv[4]
-        OUTPUT_DATASET_ID = sys.argv[5]
-        N_TARGET          = int(sys.argv[6])
-        N_WORKERS         = int(sys.argv[7])
+    source, av, pruning, pv = parse_autonet_spec(autonet_subdir, autonet_file)
+    output_path = resolve_autonet_path(autonet_subdir, autonet_file)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
 
     start_time = time.time()
 
-    output_dir = Path("data/networks")
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    if MODE == "RevScope":
+    if source == "rs":
         from generate_revScope_autoNets import generate_revScopeAutoNets
-
-        output_file = f"autonets_rs_P_v{DATASET_ID}.pkl"
-        output_path = output_dir / output_file
 
         print(f"Generating revScope autonomous networks...")
         print(f"  Output: {output_path}")
@@ -43,30 +36,25 @@ if __name__ == "__main__":
             n_target=N_TARGET, n_workers=N_WORKERS,
             save_path=output_path)
 
-        total_time = time.time() - start_time
-
-    elif MODE == "MinPaths":
-
-        from load_minPaths import loadMinPaths
+    else:  # mp
+        from load_networks import load_minpaths
         from generate_minPath_autoNets import generate_minPathAutoNets
-        all_paths = loadMinPaths(mode=BATCH_MODE, dataset=INPUT_DATASET_ID)
 
-        pruning = PRUNING.lower()
-        prune_suffix = "P" if pruning == "prune" else "NP"
-        output_file = f"autonets_mp_{BATCH_MODE}_{prune_suffix}_pv{INPUT_DATASET_ID}_v{OUTPUT_DATASET_ID}.pkl"
-        output_path = output_dir / output_file
+        paths_subdir = f"paths_pv{pv}"
+        all_paths    = load_minpaths(paths_subdir)
+        do_prune     = pruning == "P"
 
-        do_prune = pruning == "prune"
-        print(f"Generating {'pruned' if do_prune else 'unpruned'} autonomous networks from paths (pruner={BATCH_MODE}, v{INPUT_DATASET_ID})...")
+        print(f"Generating {'pruned' if do_prune else 'unpruned'} autonomous networks "
+              f"from {paths_subdir}...")
         print(f"  Output: {output_path}")
 
-        AutoNets = generate_minPathAutoNets(all_paths, rxnMat, prodMat, sumRxnVec,
-                                        nutrientSet, Currency, Core, prune=do_prune,
-                                        n_target=N_TARGET, n_workers=N_WORKERS,
-                                        save_path=output_path)
+        AutoNets = generate_minPathAutoNets(
+            all_paths, rxnMat, prodMat, sumRxnVec,
+            nutrientSet, Currency, Core, prune=do_prune,
+            n_target=N_TARGET, n_workers=N_WORKERS,
+            save_path=output_path)
 
-        total_time = time.time() - start_time
-
-    print(f"Saved {len(AutoNets)} autonomous networks to {output_file}")
+    total_time = time.time() - start_time
+    print(f"Saved {len(AutoNets)} autonomous networks to {output_path}")
     print(f"Total time: {total_time/60:.2f} minutes")
     print(f"Finished: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")

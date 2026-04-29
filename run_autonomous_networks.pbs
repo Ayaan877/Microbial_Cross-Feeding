@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N AutoNP_v2
+#PBS -N AutoNets
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=24:00:00
@@ -7,19 +7,17 @@
 #PBS -e logs/
 
 # ── Config ───────────────────────────────────────────────────────────────────
-MODE="MinPaths"         # RevScope | MinPaths
-N_TARGET=50000          # target number of unique networks (both modes)
+# AUTONET_SUBDIR : autonets_{source}_av{version}
+#   source : mp (MinPaths) | rs (RevScope)
+#   e.g. autonets_mp_av2  →  data/networks/autonets_mp_av2/
+#
+# AUTONET_FILE   : {P|NP}_pv{path_version}  (mp)  or  P  (rs)
+#   e.g. NP_pv2  →  autonets_NP_pv2.pkl
+#   e.g. P       →  autonets_P.pkl           (rs is always pruned)
+AUTONET_SUBDIR="autonets_mp_av2"
+AUTONET_FILE="NP_pv2"
+N_TARGET=50000
 N_WORKERS=32
-
-# MinPaths settings (used when MODE=MinPaths)
-BATCH_MODE="batch"      # batch | single
-PRUNING="noprune"       # prune | noprune
-INPUT_DATASET_ID="2"    # minpath version
-OUTPUT_DATASET_ID="2"   # output autonet version
-
-# RevScope settings (used when MODE=RevScope)
-DATASET_ID="1"         # output autonet version
-
 # ─────────────────────────────────────────────────────────────────────────────
 
 cd $PBS_O_WORKDIR
@@ -29,10 +27,6 @@ module load compiler/anaconda3-23.07.0
 
 source venv/bin/activate
 
-if [ "$MODE" = "RevScope" ]; then
-    python build_autoNets.py $MODE $DATASET_ID $N_TARGET $N_WORKERS
-else
-    python build_autoNets.py $MODE $BATCH_MODE $PRUNING $INPUT_DATASET_ID $OUTPUT_DATASET_ID $N_TARGET $N_WORKERS
-fi
+python build_autoNets.py $AUTONET_SUBDIR $AUTONET_FILE $N_TARGET $N_WORKERS
 
 echo "Finished autonomous network generation at $(date)"

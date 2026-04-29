@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N MinPaths_opt
+#PBS -N MinPaths
 #PBS -q cpu
 #PBS -l select=1:ncpus=8:mem=32gb
 #PBS -l walltime=24:00:00
@@ -8,12 +8,13 @@
 #PBS -e logs/
 
 # ── Config ───────────────────────────────────────────────────────────────────
-MODE="batch"            # batch | single
-PATH_ID="2"             # output version label
-N_WORKERS=8             # parallel workers
-MAX_ATTEMPTS=500        # max attempts per target
-PLATEAU_WINDOW=10       # attempts to consider for plateau detection
-PLATEAU_THRESHOLD=1     # plateau if new paths per window =< threshold
+# PATH_SUBDIR  : paths_pv{version}  (the output subdirectory)
+#   e.g. paths_pv1  →  saves to data/paths/paths_pv1/paths_{core_id}.pkl
+PATH_SUBDIR="paths_pv2"
+N_WORKERS=8
+MAX_ATTEMPTS=500
+PLATEAU_WINDOW=10
+PLATEAU_THRESHOLD=1
 # ─────────────────────────────────────────────────────────────────────────────
 
 cd $PBS_O_WORKDIR
@@ -25,6 +26,6 @@ source venv/bin/activate
 
 TARGET=$(sed -n "${PBS_ARRAY_INDEX}p" kegg_core.txt)
 
-python build_minPaths.py $TARGET $MODE $PATH_ID $N_WORKERS $MAX_ATTEMPTS $PLATEAU_WINDOW $PLATEAU_THRESHOLD
+python build_minPaths.py $TARGET $PATH_SUBDIR $N_WORKERS $MAX_ATTEMPTS $PLATEAU_WINDOW $PLATEAU_THRESHOLD
 
 echo "Finished path discovery for $TARGET at $(date)"

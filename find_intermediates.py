@@ -44,12 +44,13 @@ if __name__ == "__main__":
     from load_data import *
 
     # ── Config ──────────────────────────────────────────────────────────────
-    AUTONET_VERSION = "1"   # autonet dataset version
+    AUTONET_SUBDIR  = "autonets_rs_av1"   # autonets_{source}_av{version}
+    AUTONET_FILE    = "P"                  # P (rs is always pruned)
     NET_IDX_A       = 2395
     NET_IDX_B       = 1965
     # ──────────────────────────────────────────────────────────────────
-
-    with open(f"data/networks/autonets_rs_P_v{AUTONET_VERSION}.pkl", "rb") as f:
+    from directory_paths import resolve_autonet_path
+    with open(resolve_autonet_path(AUTONET_SUBDIR, AUTONET_FILE), "rb") as f:
         all_autonets = pickle.load(f)
 
     net_A = all_autonets[NET_IDX_A]

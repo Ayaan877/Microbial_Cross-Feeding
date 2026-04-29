@@ -3,15 +3,14 @@ MINPATHS AUTONOMOUS NETWORK CONSTRUCTION TEST
 Loads a MinPaths dataset, takes one pathway per target, and builds a
 single autonomous network as a quick sanity check.
 '''
-from load_minPaths import loadMinPaths
+from load_networks import load_minpaths
 from combine_pathways import buildAutonomousNetwork
 from load_data import *
 import pickle
 import time
 
 if __name__ == "__main__":
-    mode = "batch"
-    all_paths = loadMinPaths(mode=mode, dataset=2)
+    all_paths = load_minpaths("paths_pv2")
     paths = [all_paths[i][0] for i in range(8)]
 
     start = time.time()

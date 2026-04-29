@@ -266,16 +266,15 @@ def build_crossfeeding_pair_from_paths(all_paths, rxnMat, prodMat, sumRxnVec,
 if __name__ == "__main__":
     import time
     from load_data import *
-    from load_minPaths import loadMinPaths
+    from load_networks import load_minpaths
 
     # ── Config ──────────────────────────────────────────────────────────────
     PATHS_VERSION  = "1"
-    PATHS_MODE     = "batch"
     USE_BYPRODUCTS = False
     MAX_ATTEMPTS   = 10
     # ────────────────────────────────────────────────────────────────────────
 
-    all_paths = loadMinPaths(mode=PATHS_MODE, dataset=PATHS_VERSION)
+    all_paths = load_minpaths(f"paths_pv{PATHS_VERSION}")
 
     start = time.time()
     crossfeeders = build_crossfeeding_pair_from_paths(

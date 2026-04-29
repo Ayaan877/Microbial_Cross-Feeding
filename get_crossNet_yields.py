@@ -4,6 +4,8 @@ import sys
 import time
 import multiprocessing as mp
 import pickle
+import os
+from directory_paths import resolve_crossnet_path, resolve_yield_path
 
 def compute_crossfeeding_yield(crossPair):
     result = splitByDemand_crossfeeding(
@@ -20,31 +22,23 @@ def compute_crossfeeding_yield(crossPair):
 if __name__ == "__main__":
 
     # Args supplied by PBS script (see run_crossfeeding_yields.pbs)
-    # rs: get_crossNet_yields.py rs <autonet_id> <crossnet_id> <crossnet_type> <num_workers>
-    # mp: get_crossNet_yields.py mp <autonet_id> <crossnet_id> <crossnet_type> <num_workers> <pruner> <pruning> <paths_version>
-    source        = sys.argv[1]        # rs | mp
-    autonet_id    = sys.argv[2]        # autonet version
-    crossnet_id   = sys.argv[3]        # crossnet run version
-    crossnet_type = sys.argv[4]        # byp | int
-    num_workers   = int(sys.argv[5])
+    # Usage: get_crossNet_yields.py <autonet_subdir> <autonet_file> <crossnet_subdir> <crossnet_file> <num_workers>
+    #
+    #   autonet_subdir  : "autonets_{source}_av{av}"
+    #   autonet_file    : "{P|NP}_pv{pv}"  or  "P"
+    #   crossnet_subdir : "crossnets_{source}_cv{cv}"
+    #   crossnet_file   : "{byp|int}_{P|NP}"
+    #   num_workers     : parallel worker count
+    autonet_subdir  = sys.argv[1]
+    autonet_file    = sys.argv[2]
+    crossnet_subdir = sys.argv[3]
+    crossnet_file   = sys.argv[4]
+    num_workers     = int(sys.argv[5])
 
-    if source not in ("rs", "mp"):
-        raise ValueError(f"Unknown source '{source}'. Use 'rs' or 'mp'.")
-    if crossnet_type not in ("byp", "int"):
-        raise ValueError(f"Unknown crossnet_type '{crossnet_type}'. Use 'byp' or 'int'.")
-
-    if source == "rs":
-        subdir        = sys.argv[6] if len(sys.argv) > 6 else ""
-        crossnet_path = f"data/networks/crossnets_rs_P_v{autonet_id}_{crossnet_type}_v{crossnet_id}.pkl"
-        output_path   = f"data/yields/{subdir}/yields_cross_rs_P_v{autonet_id}_{crossnet_type}_v{crossnet_id}_sbd.pkl" if subdir else f"data/yields/yields_cross_rs_P_v{autonet_id}_{crossnet_type}_v{crossnet_id}_sbd.pkl"
-    else:
-        pruner        = sys.argv[6]   # batch | single
-        pruning       = sys.argv[7]   # prune | noprune
-        paths_version = sys.argv[8]   # paths dataset version
-        subdir        = sys.argv[9] if len(sys.argv) > 9 else ""
-        suffix        = "P" if pruning == "prune" else "NP"
-        crossnet_path = f"data/networks/crossnets_mp_{pruner}_{suffix}_pv{paths_version}_v{autonet_id}_{crossnet_type}_v{crossnet_id}.pkl"
-        output_path   = f"data/yields/{subdir}/yields_cross_mp_{pruner}_{suffix}_pv{paths_version}_v{autonet_id}_{crossnet_type}_v{crossnet_id}_sbd.pkl" if subdir else f"data/yields/yields_cross_mp_{pruner}_{suffix}_pv{paths_version}_v{autonet_id}_{crossnet_type}_v{crossnet_id}_sbd.pkl"
+    crossnet_path = resolve_crossnet_path(crossnet_subdir, crossnet_file)
+    output_path   = resolve_yield_path(autonet_subdir, autonet_file, "sbd",
+                                       crossnet_subdir, crossnet_file)
+    os.makedirs(output_path.parent, exist_ok=True)
 
     with open(crossnet_path, "rb") as f:
         CrossNets = pickle.load(f)
@@ -80,7 +74,7 @@ if __name__ == "__main__":
 
             if (i + 1) % 500 == 0:
                 processed_ratio = (i + 1) / num_pairs
-                viable_ratio = np.sum(pair_viable[:i+1]) / (i + 1)
+                viable_ratio    = np.sum(pair_viable[:i+1]) / (i + 1)
                 print(f"  Processed {i + 1}/{num_pairs} ({processed_ratio:.2%}), "
                       f"pair viable: {np.sum(pair_viable[:i+1])}/{i + 1} ({viable_ratio:.2%})")
 
@@ -89,16 +83,14 @@ if __name__ == "__main__":
     print(f"\nCompleted in {elapsed:.2f} seconds")
     print(f"Viable pairs (both organisms produce all precursors): {valid}/{num_pairs}")
 
-    import os
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
     with open(output_path, "wb") as f:
         pickle.dump({
-            'E_A':        E_A_yields,
-            'B_A':        B_A_yields,
-            'viable_A':   viable_A,
-            'E_B':        E_B_yields,
-            'B_B':        B_B_yields,
-            'viable_B':   viable_B,
+            'E_A':         E_A_yields,
+            'B_A':         B_A_yields,
+            'viable_A':    viable_A,
+            'E_B':         E_B_yields,
+            'B_B':         B_B_yields,
+            'viable_B':    viable_B,
             'pair_viable': pair_viable,
             'flux_A_to_B': flux_A_to_B,
             'flux_B_to_A': flux_B_to_A,

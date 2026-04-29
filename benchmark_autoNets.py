@@ -15,14 +15,13 @@ import math
 import time
 import numpy as np
 from load_data import rxnMat, prodMat, sumRxnVec, nutrientSet, Currency, Core
-from load_minPaths import loadMinPaths
+from load_networks import load_minpaths
 from combine_pathways import buildAutonomousNetwork
 
-N_WORKERS  = 32     # as specified in run_autonomous_networks.pbs
-N_REPS     = 10     # serial calls per mode
-N_TARGET   = 50000  # target unique networks (from PBS config)
-DATASET_ID = "2"
-BATCH_MODE = "batch"
+N_WORKERS     = 32     # as specified in run_autonomous_networks.pbs
+N_REPS        = 10     # serial calls per mode
+N_TARGET      = 50000  # target unique networks (from PBS config)
+PATHS_VERSION = "2"
 
 
 def gumbel_expected_max(mean, std, k):
@@ -45,8 +44,8 @@ def run_benchmark(all_paths, prune, n_reps, rng):
 
 
 if __name__ == "__main__":
-    print(f"Loading minpaths (mode={BATCH_MODE}, dataset={DATASET_ID})...")
-    all_paths = loadMinPaths(mode=BATCH_MODE, dataset=DATASET_ID)
+    print(f"Loading minpaths from paths_pv{PATHS_VERSION}...")
+    all_paths = load_minpaths(f"paths_pv{PATHS_VERSION}")
     path_counts = [len(p) for p in all_paths]
     print(f"Pathway counts per target: {path_counts}\n")
 

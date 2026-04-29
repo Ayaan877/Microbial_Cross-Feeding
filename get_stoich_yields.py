@@ -164,50 +164,40 @@ def compute_cross_yields(crossPair):
 
 if __name__ == "__main__":
 
-    net_type   = sys.argv[1]        # auto | cross
-    source     = sys.argv[2]        # rs   | mp
-    autonet_id = sys.argv[3]        # autonet version
+    # Usage: get_stoich_yields.py <net_type> <autonet_subdir> <autonet_file> <num_workers> [<crossnet_subdir> <crossnet_file>]
+    #
+    #   net_type        : auto | cross
+    #   autonet_subdir  : "autonets_{source}_av{av}"
+    #   autonet_file    : "{P|NP}_pv{pv}"  or  "P"
+    #   num_workers     : parallel worker count
+    #   crossnet_subdir : "crossnets_{source}_cv{cv}"  (cross only)
+    #   crossnet_file   : "{byp|int}_{P|NP}"            (cross only)
+    from directory_paths import (resolve_autonet_path, resolve_crossnet_path,
+                                 resolve_yield_path)
+
+    net_type       = sys.argv[1]
+    autonet_subdir = sys.argv[2]
+    autonet_file   = sys.argv[3]
+    NUM_WORKERS    = int(sys.argv[4])
 
     if net_type not in ("auto", "cross"):
         raise ValueError(f"Unknown net_type '{net_type}'. Use 'auto' or 'cross'.")
-    if source not in ("rs", "mp"):
-        raise ValueError(f"Unknown source '{source}'. Use 'rs' or 'mp'.")
 
-    if net_type == "auto":
-        NUM_WORKERS = int(sys.argv[4])
-        if source == "mp":
-            pruner        = sys.argv[5]   # batch | single
-            pruning       = sys.argv[6]   # prune | noprune
-            paths_version = sys.argv[7]
-    else:  # cross
-        crossnet_id   = sys.argv[4]
-        crossnet_type = sys.argv[5]       # byp | int
-        NUM_WORKERS   = int(sys.argv[6])
-        if crossnet_type not in ("byp", "int"):
-            raise ValueError(f"Unknown crossnet_type '{crossnet_type}'. Use 'byp' or 'int'.")
-        if source == "mp":
-            pruner        = sys.argv[7]
-            pruning       = sys.argv[8]
-            paths_version = sys.argv[9]
+    if net_type == "cross":
+        crossnet_subdir = sys.argv[5]
+        crossnet_file   = sys.argv[6]
 
-    if source == "rs":
-        autoID = f"rs_P_v{autonet_id}"
-    else:
-        prune_mode = "P" if pruning == "prune" else "NP"
-        autoID = f"mp_{pruner}_{prune_mode}_pv{paths_version}_v{autonet_id}"
-
-    os.makedirs("data/yields", exist_ok=True)
-
-    autonet_file = f"data/networks/autonets_{autoID}.pkl"
-    auto_out     = f"data/yields/stoich_auto_{autoID}.pkl"
+    autonet_path = resolve_autonet_path(autonet_subdir, autonet_file)
+    auto_out     = resolve_yield_path(autonet_subdir, autonet_file, "stoich")
+    os.makedirs(auto_out.parent, exist_ok=True)
 
     # -----------------------------------------------------------------------
     # AutoNets — stoichiometric yields + autonomous ceiling
     # -----------------------------------------------------------------------
-    with open(autonet_file, "rb") as f:
+    with open(autonet_path, "rb") as f:
         AutoNets = pickle.load(f)
     n_auto = len(AutoNets)
-    print(f"Loaded {n_auto} networks from {autonet_file}")
+    print(f"Loaded {n_auto} networks from {autonet_path}")
 
     auto_biomass = np.zeros(n_auto)
     auto_fitness = np.zeros(n_auto)
@@ -237,8 +227,10 @@ if __name__ == "__main__":
         # -------------------------------------------------------------------
         # CrossNets — compare each organism against the autonomous ceiling
         # -------------------------------------------------------------------
-        cross_path = f"data/networks/crossnets_{autoID}_{crossnet_type}_v{crossnet_id}.pkl"
-        cross_out  = f"data/yields/stoich_cross_{autoID}_{crossnet_type}_v{crossnet_id}.pkl"
+        cross_path = resolve_crossnet_path(crossnet_subdir, crossnet_file)
+        cross_out  = resolve_yield_path(autonet_subdir, autonet_file, "stoich",
+                                        crossnet_subdir, crossnet_file)
+        os.makedirs(cross_out.parent, exist_ok=True)
 
         with open(cross_path, "rb") as f:
             CrossNets = pickle.load(f)

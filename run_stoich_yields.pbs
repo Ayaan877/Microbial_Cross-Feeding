@@ -1,10 +1,27 @@
 #!/bin/bash
-#PBS -N StoichInt_NP
+#PBS -N StoichYields
 #PBS -q cpu
 #PBS -l select=1:ncpus=32:mem=32gb
 #PBS -l walltime=24:00:00
 #PBS -o logs/
 #PBS -e logs/
+
+# ── Config ───────────────────────────────────────────────────────────────────
+# NET_TYPE        : auto | cross
+# AUTONET_SUBDIR  : autonets_{source}_av{version}
+# AUTONET_FILE    : {P|NP}_pv{path_version}  (mp)  or  P  (rs)
+#   Yield files land in  data/yields/yields_{source}_stoich/
+NET_TYPE="cross"
+AUTONET_SUBDIR="autonets_mp_av1"
+AUTONET_FILE="NP_pv2"
+NUM_WORKERS=32
+
+# Cross-feeding settings — only used when NET_TYPE=cross
+# CROSSNET_SUBDIR : crossnets_{source}_cv{version}  e.g. crossnets_mp_cv1
+# CROSSNET_FILE   : {byp|int}_{P|NP}  e.g. byp_NP
+CROSSNET_SUBDIR="crossnets_mp_cv1"
+CROSSNET_FILE="byp_NP"
+# ─────────────────────────────────────────────────────────────────────────────
 
 cd $PBS_O_WORKDIR
 
@@ -13,34 +30,10 @@ module load compiler/anaconda3-23.07.0
 
 source venv/bin/activate
 
-# ── Config ───────────────────────────────────────────────────────────────────
-NET_TYPE="cross"         # auto | cross
-SOURCE="mp"             # rs (revscope) | mp (minpaths)
-AUTONET_ID="1"          # autonet dataset version
-NUM_WORKERS=32          # parallel workers
-
-# Cross-feeding settings — only used when NET_TYPE=cross
-CROSSNET_ID="1"         # crossnet run version
-CROSSNET_TYPE="int"     # byproduct (byp) | intermediate (int)
-
-# MinPaths (mp) settings — only used when SOURCE=mp
-PRUNER="batch"          # batch | single
-PRUNING="noprune"         # prune | noprune
-PATHS_VERSION="2"       # minpath dataset version
-# ─────────────────────────────────────────────────────────────────────────────
-
 if [ "$NET_TYPE" = "auto" ]; then
-    if [ "$SOURCE" = "mp" ]; then
-        python get_stoich_yields.py auto mp $AUTONET_ID $NUM_WORKERS $PRUNER $PRUNING $PATHS_VERSION
-    else
-        python get_stoich_yields.py auto rs $AUTONET_ID $NUM_WORKERS
-    fi
+    python get_stoich_yields.py auto $AUTONET_SUBDIR $AUTONET_FILE $NUM_WORKERS
 elif [ "$NET_TYPE" = "cross" ]; then
-    if [ "$SOURCE" = "mp" ]; then
-        python get_stoich_yields.py cross mp $AUTONET_ID $CROSSNET_ID $CROSSNET_TYPE $NUM_WORKERS $PRUNER $PRUNING $PATHS_VERSION
-    else
-        python get_stoich_yields.py cross rs $AUTONET_ID $CROSSNET_ID $CROSSNET_TYPE $NUM_WORKERS
-    fi
+    python get_stoich_yields.py cross $AUTONET_SUBDIR $AUTONET_FILE $NUM_WORKERS $CROSSNET_SUBDIR $CROSSNET_FILE
 else
     echo "ERROR: Unknown NET_TYPE '$NET_TYPE'. Use 'auto' or 'cross'." >&2
     exit 1
