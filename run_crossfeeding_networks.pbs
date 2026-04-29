@@ -12,7 +12,7 @@
 #
 # CROSSNET_FILE   : {byp|int}_{P|NP}
 #   e.g. byp_NP   →  crossnets_byp_NP.pkl
-CROSSNET_SUBDIR="crossnets_mp_cv1"
+CROSSNET_SUBDIR="crossnets_mp_cv2"
 CROSSNET_FILE="byp_NP"
 N_TARGET=50000
 N_WORKERS=32
@@ -20,7 +20,7 @@ N_WORKERS=32
 # ── Build from autonets (BUILD_FROM=autonets) ─────────────────────────────────
 # AUTONET_SUBDIR : autonets_{source}_av{version}  e.g. autonets_mp_av1
 # AUTONET_FILE   : {P|NP}_pv{path_version}  (mp)  or  P  (rs)
-AUTONET_SUBDIR="autonets_mp_av1"
+AUTONET_SUBDIR="autonets_mp_av2"
 AUTONET_FILE="NP_pv2"
 
 # ── Build directly from MinPaths (BUILD_FROM=minpaths, always NP) ─────────────
