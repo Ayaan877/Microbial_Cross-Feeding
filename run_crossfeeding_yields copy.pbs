@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N merged_yields
+#PBS -N MergedBypP_yields
 #PBS -q cpu
 #PBS -l select=1:ncpus=8:mem=16gb
 #PBS -l walltime=10:00:00
